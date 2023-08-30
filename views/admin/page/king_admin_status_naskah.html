@@ -1,0 +1,352 @@
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.4 -->
+    <link rel="stylesheet" href="<?=base_url();?>assets/adminlte/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<?=base_url();?>assets/adminlte/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="<?=base_url();?>assets/adminlte/dist/css/skins/_all-skins.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="<?=base_url();?>assets/adminlte/plugins/select2/select2.min.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+        
+		
+    		<style type="text/css">
+    		.labelfrm {
+    			display:block;
+    			font-size:small;
+    			margin-top:5px;
+    		}
+    		.error {
+    			font-size:small;
+    			color:red;
+    		}
+    		</style>
+    		
+    		<script type="text/javascript" src="<?=base_url();?>assets/admin/js/jquery.validate.min.js"></script>
+    		
+    		<script type="text/javascript">
+    		$(document).ready(function() {
+    			$('.frm-input').validate();
+                
+                $('.confirm-btn').click(function(){
+    			var answer = confirm(jQuery(this).attr('title'));
+                return answer;
+                });
+    		});
+            </script>
+            
+            <script type="text/javascript">
+                var htmlobjek;
+                $(document).ready(function()
+                {	
+					$('#transaksi').attr('class', 'active treeview');
+					$('#status-naskah').attr('class', 'active treeview');
+                });
+            </script>
+            
+     <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            Status Dokumen
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="active">Status Dokumen</li>
+            
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+          <!-- =========================================================== -->
+
+          <div class="row">
+            <div class="col-md-12">
+              <!-- <div class="box box-warning collapsed-box box-solid"> -->
+			  
+              
+              <!-- Perbatasan table dan form -->
+					
+					<div class="box">
+						<div class="box-header">
+						<h3 class="box-title">Table Status Dokumen</h3>
+							<div class="pull-right">
+								<!-- <form action="<?=base_url();?>admin/pendaftaran-klinik-cari" method="post" class="frm-cari"> -->
+								<form action="<?=base_url();?>admin-status-dokumen" method="get" class="frm-cari">
+									<table>
+										<tr>
+											<!-- <td>Berdasarkan</td><td>:</td> -->
+											<!-- <td>
+												<select name="berdasarkan" title="Cari Berdasarkan" class="form-control">
+													<option value=""><?php if (!empty($_GET['berdasarkan'])){echo $_GET['berdasarkan'];} ?></option>
+													<option value="spesialisasi">Spesialisasi</option>
+													<option value="pendidikan">Pendidikan</option>
+												</select>
+											</td> -->
+											<td>
+												<!-- <input type="text" name="cari"  maxlength="35" class="text form-control" size="35" alt="tlp" title="Cari data" placeholder="...Cari" value="<?php if (!empty($_GET['berdasarkan'])){echo $_GET['cari'];} ?>"/> -->
+												<input type="text" name="cari"  maxlength="35" class="text form-control" size="35" alt="tlp" title="Cari data" placeholder="...Cari" value="<?php if (!empty($_GET['cari'])){echo $_GET['cari'];} ?>"/>
+											</td>
+										</tr>
+									</table>
+								</form>
+							</div>
+						</div><!-- /.box-header -->
+						<div class="box-body">
+						
+						
+						<?php
+								if(!empty($list_status_naskah))
+								{
+									echo'<table width="100%" id="example2" class="table table-bordered table-hover">';
+										echo '<thead>
+	<tr>';
+													echo '<th width="5%">No</th>';
+													echo '<th width="10%">Barcode</th>';
+													echo '<th width="45%">No Dokumen - Perihal</th>';
+													echo '<th width="10%">Status</th>';
+													echo '<th width="30%">Aksi</th>';
+										echo '</tr>
+	</thead>';
+										$list_result = $list_status_naskah->result();
+										$no =$this->uri->segment(2,0)+1;
+										echo '<tbody>';
+										foreach($list_result as $row)
+										{
+											echo'<tr>';
+												echo'<td><input type="hidden" id="no_'.$row->id_pengajuan.'" value="'.$row->id_pengajuan.'" />'.$no.'</td>';
+												
+												echo'<td>'.($row->no_pengajuan).'</td>';
+												echo'<td>
+														<b>Jenis Dokumen : </b>'.$row->nama_jenis_naskah.' 
+														<br/> <b>No Dok : </b>'.$row->kode_pengajuan.' 
+														<br/> <b>Sumber : </b>'.$row->sumber.'
+														<br/> <b>Perihal : </b>'.$row->perihal.'
+													</td>';
+												echo'<td>
+														<b>Tahapan : </b>'.$row->tahapan.' 
+														<br/> <b>Valid : </b>'.$row->sts.'
+														<br/> <b>(%) : </b>'.$row->prsn.'%
+													
+													</td>';
+												//echo'<td>'.number_format($row->nominal,0,',','.').'</td>';
+												
+												echo'<input type="hidden" id="id_pengajuan_'.$no.'" value="'.$row->id_pengajuan.'" />';
+												
+												
+												echo'<input type="hidden" id="no_pengajuan_'.$no.'" value="'.$row->no_pengajuan.'" />';
+												echo'<input type="hidden" id="kode_pengajuan_'.$no.'" value="'.$row->kode_pengajuan.'" />';
+												echo'<input type="hidden" id="diajukan_oleh_'.$no.'" value="'.$row->diajukan_oleh.'" />';
+												echo'<input type="hidden" id="perihal_'.$no.'" value="'.$row->perihal.'" />';
+												echo'<input type="hidden" id="sumber_'.$no.'" value="'.$row->sumber.'" />';
+												echo'<input type="hidden" id="penting_'.$no.'" value="'.$row->penting.'" />';
+												echo'<input type="hidden" id="hasil_pengajuan_'.$no.'" value="'.$row->hasil_pengajuan.'" />';
+												echo'<input type="hidden" id="ket_hasil_'.$no.'" value="'.$row->ket_hasil.'" />';
+												
+												if($row->user_updt == $this->session->userdata('ses_id_karyawan'))
+												{
+													echo'<td>	
+	<a class="confirm-btn btn btn-success btn-sm" href="'.base_url().'admin-detail-status-dokumen/'.$row->id_pengajuan.'" title = "Ubah Status '.($row->no_pengajuan).'" alt = "Ubah Status '.($row->no_pengajuan).'">Ubah Status</a>
+	
+	<button type="button" onclick="view('.$no.')" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+		Hasil Pengajuan
+	</button>
+													</td>';
+												}
+												else
+												{
+													echo'<td>	
+														Tidak Memiliki Akses
+													</td>';
+												}
+												
+											echo'</tr>';
+											$no++;
+										}
+										
+										echo '</tbody>';
+									echo'</table>';
+								}
+								else
+								{
+									echo'<center>';
+									echo'Tidak Ada Data Yang Ditampilkan !';
+									echo'</center>';
+								}
+							?>
+						<center>
+                        <div class="halaman"><?php echo $halaman;?></div>
+                        </center>
+						</div><!-- /.box-body -->
+					</div><!-- /.box -->
+					
+					
+					<!-- Show MOdal -->
+					  <div class="modal fade modal-primary" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-dialog">
+							<div class="modal-content">
+							  <div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="myModalLabel">Hasil Pengajuan Dokumen</h4>
+							  </div>
+							  <div class="modal-body">
+								<!-- <center> -->
+									<!-- <span id="img2"></span> -->
+								<!-- </center> -->
+								<table>
+									<!-- <tr> -->
+										<!-- <td></td><td></td><td></span></td> -->
+									<!-- </tr> -->
+									<tr>
+										<td>No Pengajuan</td><td>:</td><td><span id="no_pengajuan2"></span></td>
+									</tr>
+									<tr>
+										<td>No Dokumen</td><td>:</td><td><span id="kode_pengajuan2"></span></td>
+									</tr>
+									<tr>
+										<td>Sumber</td><td>:</td><td><span id="sumber2"></span></td>
+									</tr>
+									<tr>
+										<td>Perihal</td><td>:</td><td><span id="perihal2"></span></td>
+									</tr>
+									
+								</table>
+								</br></br>
+								<div  id="box-form" class="box box-warning ellapsed-box box-solid">
+									<div class="box-header with-border">
+									  <h3 class="box-title">Hasil Keputusan Pengajuan</h3>
+									  <div class="box-tools pull-right">
+										<button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+									  </div><!-- /.box-tools -->
+									</div><!-- /.box-header -->
+									<div class="box-body">
+									  
+									  
+									  <!-- ISI FORM -->
+											<!-- <form role="form" action="<?=base_url();?>admin-jabatan-simpan" method="post" class="frm-input"> -->
+											<div class="box-body">
+												<input type="hidden" name="no2" id="no2"/>
+												
+												<div class="form-group">
+												  <label for="hasil_pengajuan">Keputusan</label>
+												  <select name="hasil_pengajuan" id="hasil_pengajuan" class="required form-control select2" title="Keputusan">
+													<option value=""></option>
+													<option value="DISPOSISI">DISPOSISI</option>
+													<option value="DITOLAK">DITOLAK</option>
+													<option value="DIREKOMENDASIKAN">DIREKOMENDASIKAN</option>
+													</select>
+												</div>
+												
+												<div class="form-group">
+												<label for="ket_hasil">Keterangan</label>
+												<textarea name="ket_hasil" id="ket_hasil" class="required form-control" title="Keterangan" placeholder="*Keterangan"></textarea>
+												</div>
+												
+											</div><!-- /.box-body -->
+							
+											<div class="box-footer">
+												<!-- <button type="reset" class="btn btn-default">Batal</button> -->
+												<a class="confirm-btn btn btn-primary" onclick="proses_hasil()" href="javascript:void(0)">Simpan</a>
+											</div>
+											<!-- </form> -->
+										<!-- ISI FORM -->
+									  
+									  
+									</div><!-- /.box-body -->
+								  </div><!-- /.box -->
+							  </div>
+							  <div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+							  </div>
+							</div>
+						  </div>
+						</div>
+
+					<!-- Show MOdal -->
+					
+					
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+          <!-- =========================================================== -->
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+            
+    		
+		
+<script type='text/javascript'>
+
+	function view(id)
+	{
+        $("#img2").html("<img style='border:1px solid #C8C8C8; padding:5px; float:left; margin-right:20px;' src='"+$('#avatar_url_'+id).val()+"' width='100px' height='100px'>");
+		$('#no_pengajuan2').html($('#no_pengajuan_'+id).val());
+        $('#kode_pengajuan2').html($('#kode_pengajuan_'+id).val());
+        $('#perihal2').html($('#perihal_'+id).val());
+        $('#sumber2').html($('#sumber_'+id).val());
+		
+		$('#no2').val(id);
+		
+		document.getElementById("ket_hasil").value = $('#ket_hasil_'+id).val();
+		
+		document.getElementById("hasil_pengajuan").options.item(0).text = $('#hasil_pengajuan_'+id).val();
+		document.getElementById("hasil_pengajuan").options.item(0).value = $('#hasil_pengajuan_'+id).val();
+		
+		//SELECT INDEX 0
+		$("select#hasil_pengajuan").prop('selectedIndex', 0);
+        
+		//alert (k_kat);
+	}
+
+	function proses_hasil()
+	{
+		var id = $("#no2").val();
+		var id_pengajuan = $("#id_pengajuan_"+id).val();
+		var hasil_pengajuan = $("#hasil_pengajuan").val();
+		var ket_hasil = $("#ket_hasil").val();
+		var kode_pengajuan = $("#kode_pengajuan_"+id).val();
+		
+		
+		if (confirm("Apakah anda yakin akan menyimpan hasil pengajuan dokumen "+kode_pengajuan+" ?"))
+		{
+			$.ajax
+			(
+				{
+					type: "POST"
+					,url: "<?=base_url();?>C_admin_status_naskah/simpan_hasil_pengajuan/"
+					,data:
+						"id_pengajuan="+id_pengajuan+"&hasil_pengajuan="+hasil_pengajuan+"&ket_hasil="+ket_hasil
+					,success:function(data)
+					{ 
+						$('#hasil_pengajuan_'+id).val(hasil_pengajuan);
+						$('#ket_hasil_'+id).val(ket_hasil);
+						alert(kode_pengajuan+" Berhasil menyimpan");
+						
+					} 
+				}
+			);
+		}
+	}
+</script>
+      
+    <!-- Bootstrap 3.3.4 -->
+    <script src="<?=base_url();?>assets/adminlte/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Slimscroll -->
+    <script src="<?=base_url();?>assets/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script src="<?=base_url();?>assets/adminlte/plugins/fastclick/fastclick.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="<?=base_url();?>assets/adminlte/dist/js/app.min.js"></script>
+    <!-- Page script -->
+    
