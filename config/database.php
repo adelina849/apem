@@ -84,18 +84,19 @@ $db['default'] = array(
 	'database' => 'sibunting_db_pelayanan',
 	*/
 
+	/*
 	'hostname' => '',
 	'username' => 'bojong_admin',
 	'password' => '@Admin849',
 	'database' => 'bojong_system',
+	*/
 
-
-     /*
-	'hostname' => '',
+     
+	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-	'database' => 'db_nasdin_sekpri',
-	*/
+	'database' => 'db_apem',
+	
 
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

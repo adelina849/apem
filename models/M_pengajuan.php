@@ -10,7 +10,8 @@
 		function list_pengajuan_limit($cari,$limit,$offset)
 		{
 			$query = $this->db->query("
-				SELECT A.*, COALESCE(B.nama_jenis_naskah,'') AS nama_jenis_naskah FROM tb_pengajuan AS A
+				SELECT A.*, COALESCE(B.nama_jenis_naskah,'') AS nama_jenis_naskah 
+				FROM tb_pengajuan AS A
 				LEFT JOIN tb_jenis_naskah AS B 
 				ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
 				".$cari." 

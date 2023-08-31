@@ -25,8 +25,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 //$config['base_url'] = 'http://localhost/sekpri.cianjurkab.go.id/';
 //$config['base_url'] = 'https://sibunting.cianjurkab.go.id/';
-//$config['base_url'] = 'http://localhost/kel_bohera/';
-$config['base_url'] = 'https://kel-bojongherang.cianjurkab.go.id/';
+$config['base_url'] = 'http://localhost/apem/';
+//$config['base_url'] = 'https://kel-bojongherang.cianjurkab.go.id/';
 
 /*
 |--------------------------------------------------------------------------

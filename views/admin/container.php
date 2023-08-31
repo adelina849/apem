@@ -9,8 +9,8 @@
 		<meta content="SISTEM TATA NASKAH DINAS SEKPRI KAB. CIANJUR adalah sistem aplikasi website terintegrasi yang dibuat/dirancang untuk mempermudah pengecekan dan pengelolaan naskah dinas yang masuk di kabupaten cianjur." name="description">
 		-->
 		
-		<meta content=",kelurahan, bojong herang, sekpri,cianjur,kabupaten,naskah,dinas,sistem" name="keywords">
-		<meta content="SISTEM PELAYANAN KELURAHAN BOJONG HERANG CIANJUR adalah sistem aplikasi website terintegrasi yang dibuat/dirancang untuk mempermudah pengecekan dan pengelolaan naskah dinas yang masuk di Kelurahan Bojong Herang kabupaten cianjur." name="description">
+		<meta content="cibeber, cianjur, apem, pelayanan, paten" name="keywords">
+		<meta content="Anjungan PATEN Mandiri (APEM) Kecamatan Cibeber adalah sebuah sistem layanan self service atau layanan sendiri yang berbasis sistem pelayanan terpadu menggunakan digital, untuk mempermudah masyarakat dalam pelayanan administrasi yang ada di Kecamatan Cibeber." name="description">
     
 		<?php
 			if(!empty($title))
@@ -19,7 +19,7 @@
 			}
 			else
 			{
-				echo'<title>SISTEM PELAYANAN KELURAHAN BOJONG HERANG CIANJUR</title>';
+				echo'<title>Anjungan Paten Mandiri | APEM</title>';
 			}
 		?>
     	

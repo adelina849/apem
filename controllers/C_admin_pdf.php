@@ -73,7 +73,7 @@ class C_admin_pdf extends CI_Controller {
 			
 				$this->fpdf->SetFont('Arial','B',10);
 				$this->fpdf->Ln(3);
-				$this->fpdf->SetY(7); //Set posisi top
+				$this->fpdf->SetY(10); //Set posisi top
 				
 				
 				//$this->fpdf->Cell(5,5,'',0,0,'L',false);
@@ -82,8 +82,8 @@ class C_admin_pdf extends CI_Controller {
 				//$this->fpdf->Cell(120,5,'',0,0,'L',false);$this->fpdf->Cell(100,5,$data_kontes->mulai.' - '.$data_kontes->sampai,0,1,'L',false);
 				
 				//$this->fpdf->Cell(5,5,'',0,0,'L',false);
-				$this->fpdf->Cell(85,5,'KECAMATAN CIANJUR',0,1,'C',false);
-				$this->fpdf->Cell(85,5,'KELURAHAN BOJONGHERANG',0,1,'C',false);
+				$this->fpdf->Cell(85,5,'KECAMATAN CIBEBER',0,1,'C',false);
+				//$this->fpdf->Cell(85,5,'KELURAHAN BOJONGHERANG',0,1,'C',false);
 				
 				$this->fpdf->Ln(3);
 				$this->fpdf->Line(5,23,90,23);

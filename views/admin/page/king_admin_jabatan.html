@@ -190,9 +190,9 @@
 										echo '<thead>
 	<tr>';
 													echo '<th width="5%">No</th>';
-													echo '<th width="20%">Nama Jabatan</th>';
-													echo '<th width="35%">Keterangan</th>';
-													echo '<th width="20%">Jumlah Akses</th>';
+													echo '<th width="30%">Nama Jabatan</th>';
+													echo '<th width="45%">Keterangan</th>';
+													//echo '<th width="20%">Jumlah Akses</th>';
 													echo '<th width="20%">Aksi</th>';
 										echo '</tr>
 	</thead>';
@@ -206,6 +206,7 @@
 												echo'<td><input type="hidden" id="nama_'.$row->id_jabatan.'" value="'.$row->nama_jabatan.'" />'.$row->nama_jabatan.'</td>';
 												echo'<td><input type="hidden" id="ket_'.$row->id_jabatan.'" value="'.$row->ket_jabatan.'" />'.$row->ket_jabatan.'</td>';
 												
+												/*
 												if($row->nama_jabatan == 'Admin Aplikasi')
 												{
 													echo'<td>Semua Akses</td>';
@@ -214,11 +215,13 @@
 												{
 													echo'<td>'.$row->JUMLAH.' Hak Akses</td>';
 												}
-												
+												*/
 												if ($row->nama_jabatan == "Admin Aplikasi")
 												{
 													echo'<td>
+	<!--
 	<a disabled class="btn btn-success btn-sm" href="#" title = "Berikan Hak Akses '.$row->nama_jabatan.'" alt = "Berikan Hak Akses '.$row->nama_jabatan.'">Akses</a>
+	-->
 												
 	<a disabled href="#" class="btn btn-warning btn-sm"  title = "Ubah Data '.$row->nama_jabatan.'" alt = "Ubah Data '.$row->nama_jabatan.'">Edit</a>
 	
@@ -229,8 +232,10 @@
 												{
 												
 													echo'<td>
+	<!--
 	<a class="confirm-btn btn btn-success btn-sm" href="'.base_url().'admin-hak-akses/'.$row->id_jabatan.'" title = "Berikan Hak Akses '.$row->nama_jabatan.'" alt = "Berikan Hak Akses '.$row->nama_jabatan.'">Akses</a>
-												
+	-->
+	
 	<a href="javascript:void(0)" class="btn btn-warning btn-sm" onclick="edit('.$row->id_jabatan.')" title = "Ubah Data '.$row->nama_jabatan.'" alt = "Ubah Data '.$row->nama_jabatan.'">Edit</a>
 	
 	<a class="confirm-btn btn btn-danger btn-sm" href="'.base_url().'admin-jabatan-hapus/'.$row->id_jabatan.'" title = "Hapus Data '.$row->nama_jabatan.'" alt = "Hapus Data '.$row->nama_jabatan.'">Hapus</a>

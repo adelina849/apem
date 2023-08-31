@@ -2,9 +2,9 @@
         <!-- Logo -->
         <a href="<?=base_url();?>index.php/" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini"><b>BH</b></span>
+          <span class="logo-mini"><b>KC</b></span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><b>BOHERA</b></span>
+          <span class="logo-lg"><b>APEM</b></span>
         </a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
