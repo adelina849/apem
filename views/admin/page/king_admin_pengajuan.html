@@ -231,6 +231,7 @@
                   <!-- ISI FORM -->
 						<form role="form" action="<?=base_url();?>admin-pengajuan-dokumen-simpan" method="post" class="frm-input">
 						<input type="hidden" name="stat_edit" id="stat_edit"/>
+						<input type="hidden" name="from" id="from" value="<?php if (!empty($_GET['from'])){echo $_GET['from'];} ?>"/>
 						
 						
 						<div class="box-body">
@@ -263,11 +264,24 @@
 							<input type="text" id="sumber" name="sumber"  maxlength="35" class="required form-control" size="35" alt="Sumber/Dinas/Kantor Asal Dokumen" title="Sumber/Dinas/Kantor Asal Dokumen" placeholder="*Sumber/Dinas/Kantor Asal Dokumen"/>
 							</div>
 							-->
+							<!--
 							<div class="form-group">
 							<label for="sumber">NIK Permohonan/Asal Permohonan</label>
 							<input type="text" id="sumber" name="sumber"  maxlength="35" class="required form-control" size="35" alt="NIK Permohonan/Asal Permohonan" title="NIK Permohonan/Asal Permohonan" placeholder="*NIK Permohonan/Asal Permohonan"/>
 							<span id="pesan_nik"></span>
 							</div>
+							-->
+							
+							<label for="no_bukti">NIK Permohonan/Asal Permohonan</label>
+							<div class="form-group input-group input-group-sm">
+								<input type="text" id="sumber" name="sumber"  maxlength="50" class="required form-control" size="35" alt="NIK Permohonan/Asal Permohonan" title="NIK Permohonan/Asal Permohonan" placeholder="*NIK Permohonan/Asal Permohonan"/>
+								<span class="input-group-btn">
+								<button class="btn btn-info btn-flat" type="button" title="Cari Denda" onclick="tampilkan_penduduk()" data-toggle="modal" data-target="#myModal_penduduk">...</button>
+								</span>
+								
+							</div><!-- /input-group<br />-->
+							<span id="pesan_nik"></span>
+							
 							
 							<div class="form-group">
 							<label for="perihal">Perihal</label>
@@ -569,63 +583,55 @@
 						</div>
 						</div>
 
-					<!-- Show MOdal - TABLE 1 Kategori uang Masuk-->
+					<!-- Show MOdal - TABLE 1 JENIS NASKAH -->
 					
-					<!-- Show MOdal DETAIL UANG MASUK -->
-                      <div class="modal fade modal-primary" id="myModal_detail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Detail Pengajuan Dokumen</h4>
-                              </div>
-                              <div class="modal-body">
-                                <table>
-									<tr>
-                                        <td>Status</td><td> : </td><td><span id="penting2"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>NO Pengajuan</td width="30%"><td width="3%"> : </td><td width="65%"><span id="no_pengajuan2"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Jenis Dokumen</td><td> : </td><td><span id="nama_jenis_naskah2"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>No Dokumen</td><td> : </td><td><span id="kode_pengajuan2"></span></td>
-                                    </tr>
-									<tr>
-                                        <td>Sumber</td><td> : </td><td><span id="sumber2"></span></td>
-                                    </tr>
-									<tr>
-                                        <td>Perihal</td><td> : </td><td><span id="perihal2"></span></td>
-                                    </tr>
-									<tr>
-                                        <td>Diajukan Oleh</td><td> : </td><td><span id="diajukan_oleh2"></span></td>
-                                    </tr>
-									<tr>
-                                        <td>Ditandatangani Oleh</td><td> : </td><td><span id="tandatangan_oleh2"></span></td>
-                                    </tr>
-									<tr>
-                                        <td>Tgl Dokumen Dibuat</td><td> : </td><td><span id="tgl_surat_dibuat2"></span></td>
-                                    </tr>
-									<tr>
-                                        <td>Tgl Dokumen Masuk</td><td> : </td><td><span id="tgl_surat_masuk2"></span></td>
-                                    </tr>
-									<tr>
-                                        <td>Keterangan</td><td> : </td><td><span id="ket_pengajuan2"></span></td>
-                                    </tr>
-									
-                                </table>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+					<!-- Show MOdal - TABLE 2 Data Penduduk -->
+					<div class="modal fade" id="myModal_penduduk" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="myModalLabel_penduduk">List Data Penduduk</h4>
+							</div>
+							<div class="modal-body">
+								
+								
+								<!-- ISI BODY -->
+								<div class="box">
+									<div class="box-header">
+									<h3 class="box-title">Table Data Penduduk</h3>
+										<div class="pull-right">
+											
+												<table>
+													<tr>
+														<td>
+															<input type="text" id="cari-tmp-penduduk" name="cari-tmp"  maxlength="35" class="text form-control" size="35" alt="tlp" title="Cari data" placeholder="...Cari" value="<?php if (!empty($_GET['cari'])){echo $_GET['cari'];} ?>"/>
+														</td>
+														<td><a href="javascript:void(0)" id="btn-cari-penduduk" onclick="tampilkan_penduduk()" class="btn btn-success btn-sm btn-flat btn-block" title = "Cari Jenis Dokumen" >Cari</a></td>
+														
+														</td>
+														<td><a href="javascript:void(0)" id="btn-tambah-penduduk" onclick="tambah_penduduk()" class="btn btn-warning btn-sm btn-flat btn-block" title = "Tambah penduduk" >Tambah Penduduk</a></td>
+													</tr>
+												</table>
+										</div>
+									</div><!-- /.box-header -->
+									<div  id="tb_penduduk" class="box-body">
+										
+									</div><!-- /.box-body -->
+								</div><!-- /.box -->
+								<!-- ISI BODY -->
+								
+								
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+							</div>
+							</div>
+						</div>
+						</div>
 
-                    <!-- Show MOdal Detail UANG MASUK -->
+					<!-- Show MOdal - TABLE 1 Data Penduduk -->
 					
 					
 					
@@ -639,6 +645,40 @@
     		
 		
 <script type='text/javascript'>
+	function tambah_penduduk(id)
+	{	
+		//var kode_produk = $("#kode_produk_"+id).val();
+		var cari = "";
+		var href = "<?php echo base_url();?>admin-penduduk?cari="+cari+"";
+		window.open(href, 'popup', 'height=800,width=500,toolbar=no');
+	}
+
+	function insert_penduduk(id)
+	{
+		$('input[name=sumber]').val($('#nik_'+id).val());
+		
+		//$('input[name=ket_kat_uang_masuk]').val($('#ket_kat_uang_masuk2_'+id).val());
+	}
+	
+	function tampilkan_penduduk()
+	{
+		//alert("Masuk fusntion");
+		var cari = $("#cari-tmp-penduduk").val();
+		$("#tb_penduduk").html("<img src='<?=base_url();?>assets/global/loading.gif'>Cek Data ...");
+		$.ajax({type: "POST", url: "<?=base_url();?>C_admin_pengajuan/cek_tb_penduduk/", data: "cari="+cari, success:function(data)
+		{ 
+			if(data!=0)
+			{
+				$("#tb_penduduk").html(data);
+			} 
+			else
+			{
+				$("#tb_penduduk").html("Tidak Ada Data Yang Ditampilkan");
+			}
+		}
+		});
+	}
+
 	function view(id)
 	{
 		$('#no_pengajuan2').html($('#no_pengajuan_'+id).val());

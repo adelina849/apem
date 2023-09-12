@@ -6,7 +6,7 @@ class C_admin_pengajuan extends CI_Controller {
 	{
 		parent::__construct();
 		// Your own constructor code
-		$this->load->model(array('M_jenis_naskah','M_pengajuan'));
+		$this->load->model(array('M_jenis_naskah','M_pengajuan','M_penduduk'));
 		
 	}
 	
@@ -85,8 +85,17 @@ class C_admin_pengajuan extends CI_Controller {
 				$this->pagination->initialize($config);
 				$halaman = $this->pagination->create_links();
 				
+				if((!empty($_GET['from'])) && ($_GET['from']!= "")  )
+				{
+					$list_pengajuan = $this->M_pengajuan->list_pengajuan_limit($cari,1,0);
+				}
+				else
+				{
+					$list_pengajuan = $this->M_pengajuan->list_pengajuan_limit($cari,$config['per_page'],$this->uri->segment(2,0));
+				}
+				
 				$list_jenis_naskah = $this->M_jenis_naskah->list_jenis_naskah_limit('',10,0);
-				$list_pengajuan = $this->M_pengajuan->list_pengajuan_limit($cari,$config['per_page'],$this->uri->segment(2,0));
+				
 				$data = array('page_content'=>'king_admin_pengajuan','halaman'=>$halaman,'list_pengajuan'=>$list_pengajuan,'list_jenis_naskah' => $list_jenis_naskah);
 				$this->load->view('admin/container',$data);
 			}
@@ -109,6 +118,14 @@ class C_admin_pengajuan extends CI_Controller {
 			
 			if(!empty($cek_ses_login))
 			{
+				if((!empty($_POST['from'])) && ($_POST['from']!= "")  )
+				{
+					$from = $_POST['from'];
+				}
+				else
+				{
+					$from="";
+				}
 					if (!empty($_POST['stat_edit']))
 					{
 						$this->M_pengajuan->edit
@@ -128,7 +145,7 @@ class C_admin_pengajuan extends CI_Controller {
 								,$this->session->userdata('ses_id_karyawan')
 							
 							);
-						header('Location: '.base_url().'admin-pengajuan-dokumen');
+						header('Location: '.base_url().'admin-pengajuan-dokumen?from'.$from);
 					}
 					else
 					{
@@ -177,7 +194,7 @@ class C_admin_pengajuan extends CI_Controller {
 						
 							
 							
-						header('Location: '.base_url().'admin-pengajuan-dokumen');
+						header('Location: '.base_url().'admin-pengajuan-dokumen?from'.$from);
 					}
 			}
 			else
@@ -257,6 +274,74 @@ class C_admin_pengajuan extends CI_Controller {
 						
 						echo'<td>
 <button type="button" onclick="insert('.$no.')" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">Pilih</button>
+</td>';
+						
+					echo'</tr>';
+					$no++;
+				}
+				
+				echo '</tbody>';
+			echo'</table>';
+		}
+	}
+	
+	function cek_tb_penduduk()
+	{
+		if((!empty($_POST['cari'])) && ($_POST['cari']!= "")  )
+		{
+			$cari = " WHERE kode_kantor = '".$this->session->userdata('ses_kode_kantor')."' 
+						AND 
+						(
+							nik LIKE '%".str_replace("'","",$_POST['cari'])."%'
+							OR nama LIKE '%".str_replace("'","",$_POST['cari'])."%'
+						)
+					";
+		}
+		else
+		{
+			$cari= " WHERE kode_kantor = '".$this->session->userdata('ses_kode_kantor')."' ";
+		}
+		
+		$list_penduduk = $this->M_penduduk->list_penduduk_limit($cari,30,0);
+		
+		if(!empty($list_penduduk))
+		{
+			echo'<table width="100%" id="example2" class="table table-bordered table-hover">';
+				echo '<thead>
+<tr>';
+							echo '<th width="5%">No</th>';
+							echo '<th width="40%">Data Penduduk</th>';
+							echo '<th width="40%">Kontak Penduduk</th>';
+							echo '<th width="15%">Aksi</th>';
+				echo '</tr>
+</thead>';
+				$list_result = $list_penduduk->result();
+				$no =1;
+				echo '<tbody>';
+				foreach($list_result as $row)
+				{
+					echo'<tr>';
+						echo'<td>'.$no.'</td>';
+						echo'<td>
+								<b>NIK : </b>'.$row->nik.'
+								<br/><b>Nama : </b>'.$row->nama.'
+								<br/><b>Kelamin : </b>'.$row->jenis_kelamin.'
+								<br/><b>TTL : </b>'.$row->tempat_lahir.', '.$row->tgl_lahir.'
+							</td>';
+						
+						echo'<td>
+								<b>Telpon : </b>'.$row->tlp.'
+								<br/><b>Email : </b>'.$row->email.'
+								<br/><b>Alamat : </b>'.$row->alamat.'
+							</td>';
+						
+						
+						echo'<input type="hidden" id="nik_'.$no.'" value="'.$row->nik.'" />';
+						echo'<input type="hidden" id="id_penduduk_'.$no.'" value="'.$row->id_penduduk.'" />';
+						
+						
+						echo'<td>
+<button type="button" onclick="insert_penduduk('.$no.')" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal_penduduk">Pilih</button>
 </td>';
 						
 					echo'</tr>';
