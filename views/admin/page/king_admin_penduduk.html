@@ -13,6 +13,10 @@
     <link rel="stylesheet" href="<?=base_url();?>assets/adminlte/dist/css/skins/_all-skins.min.css">
     <!-- Select2 -->
     <link rel="stylesheet" href="<?=base_url();?>assets/adminlte/plugins/select2/select2.min.css">
+	<link rel="stylesheet" href="<?=base_url();?>assets/adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+	<link rel="stylesheet" href="<?=base_url();?>assets/adminlte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+	<link rel="stylesheet" href="<?=base_url();?>assets/adminlte/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
+	<link rel="stylesheet" href="<?=base_url();?>assets/adminlte/plugins/timepicker/bootstrap-timepicker.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -51,8 +55,7 @@
                 $(document).ready(function()
                 {	
 					$('#inputdata').attr('class', 'active treeview');
-					$('#input-data-karyawan').attr('class', 'active treeview');
-					$('#input-data-karyawan-karyawan').attr('class', 'active treeview');
+					$('#input-data-penduduk').attr('class', 'active treeview');
 					
                      $("#nik").change(function()
                     //$("#simpan").click(function()
@@ -67,34 +70,28 @@
                           $("#nik").css('border', '3px #C33 solid');
                         }
 						else
-						$.ajax({type: "POST", url: "<?=base_url();?>index.php/c_admin_karyawan/cek_karyawan/", data: "nik="+nik, success:function(data)
+						$.ajax({type: "POST", url: "<?=base_url();?>index.php/C_admin_penduduk/get_data_penduduk/", data: "nik="+nik, success:function(data)
                         { 
                         	if(data==0 || ($("#nik").val() == $("#cek_nik").val()))
                             //if(data==0)
                         	  {
-                        	  	$("#pesan").html('<img src="<?=base_url();?>assets/global/true.png">');
+                        	  	$("#pesan").html('<img src="<?=base_url();?>assets/global/true.png"> NIK Penduduk Belum terdaftar');
                                 $("#nik").css('border', '3px #090 solid');
                                 $("#nama").attr("disabled", false);
-								$("#jabatan").attr("disabled", false);
-								$("#pnd").attr("disabled", false);
 								$("#tlp").attr("disabled", false);
 								$("#email").attr("disabled", false);
 								$("#alamat").attr("disabled", false);
-								$("#keterangan").attr("disabled", false);
                                 $("#btnsimpan").attr("disabled", false);
                             }
                               else
                               {
-                              	$("#pesan").html('<img src="<?=base_url();?>assets/global/salah.png"> NIK Karyawan Tampilan telah digunakan');
+                              	$("#pesan").html('<img src="<?=base_url();?>assets/global/salah.png"> NIK Penduduk Telah terdaftar');
                 				//$("#pesan").html(data); 
                               	$("#nik").css('border', '3px #C33 solid');
                                 $("#nama").attr("disabled", true);
-								$("#jabatan").attr("disabled", true);
-								$("#pnd").attr("disabled", true);
 								$("#tlp").attr("disabled", true);
 								$("#email").attr("disabled", true);
 								$("#alamat").attr("disabled", true);
-								$("#keterangan").attr("disabled", true);
                                 $("#btnsimpan").attr("disabled", true);
                               }
                               
@@ -108,12 +105,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            Karyawan
+            Penduduk
           </h1>
           <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
 			<li><a href="#"><i class="fa fa-dashboard"></i> Data Dasar</a></li>
-            <li class="active">Karyawan</li>
+            <li class="active">Penduduk</li>
             
           </ol>
         </section>
@@ -127,7 +124,7 @@
               <!-- <div class="box box-warning collapsed-box box-solid"> -->
 			  <div  id="box-form" class="box box-warning collapsed-box box-solid">
                 <div class="box-header with-border">
-                  <h3 class="box-title">Formulir Input Karyawan</h3>
+                  <h3 class="box-title">Formulir Input Penduduk</h3>
                   <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
                   </div><!-- /.box-tools -->
@@ -136,21 +133,16 @@
                   
                   
                   <!-- ISI FORM -->
-                        <form role="form" action="<?=base_url();?>admin-karyawan-simpan" method="post" class="frm-input" enctype="multipart/form-data">
+                        <form role="form" action="<?=base_url();?>admin-penduduk-simpan" method="post" class="frm-input" enctype="multipart/form-data">
                           <input type="hidden" name="stat_edit" id="stat_edit"/>
                           <div class="box-body">
-                            <div class="form-group">
-                              <label for="foto">Avatar</label>
-                              <span id="img_edit"></span>
-                              <input type="file" id="foto" name="foto">
-                              <p class="help-block">Pilih untuk memasukan avatar</p>
-                            </div>
                             
-							<br/>
-							<div class="form-group">
-                              <label for="no_karyawan">NO ID Karyawan</label>
-                              <input type="text" id="no_karyawan" name="no_karyawan"  maxlength="35" class="form-control" size="35" alt="NO Karyawan" value="<?php echo $no_karyawan; ?>" title="NO Karyawan" placeholder="*NO Karyawan Otomatis" disabled/>
-                            </div>
+							<!-- <div class="form-group"> -->
+                              <!-- <label for="foto">Avatar</label> -->
+                              <!-- <span id="img_edit"></span> -->
+                              <!-- <input type="file" id="foto" name="foto"> -->
+                              <!-- <p class="help-block">Pilih untuk memasukan avatar</p> -->
+                            <!-- </div> -->
 							
                             <div class="form-group">
                               <label for="nik">NIK</label>
@@ -164,26 +156,29 @@
                             </div>
                             
 							<div class="form-group">
-                              <label for="jabatan">Jabatan</label>
-                              <select name="jabatan" id="jabatan" class="required form-control select2" title="jabatan">
-                                <option value="">--Pilih Jabatan--</option>
-                                <?php
-                                	if (!empty($list_jabatan))
-                                    {
-                                    	$list_result = $list_jabatan->result();
-                                    	foreach($list_result as $row)
-                                        {
-                                            echo '<option value="'.$row->id_jabatan.'">'.$row->nama_jabatan.'</option>';
-                                        }
-                                     }
-                                 ?>
+                              <label for="jenis_kelamin">Jenis Kelamin</label>
+								<select name="jenis_kelamin" id="jenis_kelamin" class="required form-control select2" title="Jenis Kelamin">
+									<option value="">--Pilih Kelamin--</option>
+									<option value="PRIA">PRIA</option>
+									<option value="WANITA">WANITA</option>
                                 </select>
                             </div>
 							
 							<div class="form-group">
-							  <label for="pnd">Pendidikan</label>
-                              <input type="text" id="pnd" name="pnd"  maxlength="35" class="required form-control" size="35" alt="pnd" title="Pendidikan" placeholder="*Pendidikan"/>
+                              <label for="tempat_lahir">Tempat Lahir</label>
+                              <input type="text" id="tempat_lahir" name="tempat_lahir"  maxlength="35" class="required form-control" size="35" alt="Tempat Lahir" title="Tempat Lahir" placeholder="*Tempat Lahir"/>
                             </div>
+							
+							<div class="form-group">
+								<label>Tanggal Lahir</label>
+								<div class="input-group date">
+								  <div class="input-group-addon">
+									<i class="fa fa-calendar"></i>
+								  </div>
+								  <input name="tgl_lahir" type="text" class="required form-control pull-right settingDate" id="tgl_lahir" alt="Tanggal Lahir" title="Tanggal Lahir" value="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd">
+								</div>
+								<!-- /.input group -->
+							</div>
 							
                             <div class="form-group">
                               <label for="tlp">No Tlp</label>
@@ -200,11 +195,6 @@
                             <div class="form-group">
                               <label for="alamat">Alamat Lengkap</label>
                               <textarea name="alamat" id="alamat" class="required form-control" title="Alamat Lengkap" placeholder="*Alamat Lengkap"></textarea>
-                            </div>
-							
-							<div class="form-group">
-                              <label for="keterangan">Keterangan</label>
-                              <textarea name="keterangan" id="keterangan" class="required form-control" title="keterangan Lengkap" placeholder="*keterangan"></textarea>
                             </div>
 							
                           </div><!-- /.box-body -->
@@ -225,10 +215,10 @@
 					
 					<div class="box">
 						<div class="box-header">
-						<h3 class="box-title">Table Karyawan</h3>
+						<h3 class="box-title">Table Penduduk</h3>
 							<div class="pull-right">
 								<!-- <form action="<?=base_url();?>admin/pendaftaran-klinik-cari" method="post" class="frm-cari"> -->
-								<form action="<?=base_url();?>admin-karyawan" method="get" class="frm-cari">
+								<form action="<?=base_url();?>admin-penduduk" method="get" class="frm-cari">
 									<table>
 										<tr>
 											<!-- <td>Berdasarkan</td><td>:</td> -->
@@ -252,69 +242,63 @@
 						
 						
 						<?php
-								if(!empty($list_karyawan))
+								if(!empty($list_penduduk))
 								{
 									echo'<table width="100%" id="example2" class="table table-bordered table-hover">';
 										echo '<thead>
 	<tr>';
 													echo '<th width="5%">No</th>';
-													echo '<th width="10%">Avatar</th>';
-													echo '<th width="15%">No ID Karyawan</th>';
-													//echo '<th width="15%">NIK</th>';
-													echo '<th width="20%">Nama Karyawan</th>';
-													echo '<th width="15%">Jabatan</th>';
-													echo '<th width="20%">Aksi</th>';
+													echo '<th width="40%">Data Penduduk</th>';
+													echo '<th width="40%">Kontak Penduduk</th>';
+													echo '<th width="15%">Aksi</th>';
 										echo '</tr>
 	</thead>';
-										$list_result = $list_karyawan->result();
+										$list_result = $list_penduduk->result();
 										$no =$this->uri->segment(2,0)+1;
 										echo '<tbody>';
 										foreach($list_result as $row)
 										{
 											echo'<tr>';
-												echo'<td><input type="hidden" id="no_'.$row->id_karyawan.'" value="'.$row->id_karyawan.'" />'.$no.'</td>';
-												if ($row->avatar == "")
-												{
-													$src = base_url().'assets/global/karyawan/loading.gif';
-													echo '<td><img id="img_'.$row->id_karyawan.'"  width="100px" height="100px" style="border:1px solid #C8C8C8; padding:5px; float:left; margin-right:20px;" src="'.$src.'" /></td>';
-													
-													echo'<input type="hidden" id="avatar_url_'.$row->id_karyawan.'" value="'.$src.'" />';
-												}
-												else
-												{
-													$src = base_url().'assets/global/karyawan/'.$row->avatar;
-													echo '<td><img id="img_'.$row->id_karyawan.'"  width="100px" height="100px" style="border:1px solid #C8C8C8; padding:5px; float:left; margin-right:20px;" src="'.$src.'" /></td>';
-													
-													echo'<input type="hidden" id="avatar_url_'.$row->id_karyawan.'" value="'.$src.'" />';
-												}
-												
-												echo'<td><input type="hidden" id="no_karyawan_'.$row->id_karyawan.'" value="'.$row->no_karyawan.'" />'.$row->no_karyawan.'</td>';
-												//echo'<td><input type="hidden" id="nik_'.$row->id_karyawan.'" value="'.$row->nik_karyawan.'" />'.$row->nik_karyawan.'</td>';
-												echo'<input type="hidden" id="nik_'.$row->id_karyawan.'" value="'.$row->nik_karyawan.'" />';
-												echo'<td><input type="hidden" id="nama_'.$row->id_karyawan.'" value="'.$row->nama_karyawan.'" />'.$row->nama_karyawan.'</td>';
-												
-												echo'<td><input type="hidden" id="nama_jabatan_'.$row->id_karyawan.'" value="'.$row->nama_jabatan.'" />'.$row->nama_jabatan.'</td>';
-												echo'<input type="hidden" id="id_jabatan_'.$row->id_karyawan.'" value="'.$row->id_jabatan.'" />';
-												
-												echo'<input type="hidden" id="pnd_'.$row->id_karyawan.'" value="'.$row->pnd.'" />';
-												echo'<input type="hidden" id="tlp_'.$row->id_karyawan.'" value="'.$row->tlp.'" />';
-												echo'<input type="hidden" id="email_'.$row->id_karyawan.'" value="'.$row->email.'" />';
-												echo'<input type="hidden" id="alamat_'.$row->id_karyawan.'" value="'.$row->alamat.'" />';
-												echo'<input type="hidden" id="keterangan_'.$row->id_karyawan.'" value="'.$row->ket_karyawan.'" />';
+												echo'<td>'.$no.'</td>';
+												echo'<td>
+														<b>NIK : </b>'.$row->nik.'
+														<br/><b>Nama : </b>'.$row->nama.'
+														<br/><b>Kelamin : </b>'.$row->jenis_kelamin.'
+														<br/><b>TTL : </b>'.$row->tempat_lahir.', '.$row->tgl_lahir.'
+													</td>';
 												
 												echo'<td>
+														<b>Telpon : </b>'.$row->tlp.'
+														<br/><b>Email : </b>'.$row->email.'
+														<br/><b>Alamat : </b>'.$row->alamat.'
+													</td>';
 												
-	<button type="button" onclick="view('.$row->id_karyawan.')" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
-		view
-	</button>
+												
+												echo'<input type="hidden" id="id_penduduk_'.$no.'" value="'.$row->id_penduduk.'" />';
+												echo'<input type="hidden" id="nik_'.$no.'" value="'.$row->nik.'" />';
+												echo'<input type="hidden" id="nama_'.$no.'" value="'.$row->nama.'" />';
+												echo'<input type="hidden" id="jenis_kelamin_'.$no.'" value="'.$row->jenis_kelamin.'" />';
+												echo'<input type="hidden" id="status_menikah_'.$no.'" value="'.$row->status_menikah.'" />';
+												echo'<input type="hidden" id="tempat_lahir_'.$no.'" value="'.$row->tempat_lahir.'" />';
+												echo'<input type="hidden" id="tgl_lahir_'.$no.'" value="'.$row->tgl_lahir.'" />';
+												echo'<input type="hidden" id="tlp_'.$no.'" value="'.$row->tlp.'" />';
+												echo'<input type="hidden" id="email_'.$no.'" value="'.$row->email.'" />';
+												echo'<input type="hidden" id="alamat_'.$no.'" value="'.$row->alamat.'" />';
+												echo'<input type="hidden" id="from_db_'.$no.'" value="'.$row->from_db.'" />';
+												echo'<input type="hidden" id="kode_kantor_'.$no.'" value="'.$row->kode_kantor.'" />';
+												
+												echo'<td>
+	<a href="javascript:void(0)" class="btn btn-warning btn-sm" onclick="edit('.$no.')" title = "Ubah Data '.$row->nama.'" alt = "Ubah Data '.$row->nama.'">Edit</a>
 	
-	<a href="javascript:void(0)" class="btn btn-warning btn-sm" onclick="edit('.$row->id_karyawan.')" title = "Ubah Data '.$row->nama_karyawan.'" alt = "Ubah Data '.$row->nama_karyawan.'">Edit</a>
-	
-	<a class="confirm-btn btn btn-danger btn-sm" href="'.base_url().'admin-karyawan-hapus/'.$row->id_karyawan.'" title = "Hapus Data '.$row->nama_karyawan.'" alt = "Hapus Data '.$row->nama_karyawan.'">Hapus</a>
+	<a class="confirm-btn btn btn-danger btn-sm" href="'.base_url().'admin-penduduk-hapus/'.md5($row->id_penduduk).'" title = "Hapus Data '.$row->nama.'" alt = "Hapus Data '.$row->nama.'">Hapus</a>
 	
 	</td>';
 												
 											echo'</tr>';
+											
+											
+
+											
 											$no++;
 										}
 										
@@ -419,20 +403,31 @@
 	function edit(id)
 	{
 		alert("Mode Perubahan Data, Silahkan Cek Formulir Isian !");
-		$("#img_edit").html("<img style='border:1px solid #C8C8C8; padding:5px; float:left; margin-right:20px;' src='"+$('#avatar_url_'+id).val()+"' width='100px' height='100px'>");
-		$('input[name=stat_edit]').val($('#no_'+id).val());
-		$('input[name=no_karyawan]').val($('#no_karyawan_'+id).val());
-        $('input[name=nik]').val($('#nik_'+id).val());
-		$('input[name=cek_nik]').val($('#nik_'+id).val());
+		//$("#img_edit").html("<img style='border:1px solid #C8C8C8; padding:5px; float:left; margin-right:20px;' src='"+$('#avatar_url_'+id).val()+"' width='100px' height='100px'>");
+		
+		$('input[name=stat_edit]').val($('#id_penduduk_'+id).val());
+		$('input[name=id_penduduk]').val($('#id_penduduk_'+id).val());
+		$('input[name=nik]').val($('#nik_'+id).val());
 		$('input[name=nama]').val($('#nama_'+id).val());
-		$('input[name=pnd]').val($('#pnd_'+id).val());
+		
+		//$('input[name=jenis_kelamin]').val($('#jenis_kelamin_'+id).val());
+		document.getElementById("jenis_kelamin").options.item(0).text = $('#jenis_kelamin_'+id).val();
+		document.getElementById("jenis_kelamin").options.item(0).value = $('#jenis_kelamin_'+id).val();
+		
+		$('input[name=status_menikah]').val($('#status_menikah_'+id).val());
+		$('input[name=tempat_lahir]').val($('#tempat_lahir_'+id).val());
+		$('input[name=tgl_lahir]').val($('#tgl_lahir_'+id).val());
 		$('input[name=tlp]').val($('#tlp_'+id).val());
 		$('input[name=email]').val($('#email_'+id).val());
-		document.getElementById("alamat").value = $('#alamat_'+id).val();
-		document.getElementById("keterangan").value = $('#keterangan_'+id).val();
 		
-		document.getElementById("jabatan").options.item(0).text = $('#nama_jabatan_'+id).val();
-		document.getElementById("jabatan").options.item(0).value = $('#id_jabatan_'+id).val();
+		//$('input[name=alamat]').val($('#alamat_'+id).val());
+		document.getElementById("alamat").value = $('#alamat_'+id).val();
+		
+		/*
+		$('input[name=from_db]').val($('#from_db_'+id).val());
+		$('input[name=kode_kantor]').val($('#kode_kantor_'+id).val());
+		*/
+		
 		
 		$('#box-form').attr('class', 'box box-warning ellapsed-box box-solid');
 	}
@@ -447,12 +442,69 @@
 </script>
       
     <!-- Bootstrap 3.3.4 -->
-    <script src="<?=base_url();?>assets/adminlte/bootstrap/js/bootstrap.min.js"></script>
-    <!-- Slimscroll -->
-    <script src="<?=base_url();?>assets/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-    <!-- FastClick -->
-    <script src="<?=base_url();?>assets/adminlte/plugins/fastclick/fastclick.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="<?=base_url();?>assets/adminlte/dist/js/app.min.js"></script>
-    <!-- Page script -->
+	<script src="<?=base_url();?>assets/adminlte/bootstrap/js/bootstrap.min.js"></script>
+	<!-- Slimscroll -->
+	<script src="<?=base_url();?>assets/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+	<!-- FastClick -->
+	<script src="<?=base_url();?>assets/adminlte/plugins/fastclick/fastclick.min.js"></script>
+	<!-- AdminLTE App -->
+	<script src="<?=base_url();?>assets/adminlte/dist/js/app.min.js"></script>
+	<!-- Page script -->
+    <!-- InputMask -->
+    <script src="<?=base_url();?>/assets/adminlte/plugins/input-mask/jquery.inputmask.js"></script>
+    <script src="<?=base_url();?>/assets/adminlte/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+    <script src="<?=base_url();?>/assets/adminlte/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+	
+	<!-- bootstrap datepicker -->
+	<script src="<?=base_url();?>/assets/adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    
+    <script>
+      $(function () {
+		//Date picker
+		$('.settingDate').datepicker({
+			autoclose: true
+		});
+		
+		
+        //Initialize Select2 Elements
+        //$(".select2").select2();
+
+        //Datemask yyyy-mm-dd
+        $(".datemask_mysql").inputmask("yyyy-mm-dd", {"placeholder": "yyyy-mm-dd"});
+        //Datemask dd/mm/yyyy
+        //$("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+        //Datemask2 mm/dd/yyyy
+        //$("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
+        //TimeMask hh:mm:ss
+        $(".time_mysql").inputmask("hh:mm:ss", {"placeholder": "hh:mm:ss"});
+        //Money Euro
+        //$("[data-mask]").inputmask();
+
+        //iCheck for checkbox and radio inputs
+        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+          checkboxClass: 'icheckbox_minimal-blue',
+          radioClass: 'iradio_minimal-blue'
+        });
+        //Red color scheme for iCheck
+        $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+          checkboxClass: 'icheckbox_minimal-red',
+          radioClass: 'iradio_minimal-red'
+        });
+        //Flat red color scheme for iCheck
+        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+          checkboxClass: 'icheckbox_flat-green',
+          radioClass: 'iradio_flat-green'
+        });
+
+        //Colorpicker
+        $(".my-colorpicker1").colorpicker();
+        //color picker with addon
+        $(".my-colorpicker2").colorpicker();
+
+        //Timepicker
+        $(".timepicker").timepicker({
+          showInputs: false
+        });
+      });
+    </script>
     

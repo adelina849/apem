@@ -162,7 +162,7 @@
 					<!-- CEK AKSES TAHAPAN PROSES -->
 					
 					<!-- CEK AKSES DATA PENDUDUK -->
-							<li id="input-data-penduduk" class="treeview">
+							<li id="input-data-pendduk" class="treeview">
 							  <a href="<?=base_url()?>admin-penduduk">
 								<i class="fa fa-users"></i> <span>Data Penduduk</span>
 							  </a>

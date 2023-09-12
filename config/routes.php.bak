@@ -112,14 +112,14 @@ $route['translate_uri_dashes'] = FALSE;
 //TAHAPAN
 
 //DATA PENDUDUK
-	$route['admin-penduduk'] = "C_admin_penduduk/index";
-	$route['admin-penduduk/(:any)'] = 'C_admin_penduduk/index';
+	$route['admin-penduduk'] = "C_admin_tahapan/index";
+	$route['admin-penduduk/(:any)'] = 'C_admin_tahapan/index';
 
-	$route['admin-penduduk-simpan'] = "C_admin_penduduk/simpan";
-	$route['admin-penduduk-simpan/(:any)'] = 'C_admin_penduduk/simpan';
+	$route['admin-penduduk-simpan'] = "C_admin_tahapan/simpan";
+	$route['admin-penduduk-simpan/(:any)'] = 'C_admin_tahapan/simpan';
 
-	$route['admin-penduduk-hapus'] = "C_admin_penduduk/hapus";
-	$route['admin-penduduk-hapus/(:any)'] = 'C_admin_penduduk/hapus';
+	$route['admin-penduduk-hapus'] = "C_admin_tahapan/hapus";
+	$route['admin-penduduk-hapus/(:any)'] = 'C_admin_tahapan/hapus';
 //DATA PENDUDUK
 
 

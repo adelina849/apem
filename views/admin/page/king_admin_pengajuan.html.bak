@@ -75,13 +75,15 @@
                         { 
                         	//if(data==0 || ($("#nik").val() == $("#cek_nik").val()))
                             if(data=='BERHASIL')
-                        	{
-                        	  	$("#pesan_nik").html('<img src="<?=base_url();?>assets/global/true.png"> NIK Penduduk Telah terdaftar');
+                        	  {
+                        	  	
                                 $("#btnsimpan").attr("disabled", false);
                             }
                               else
                               {
                               	$("#pesan_nik").html('<img src="<?=base_url();?>assets/global/salah.png"> NIK Penduduk Belum terdaftar');
+								
+								$("#pesan_nik").html('<img src="<?=base_url();?>assets/global/true.png"> NIK Penduduk Telah terdaftar');
 								
                                 $("#btnsimpan").attr("disabled", true);
                               }

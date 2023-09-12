@@ -112,7 +112,7 @@
           </h1>
           <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-			<li><a href="#"><i class="fa fa-dashboard"></i> Data Dasar</a></li>
+			<li><a href="#"><i class="fa fa-dashboard"></i> Karyawan</a></li>
             <li class="active">Karyawan</li>
             
           </ol>
