@@ -8,7 +8,9 @@
 			$this->load->helper(array('captcha','array'));
             $this->load->library(array('form_validation'));
             $this->config->load('cap');
+			$this->load->model(array('M_dash','M_penduduk'));
 		}
+		
 		
 		function index()
 		{
@@ -84,7 +86,165 @@
 				////}
 			////}
 		}
+		
+		function login_warga()
+		{
+			$this->load->view('admin/login_warga.html');
+		}
+		
+		function cek_nik()
+		{
+			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."'";
+			$cek_nik = $this->M_dash->view_query_general($query_cek_nik);
+			if(!empty($cek_nik))
+			{
+				$cek_nik = $cek_nik->row();
+				//echo $cek_nik->nama;
+				
+				$query_list_layanan = "SELECT * FROM tb_jenis_naskah ORDER BY nama_jenis_naskah ASC";
+				$list_layanan = $this->M_dash->view_query_general($query_list_layanan);
+				if(!empty($list_layanan))
+				{
+					echo'<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
+						echo'<thead>';
+						echo'<tr>';
+													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;">No</th>';
+													echo '<th width="35%" style="background-color:red;color:white;font-weight:bold;">NAMA PELAYANAN</th>';
+													echo '<th width="45%" style="background-color:red;color:white;font-weight:bold;">PERSYARATAN</th>';
+													echo '<th width="15%" style="background-color:red;color:white;font-weight:bold;">Aksi</th>';
+						echo'</tr>';
+						echo'</thead>';
+						
+						$list_result = $list_layanan->result();
+						$no = 1;
+						echo '<tbody>';
+						foreach($list_result as $row)
+						{
+							echo'<tr>';
+								echo'<td>'.$no.'</td>';
+								echo'<td>'.$row->nama_jenis_naskah.'</td>';
+								echo'<td>'.
+											str_replace('6.','<br/>6.',
+												str_replace('5.','<br/>5.',
+													str_replace('4.','<br/>4.',
+														str_replace('3.','<br/>3.',
+															str_replace('2.','<br/>2.',$row->syarat_jenis_naskah)
+														)
+													)
+												)
+											)
+										.'</td>';
+							
+								echo'<input type="hidden" id="id_jenis_naskah_'.$no.'" value="'.$row->id_jenis_naskah.'" />';
+								echo'<input type="hidden" id="nama_jenis_naskah_'.$no.'" value="'.$row->nama_jenis_naskah.'" />';
+								echo'<input type="hidden" id="syarat_jenis_naskah_'.$no.'" value="'.$row->syarat_jenis_naskah.'" />';
+								echo'<input type="hidden" id="ket_jenis_naskah_'.$no.'" value="'.$row->ket_jenis_naskah.'" />';
+								
+								echo'<td>
+
+<a href="javascript:void(0)" class="btn btn-success btn-sm btn-flat btn-block" onclick="edit('.$no.')" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">PILIH</a>
+								
+								</td>';
+								
+								
+							echo'</tr>';
+							$no++;
+						}
+						echo '</tbody>';
+					echo'</table>';
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
         
+		function daftar_warga()
+		{
+			echo'<h2><center>FORM PENDAFTARAN</center></h2>';
+			echo'<form role="form" class="frm-input" enctype="multipart/form-data">';
+			echo'<div class="form-group">
+				  <label for="nik">NIK</label>
+				  <input type="text" id="nik" name="nik"  maxlength="35" class="required form-control" size="35" alt="NIK" title="NIK" placeholder="*NIK" onchange="cek_nik_pas_daftar()"/><span id="pesan"></span>
+				</div>';
+			echo'<div class="form-group">
+				  <label for="nama">Nama Karyawan</label>
+				  <input type="text" id="nama" name="nama"  maxlength="35" class="required form-control" size="35" alt="nama" title="Nama Karyawan" placeholder="*Nama"/>
+				</div>';
+			echo'<div class="form-group">
+				  <label for="jenis_kelamin">Jenis Kelamin</label>
+					<select name="jenis_kelamin" id="jenis_kelamin" class="required form-control select2" title="Jenis Kelamin">
+						<option value="">--Pilih Kelamin--</option>
+						<option value="PRIA">PRIA</option>
+						<option value="WANITA">WANITA</option>
+					</select>
+				</div>';
+			echo'<div class="form-group">
+				  <label for="tempat_lahir">Tempat Lahir</label>
+				  <input type="text" id="tempat_lahir" name="tempat_lahir"  maxlength="35" class="required form-control" size="35" alt="Tempat Lahir" title="Tempat Lahir" placeholder="*Tempat Lahir"/>
+				</div>';
+			echo'<div class="form-group">
+					<label>Tanggal Lahir</label>
+					<div class="input-group date">
+					  <div class="input-group-addon">
+						<i class="fa fa-calendar"></i>
+					  </div>
+					  <input name="tgl_lahir" type="text" class="required form-control pull-right settingDate" id="tgl_lahir" alt="Tanggal Lahir" title="Tanggal Lahir" value="'.date("Y-m-d").'" data-date-format="yyyy-mm-dd">
+					</div>
+					<!-- /.input group -->
+				</div>';
+			echo'<div class="form-group">
+				  <label for="tlp">No Tlp</label>
+				  <input type="text" id="tlp" name="tlp"  maxlength="35" onkeypress="return isNumberKey(event)" class="required form-control" size="35" alt="tlp" title="No Telpon" placeholder="*No Tlp"/>
+				</div>';
+			echo'<div class="form-group">
+				  <input type="hidden" id="cek_email" name="cek_email" />
+				  <label for="email">Email</label>
+				  <input type="text" id="email" name="email"  maxlength="35" class="email form-control" size="35" alt="tlp" title="Email" placeholder="Email"/> <span id="pesan2"></span>
+				</div>';
+			echo'<div class="form-group">
+				  <label for="alamat">Alamat Lengkap</label>
+				  <textarea name="alamat" id="alamat" class="required form-control" title="Alamat Lengkap" placeholder="*Alamat Lengkap"></textarea>
+				</div>';
+			echo'</form>';
+			echo'
+			<div class="col-xs-12">
+              <button type="button" id="btn_lanjut" class="btn-warga btn btn-success btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik()">SIMPAN DATA</button>
+            </div>
+			';
+		}
+		
+		function simpan_data_warga()
+		{
+			
+			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			$nama = htmlentities($_POST['nama'], ENT_QUOTES, 'UTF-8');
+			$jenis_kelamin = htmlentities($_POST['jenis_kelamin'], ENT_QUOTES, 'UTF-8');
+			$tempat_lahir = htmlentities($_POST['tempat_lahir'], ENT_QUOTES, 'UTF-8');
+			$tgl_lahir = htmlentities($_POST['tgl_lahir'], ENT_QUOTES, 'UTF-8');
+			$tlp = htmlentities($_POST['tlp'], ENT_QUOTES, 'UTF-8');
+			$email = htmlentities($_POST['email'], ENT_QUOTES, 'UTF-8');
+			$alamat = htmlentities($_POST['alamat'], ENT_QUOTES, 'UTF-8');
+			
+			$this->M_penduduk->simpan
+			(
+				$nik
+				,$nama
+				,$jenis_kelamin
+				,'' //,$status_menikah
+				,$tempat_lahir
+				,$tgl_lahir
+				,$tlp
+				,$email
+				,$alamat
+				,'ADMIN' //$from_db
+				,'KABCJR'
+			);
+			echo'BERHASIL';
+		}
+		
         public function cek_login()
         {
             $user = htmlentities($_POST['user'], ENT_QUOTES, 'UTF-8');

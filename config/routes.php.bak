@@ -65,6 +65,15 @@ $route['translate_uri_dashes'] = FALSE;
 	
 	$route['admin-logout'] = "C_admin_login/logout";
 	$route['admin-logout/(:any)'] = 'C_admin_login/logout';
+	
+	$route['warga-pelayanan'] = "C_admin_login/login_warga";
+	$route['warga-pelayanan/(:any)'] = 'C_admin_login/login_warga';
+	
+	$route['warga-cek-nik'] = "C_admin_login/cek_nik";
+	$route['warga-cek-nik/(:any)'] = 'C_admin_login/cek_nik';
+	
+	$route['warga-daftar'] = "C_admin_login/daftar_warga";
+	$route['warga-daftar/(:any)'] = 'C_admin_login/daftar_warga';
 //LOGIN
 
 //JABATAN KARYAWAN
@@ -112,14 +121,14 @@ $route['translate_uri_dashes'] = FALSE;
 //TAHAPAN
 
 //DATA PENDUDUK
-	$route['admin-penduduk'] = "C_admin_tahapan/index";
-	$route['admin-penduduk/(:any)'] = 'C_admin_tahapan/index';
+	$route['admin-penduduk'] = "C_admin_penduduk/index";
+	$route['admin-penduduk/(:any)'] = 'C_admin_penduduk/index';
 
-	$route['admin-penduduk-simpan'] = "C_admin_tahapan/simpan";
-	$route['admin-penduduk-simpan/(:any)'] = 'C_admin_tahapan/simpan';
+	$route['admin-penduduk-simpan'] = "C_admin_penduduk/simpan";
+	$route['admin-penduduk-simpan/(:any)'] = 'C_admin_penduduk/simpan';
 
-	$route['admin-penduduk-hapus'] = "C_admin_tahapan/hapus";
-	$route['admin-penduduk-hapus/(:any)'] = 'C_admin_tahapan/hapus';
+	$route['admin-penduduk-hapus'] = "C_admin_penduduk/hapus";
+	$route['admin-penduduk-hapus/(:any)'] = 'C_admin_penduduk/hapus';
 //DATA PENDUDUK
 
 

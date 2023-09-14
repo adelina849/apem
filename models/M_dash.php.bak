@@ -20,11 +20,6 @@
 			}
 		}
 		
-		function exec_query_general($query)
-		{
-			$query = $this->db->query($query);
-		}
-		
 		function getTransaksiJual()
 		{
 			$query = $this->db->query('SELECT COUNT(A.id_h_penjualan) AS TRANSAKSI_PENJUALAN FROM tb_h_penjualan AS A

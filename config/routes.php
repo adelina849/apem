@@ -65,6 +65,18 @@ $route['translate_uri_dashes'] = FALSE;
 	
 	$route['admin-logout'] = "C_admin_login/logout";
 	$route['admin-logout/(:any)'] = 'C_admin_login/logout';
+	
+	$route['warga-pelayanan'] = "C_admin_login/login_warga";
+	$route['warga-pelayanan/(:any)'] = 'C_admin_login/login_warga';
+	
+	$route['warga-cek-nik'] = "C_admin_login/cek_nik";
+	$route['warga-cek-nik/(:any)'] = 'C_admin_login/cek_nik';
+	
+	$route['warga-daftar'] = "C_admin_login/daftar_warga";
+	$route['warga-daftar/(:any)'] = 'C_admin_login/daftar_warga';
+	
+	$route['warga-daftar-simpan'] = "C_admin_login/simpan_data_warga";
+	$route['warga-daftar-simpan/(:any)'] = 'C_admin_login/simpan_data_warga';
 //LOGIN
 
 //JABATAN KARYAWAN
