@@ -73,7 +73,7 @@
       <div class="login-box-body">
 		
 		<center style="margin-top:-5%;">
-		<img src="<?php echo base_url('assets/global/images/logo.png');?>" style="width:100px;height:100px;">
+		<img src="<?php echo base_url('assets/global/images/cjrjago200.png');?>" style="width:100px;height:100px;">
         <!-- <p class="login-box-msg"><h3>ANJUNGAN PATEN MANDIRI</h3></p> -->
 		<h3 style="text-shadow: 2px 1px 1px grey;color:black;">ANJUNGAN PATEN MANDIRI</h3>
 		<h3 style="margin-top:-2%;text-shadow: 2px 1px 1px grey;color:black;">KECAMATAN CIBEBER</h3>

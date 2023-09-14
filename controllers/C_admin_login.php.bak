@@ -10,7 +10,6 @@
             $this->config->load('cap');
 		}
 		
-		
 		function index()
 		{
 			// $this->auto_remove_captcha();
@@ -84,11 +83,6 @@
 				$this->load->view('admin/login.html');
 				////}
 			////}
-		}
-		
-		function login_warga()
-		{
-			$this->load->view('admin/login_warga.html');
 		}
         
         public function cek_login()

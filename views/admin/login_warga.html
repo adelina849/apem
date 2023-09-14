@@ -59,34 +59,54 @@
 		}
     </style>
 	
+	<style>	
+		@media (max-width:960px) 
+		{
+			h3 
+			{
+				font-size:8px;
+			}
+			
+			.btn-warga 
+			{
+				font-size:8px;
+			}
+		}
+	</style>
+	
 	
   </head>
-  <body id = "bg" class="login-page" style="background-image: linear-gradient(red, white);background-image:url(<?php echo base_url();?>assets/global/images/pemda.jpg)">
+  <body id = "bg" class="login-page" style="background-repeat: repeat-y;background-image: linear-gradient(red, white);background-image:url(<?php echo base_url();?>assets/global/images/pemda.jpg)">
 	<center>
 	<!-- <h1>PATEN (Pelayanan Administrasi Terpadu Kecamatan)</h1> -->
+	<!-- <img src="<?php echo base_url('assets/global/images/banner.png');?>" style="width:100%;"> -->
+	<img src="<?php echo base_url('assets/global/images/bupati_cjr.png');?>" style="width:25%;float:left;">
+	<img src="<?php echo base_url('assets/global/images/cam_sam.png');?>" style="width:25%;float:right;">
 	</center>
-    <div class="login-box" style="opacity:0.8;">
+    <div class="login-box" style="opacity:0.8;width:50%;">
       <div class="login-logo">
-        <!-- <img src="<?php echo base_url('assets/global/images/cjrjago200.png');?>" style="width:100px;height:100px;"> -->
+        <!-- <img src="<?php echo base_url('assets/global/images/logo.png');?>" style="width:100px;height:100px;"> -->
         <!--<img src="<?php echo base_url('direktori/image/textlogo.png');?>" style="width:100%;height:30px;">-->
       </div><!-- /.login-logo -->
       <div class="login-box-body">
 		
-		<center style="margin-top:-5%;">
-		<img src="<?php echo base_url('assets/global/images/logo.png');?>" style="width:100px;height:100px;">
+		<!-- <center style="margin-top:-5%;"> -->
+		<center style="margin-top:0%;">
+		<img src="<?php echo base_url('assets/global/images/logo.png');?>" style="width:25%;">
         <!-- <p class="login-box-msg"><h3>ANJUNGAN PATEN MANDIRI</h3></p> -->
-		<h3 style="text-shadow: 2px 1px 1px grey;color:black;">ANJUNGAN PATEN MANDIRI</h3>
-		<h3 style="margin-top:-2%;text-shadow: 2px 1px 1px grey;color:black;">KECAMATAN CIBEBER</h3>
+		<h3 style="text-shadow: 1px 1px 1px white;color:black;">ANJUNGAN PATEN MANDIRI (APEM)<br/>KECAMATAN CIBEBER</h3>
+		<h3 style="margin-top:-2%;text-shadow: 1px 1px 1px white;color:black;">DAN</h3>
+		<h3 style="margin-top:-2%;text-shadow: 1px 1px 1px white;color:black;">SISTEM PENAGIHAN PAJAK KENDARAAN BERMOTOR TERINTEGRITAS PELAYANAN TERPADU DI KECAMATAN<br/>(SI GANTENG DT)</h3>
 		</center>
-        <form action="<?=base_url();?>admin-cek-login" method="post">
+		
+        <!-- <form method="post" style="border:1px black dashed;padding:2%;"> -->
+		<div style="border:1px grey dashed;padding:2%;box-shadow: 2px 2px 2px black;">
           <div class="form-group has-feedback">
-            <input type="text" name="user" class="form-control" placeholder="Username" value="<?php //echo md5('adelina'); ?>">
+			<label style="color:black;text-align:Center;width:100%;">MASUKAN NIK </label>
+            <input type="text" name="user" class="form-control" placeholder="MASUKAN NIK ANDA...." autocomplete="off" />
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
           </div>
-          <div class="form-group has-feedback">
-            <input type="password" name="pass" class="form-control" placeholder="Password">
-            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-          </div>
+          
           <?php
                 //if (!empty($captcha_img))
                 //{
@@ -105,19 +125,19 @@
               <!-- </div> -->
             <!-- </div> -->
             <div class="col-xs-12">
-              <button type="submit" class="btn btn-danger btn-block btn-flat" style="border:1px dotted black;">Sign In</button>
+              <button type="button" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik()">CEK TAGIHAN DAN MULAI PELAYAN</button>
+			  
+              <button type="button" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik()">DAFTAR</button>
 			  <br/>
             </div>
-			<div class="col-xs-12">
-				<a href="<?php echo base_url();?>admin-pengajuan-dokumen?from=penduduk" class="btn btn-danger btn-block btn-flat" style="border:1px dotted black;">Buat Pengajuan</a>
-			</div>
-			<div class="col-xs-12">
-				<a href="<?php echo base_url();?>cek-barcode" class="btn btn-danger btn-block btn-flat" style="border:1px dotted black;">Cek Status Pengajuan</a>
-			</div>
+			<!-- <div class="col-xs-12"> -->
+				<!-- <a href="<?php echo base_url();?>cek-barcode" class="btn btn-primary btn-block btn-flat">Cek Status Pengajuan</a> -->
+			<!-- </div> -->
 			
           </div>
 			
-        </form>
+        <!-- </form> -->
+		</div>
 
         <!-- <a href="#">Lupa Password ?</a><br> -->
         <!-- <a href="register.html" class="text-center">Register a new membership</a> -->
@@ -140,5 +160,13 @@
         });
       });
     </script>
+	
+	<script type='text/javascript'>
+		function cek_nik()
+		{
+			alert("GOOD");
+		}
+	</script>
+	
   </body>
 </html>
