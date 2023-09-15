@@ -115,8 +115,8 @@
 	<center>
 	<!-- <h1>PATEN (Pelayanan Administrasi Terpadu Kecamatan)</h1> -->
 	<!-- <img src="<?php echo base_url('assets/global/images/banner.png');?>" style="width:100%;"> -->
-	<img src="<?php echo base_url('assets/global/images/bupati_cjr.png');?>" style="width:25%;float:left;">
-	<img src="<?php echo base_url('assets/global/images/cam_sam.png');?>" style="width:25%;float:right;">
+	<img src="<?php echo base_url('assets/global/images/bupati_cjr.png');?>" style="width:25%;float:left;position:fixed;">
+	<img src="<?php echo base_url('assets/global/images/cam_sam.png');?>" style="width:25%;float:right;position:fixed;">
 	</center>
     <!-- <div class="login-box" style="opacity:0.8;width:50%;"> -->
 	<div class="login-box" style="opacity:1;width:50%;">
@@ -306,7 +306,7 @@
 							//do something special
 							//$("#form_utama").html(data);
 							location.reload();
-						}, 2000);
+						}, 4000);
 						
 					}
 					else

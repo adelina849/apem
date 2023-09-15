@@ -74,6 +74,9 @@ $route['translate_uri_dashes'] = FALSE;
 	
 	$route['warga-daftar'] = "C_admin_login/daftar_warga";
 	$route['warga-daftar/(:any)'] = 'C_admin_login/daftar_warga';
+	
+	$route['warga-daftar-simpan'] = "C_admin_login/simpan_data_warga";
+	$route['warga-daftar-simpan/(:any)'] = 'C_admin_login/simpan_data_warga';
 //LOGIN
 
 //JABATAN KARYAWAN
