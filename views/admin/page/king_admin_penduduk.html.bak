@@ -75,7 +75,7 @@
                         	if(data==0 || ($("#nik").val() == $("#cek_nik").val()))
                             //if(data==0)
                         	  {
-                        	  	$("#pesan").html('<img src="<?=base_url();?>assets/global/true.png">');
+                        	  	$("#pesan").html('<img src="<?=base_url();?>assets/global/true.png"> NIK Penduduk Belum terdaftar');
                                 $("#nik").css('border', '3px #090 solid');
                                 $("#nama").attr("disabled", false);
 								$("#tlp").attr("disabled", false);

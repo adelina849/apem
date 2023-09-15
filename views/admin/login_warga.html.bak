@@ -221,7 +221,7 @@
 			var r = confirm("Apakah anda yakin akan menghapus pengajuan untuk "+$("#no_pengajuan_"+idx).val()+" ?");
 			if (r == true) 
 			{
-				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-pengajuan-history/"
+				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-pengajuan-hapus/"
 				, data: 
 						{
 							id_pengajuan:id_pengajuan
@@ -616,7 +616,7 @@
 					else
 					{
 						//alert("GAGAL");
-						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> NIK Tidak Ditemukan, Silahan lakukan pendaftaran data warga !');
+						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> NIK Tidak Ditemukan, Silahkan lakukan pendaftaran data warga !');
 						$("#nik").css('border', '3px #C33 solid');
 						//$("#btn_lanjut").attr("disabled", true);
 					}

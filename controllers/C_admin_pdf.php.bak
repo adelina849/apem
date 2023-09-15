@@ -8,7 +8,7 @@ class C_admin_pdf extends CI_Controller {
 		// Your own constructor code
 		$this->load->library('Fpdf');
 		//$this->load->model(array('M_h_pendaftaran','M_kontes','M_d_pendaftaran','M_member','M_penutupan'));
-		$this->load->model(array('M_pengajuan'));
+		$this->load->model(array('M_pengajuan','M_dash'));
 	}
 	
 	
@@ -56,12 +56,25 @@ class C_admin_pdf extends CI_Controller {
 	public function print_faktur_pengajuan()
 	{
 		$no_pengajuan = $_GET['pengajuan'];
+		echo $no_pengajuan;
 		// echo $id_member;
 		//DATA PENGAJUAN
-			$data_pengajaun = $this->M_pengajuan->get_pengajuan('A.no_pengajuan',$no_pengajuan);
+			//$data_pengajaun = $this->M_pengajuan->get_pengajuan('A.no_pengajuan',$no_pengajuan);
+			$query = "
+						SELECT 
+							A.* 
+							,COALESCE(B.nama_jenis_naskah,'') AS nama_jenis_naskah
+						FROM tb_pengajuan AS A
+						LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
+						WHERE no_pengajuan = '".$no_pengajuan."'
+						;
+					";
+			$data_pengajaun = $this->M_dash->view_query_general($query);
 		//DATA PENGAJUAN
+		
 		if(!empty($data_pengajaun))
 		{
+		
 			$data_pengajaun = $data_pengajaun->row();
 			
 			
@@ -89,7 +102,7 @@ class C_admin_pdf extends CI_Controller {
 				//$this->fpdf->Cell(85,5,'KELURAHAN BOJONGHERANG',0,1,'C',false);
 				
 				$this->fpdf->Ln(3);
-				$this->fpdf->Line(5,23,90,23);
+				$this->fpdf->Line(5,23,95,23);
 				
 				$this->fpdf->SetFont('Arial','',6);
 				$this->fpdf->SetY(22); //Set posisi top
@@ -130,7 +143,7 @@ class C_admin_pdf extends CI_Controller {
 				
 				$this->fpdf->SetFont('Arial','',7);
 				$this->fpdf->Ln(3);
-				$this->fpdf->Line(5,89,90,89);
+				$this->fpdf->Line(5,89,95,89);
 				
 				$this->fpdf->Cell(75,3,'Simpan slip ini sebagai bukti pengajuan dokumen',0,1,'C',false);
 				$this->fpdf->Cell(75,3,'untuk melihat status pengajuan, silahkan kunjungi halaman',0,1,'C',false);
@@ -141,11 +154,13 @@ class C_admin_pdf extends CI_Controller {
 			//HEADER
 			
 			$this->fpdf->Output($no_pengajuan.'.pdf','D');
+		
 		}
 		else
 		{
 			header('Location: '.base_url().'admin-member');
 		}
+		
 	}
 	
 	// public function print_faktur_pengajuan()

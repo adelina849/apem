@@ -200,7 +200,7 @@
 										,COALESCE(B.nama_jenis_naskah,'') AS nama_jenis_naskah
 									FROM tb_pengajuan AS A
 									LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
-									WHERE ".$berdasarkan." = '".$cari."'
+									WHERE ".$berdasarkan." = '".$cari."' AND A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 									;
 									
 									");

@@ -216,8 +216,8 @@
 				  <input type="text" id="nik" name="nik"  maxlength="35" class="required form-control" size="35" alt="NIK" title="NIK" placeholder="*NIK" onchange="cek_nik_pas_daftar()" value="'.$nik.'"/><span id="pesan"></span>
 				</div>';
 			echo'<div class="form-group">
-				  <label for="nama">Nama Karyawan</label>
-				  <input type="text" id="nama" name="nama"  maxlength="35" class="required form-control" size="35" alt="nama" title="Nama Karyawan" placeholder="*Nama" value="'.$nama.'"/>
+				  <label for="nama">Nama Lengkap</label>
+				  <input type="text" id="nama" name="nama"  maxlength="35" class="required form-control" size="35" alt="nama" title="Nama Lengkap" placeholder="*Nama" value="'.$nama.'"/>
 				</div>';
 			echo'<div class="form-group">
 				  <label for="jenis_kelamin">Jenis Kelamin</label>
@@ -666,9 +666,9 @@
 
 <a href="javascript:void(0)" class="btn btn-danger btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="hapus_pengajuan(this)" title = "Hapus Data '.$row->nama_jenis_naskah.'" alt = "Hapus Data '.$row->nama_jenis_naskah.'">HAPUS</a>
 
-<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="cetak_qr(this)" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'">CETAK</a>
+<a href="'.base_url().'admin-cetak-faktur?pengajuan='.$row->no_pengajuan.'" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'">CETAK</a>
 
-<a href="'.base_url().'cek-barcode" class="btn btn-default btn-sm btn-flat btn-block" id="" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'">PROGRES</a>
+<a href="'.base_url().'cek-barcode?no_pengajuan='.$row->no_pengajuan.'" class="btn btn-default btn-sm btn-flat btn-block" id="" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'">PROGRES</a>
 							
 							</td>';
 							
