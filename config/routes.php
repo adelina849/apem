@@ -72,11 +72,25 @@ $route['translate_uri_dashes'] = FALSE;
 	$route['warga-cek-nik'] = "C_admin_login/cek_nik";
 	$route['warga-cek-nik/(:any)'] = 'C_admin_login/cek_nik';
 	
-	$route['warga-daftar'] = "C_admin_login/daftar_warga";
-	$route['warga-daftar/(:any)'] = 'C_admin_login/daftar_warga';
+	$route['warga-daftar'] = "C_admin_login/view_daftar_warga";
+	$route['warga-daftar/(:any)'] = 'C_admin_login/view_daftar_warga';
 	
 	$route['warga-daftar-simpan'] = "C_admin_login/simpan_data_warga";
 	$route['warga-daftar-simpan/(:any)'] = 'C_admin_login/simpan_data_warga';
+	
+	$route['warga-pengajuan-view'] = "C_admin_login/view_pengajuan";
+	$route['warga-pengajuan-view/(:any)'] = 'C_admin_login/view_pengajuan';
+	
+	$route['warga-pengajuan-simpan'] = "C_admin_login/simpan_pengajuan_pelayanan";
+	$route['warga-pengajuan-simpan/(:any)'] = 'C_admin_login/simpan_pengajuan_pelayanan';
+	
+	$route['warga-pengajuan-history'] = "C_admin_login/view_history_pengajuan";
+	$route['warga-pengajuan-history/(:any)'] = 'C_admin_login/view_history_pengajuan';
+	
+	$route['warga-pengajuan-hapus'] = "C_admin_login/hapus_pengajuan";
+	$route['warga-pengajuan-hapus/(:any)'] = 'C_admin_login/hapus_pengajuan';
+	
+	
 //LOGIN
 
 //JABATAN KARYAWAN

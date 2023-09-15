@@ -11,7 +11,6 @@
 			error_reporting(0);
 			$this->load->library("session");
 			$this->load->helper('url');
-			$this->load->model(array('M_dash'));
 		}
 		
 		function index()

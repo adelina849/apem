@@ -89,7 +89,7 @@ class C_admin_pdf extends CI_Controller {
 				//$this->fpdf->Cell(85,5,'KELURAHAN BOJONGHERANG',0,1,'C',false);
 				
 				$this->fpdf->Ln(3);
-				$this->fpdf->Line(5,23,95,23);
+				$this->fpdf->Line(5,23,90,23);
 				
 				$this->fpdf->SetFont('Arial','',6);
 				$this->fpdf->SetY(22); //Set posisi top
@@ -130,7 +130,7 @@ class C_admin_pdf extends CI_Controller {
 				
 				$this->fpdf->SetFont('Arial','',7);
 				$this->fpdf->Ln(3);
-				$this->fpdf->Line(5,89,95,89);
+				$this->fpdf->Line(5,89,90,89);
 				
 				$this->fpdf->Cell(75,3,'Simpan slip ini sebagai bukti pengajuan dokumen',0,1,'C',false);
 				$this->fpdf->Cell(75,3,'untuk melihat status pengajuan, silahkan kunjungi halaman',0,1,'C',false);

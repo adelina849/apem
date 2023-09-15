@@ -239,13 +239,11 @@
 													else
 													{
 														echo '<td style="text-align:center;">
-																<center>
 																<a href="'.$src.'" target="_blank">
-																	
-																	<img id="img_'.$row->id_images.'"  width="100px" height="100px" style="border:1px solid #C8C8C8; padding:5px;" src="'.$src.'" />
-																	
+																	<center>
+																	<img id="img_'.$row->id_images.'"  width="100px" height="100px" style="border:1px solid #C8C8C8; padding:5px; float:left; margin-right:20px;" src="'.$src.'" />
+																	</center>
 																</a>
-																</center>
 															</td>';
 													}
 													

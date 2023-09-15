@@ -111,7 +111,8 @@
 	
 	
   </head>
-  <body id = "bg" class="login-page" style="background-repeat: repeat-y;background-image: linear-gradient(red, white);background-image:url(<?php echo base_url();?>assets/global/images/pemda.jpg)">
+  <!-- <body id = "bg" class="login-page" style="background-repeat: repeat-y;background-image: linear-gradient(red, white);background-image:url(<?php echo base_url();?>assets/global/images/pemda.jpg)"> -->
+  <body id = "bg" class="login-page" style="background-color:#c30507;background-image: linear-gradient(red, white);background-image:url(<?php echo base_url();?>assets/global/images/pemda.jpg)">
 	<center>
 	<!-- <h1>PATEN (Pelayanan Administrasi Terpadu Kecamatan)</h1> -->
 	<!-- <img src="<?php echo base_url('assets/global/images/banner.png');?>" style="width:100%;"> -->
@@ -133,6 +134,7 @@
 		<h3 style="text-shadow: 1px 1px 1px white;color:black;">ANJUNGAN PATEN MANDIRI (APEM)<br/>KECAMATAN CIBEBER</h3>
 		<h3 style="margin-top:-2%;text-shadow: 1px 1px 1px white;color:black;">DAN</h3>
 		<h3 style="margin-top:-2%;text-shadow: 1px 1px 1px white;color:black;">SISTEM PENAGIHAN PAJAK KENDARAAN BERMOTOR TERINTEGRITAS PELAYANAN TERPADU DI KECAMATAN<br/>(SI GANTENG DT)</h3>
+		<input type="hidden" name="nik_ori" id="nik_ori" class="form-control" placeholder="MASUKAN NIK ANDA...." autocomplete="off" />
 		</center>
 		
         <!-- <form method="post" style="border:1px black dashed;padding:2%;"> -->
@@ -167,7 +169,7 @@
             <div class="col-xs-12">
               <button type="button" id="btn_lanjut" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik()">CEK TAGIHAN DAN MULAI PELAYANAN</button>
 			  
-              <button type="button" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="view_daftar()">DAFTAR</button>
+              <button type="button" id="btn_daftar" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="view_daftar()">DAFTAR ATAU UBAH DATA WARGA</button>
 			  
 			  <button type="button" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="location.reload();">ULANGI</button>
 			  <br/>
@@ -190,7 +192,7 @@
     <!-- jQuery 2.1.4 -->
     <script src="<?=base_url();?>assets/adminlte/plugins/jQuery/jQuery-2.1.4.min.js"></script>
     <!-- Bootstrap 3.3.4 -->
-    <script src="<?=base_url();?>assets/adminlte/bootstrap/js/bootstrap.min.js"></script>
+    <!-- <script src="<?=base_url();?>assets/adminlte/bootstrap/js/bootstrap.min.js"></script> -->
     <!-- iCheck -->
     <script src="<?=base_url();?>assets/adminlte/plugins/iCheck/icheck.min.js"></script>
     <script>
@@ -204,6 +206,221 @@
     </script>
 	
 	<script type='text/javascript'>
+		function hapus_pengajuan(evt)
+		{
+			var arrStrId = evt.id;
+			var arrIdSplit = arrStrId.split("-");
+			
+			var jenis = arrIdSplit[0];
+			var id_jenis_naskah = arrIdSplit[1];
+			var idx = arrIdSplit[2];
+			var nik = $("#nik_ori").val();
+			var id_pengajuan = $("#id_pengajuan_"+idx).val();
+			var no_pengajuan = $("#no_pengajuan_"+idx).val();
+			
+			var r = confirm("Apakah anda yakin akan menghapus pengajuan untuk "+$("#no_pengajuan_"+idx).val()+" ?");
+			if (r == true) 
+			{
+				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-pengajuan-hapus/"
+				, data: 
+						{
+							id_pengajuan:id_pengajuan
+						}
+				, cache: false
+				, success:function(data)
+				{
+					 //alert(data);
+					if(data=='BERHASIL')
+					//if(data != false)
+					{
+						location.reload();
+					}
+					else
+					{
+						alert("TERJADI KESALAHAN JARINGAN/INTERNET");
+					}
+				} 
+				});
+			}
+		}
+		
+		function cetak_qr(evt)
+		{
+			var arrStrId = evt.id;
+			var arrIdSplit = arrStrId.split("-");
+			
+			var jenis = arrIdSplit[0];
+			var id_jenis_naskah = arrIdSplit[1];
+			var idx = arrIdSplit[2];
+			var nik = $("#nik_ori").val();
+			var no_pengajuan = $("#no_pengajuan_"+idx).val();
+			
+			var href_dir = "<?php echo base_url();?>admin-cetak-faktur?pengajuan="+no_pengajuan;
+			//window.open(href, 'popup', 'height=500,width=300,toolbar=no');
+			
+			//window.location.href = 'uploads/file.doc';
+			window.location.href = href_dir;
+		}
+		
+		function view_history_ajuan(evt)
+		{
+			var arrStrId = evt.id;
+			var arrIdSplit = arrStrId.split("-");
+			
+			var jenis = arrIdSplit[0];
+			var id_jenis_naskah = arrIdSplit[1];
+			var idx = arrIdSplit[2];
+			var nik = $("#nik_ori").val();
+			var no_pengajuan = $("#no_pengajuan_"+idx).val();
+			
+			var r = confirm("Apakah anda yakin akan melihat history pengajuan untuk "+$("#nama_jenis_naskah_"+idx).val()+" ?");
+			if (r == true) 
+			{
+				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-pengajuan-history/"
+				, data: 
+						{
+							nik:nik
+							,id_jenis_naskah:id_jenis_naskah
+							,no_pengajuan:no_pengajuan
+						}
+				, cache: false
+				, success:function(data)
+				{
+					 //alert(data);
+					//if(data=='BERHASIL')
+					if(data != false)
+					{
+						$("#form_utama").html(data);
+						$("#btn_lanjut").css('display','none');
+						$("#btn_daftar").css('display','none');
+					}
+					else
+					{
+						alert("TERJADI KESALAHAN JARINGAN/INTERNET");
+					}
+				} 
+				});
+			}
+			
+		}
+		
+		function simpan_pengajuan()
+		{
+			var id_jenis_naskah = $("#id_jenis_naskah").val();
+			var kode_pengajuan = $("#kode_pengajuan").val();
+			var no_pengajuan = $("#no_pengajuan").val();
+			var perihal = $("#perihal").val();
+			var sumber = $("#sumber").val();
+			var diajukan_oleh = $("#diajukan_oleh_dodol").val();
+			//var diajukan_oleh = "ADE";
+			var tandatangan_oleh = $("#tandatangan_oleh").val();
+			var tgl_surat_dibuat = $("#tgl_surat_dibuat").val();
+			var tgl_surat_masuk = $("#tgl_surat_masuk").val();
+			var ket_pengajuan = $("#ket_pengajuan").val();
+			var penting = $("#penting").val();
+			
+			if(perihal == '')
+			{
+				alert('Kolom Perihal Harus Diisi !');
+			}
+			else if(diajukan_oleh == '')
+			{
+				alert('Kolom Nama Pemohon Harus Diisi !');
+			}
+			else
+			{
+				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-pengajuan-simpan/"
+				, data: 
+						{
+							id_jenis_naskah:id_jenis_naskah,
+							no_pengajuan:no_pengajuan,
+							kode_pengajuan:kode_pengajuan,
+							perihal:perihal,
+							sumber:sumber,
+							diajukan_oleh:diajukan_oleh,
+							tandatangan_oleh:tandatangan_oleh,
+							tgl_surat_dibuat:tgl_surat_dibuat,
+							tgl_surat_masuk:tgl_surat_masuk,
+							ket_pengajuan:ket_pengajuan,
+							penting:penting
+						}
+				, cache: false
+				, success:function(data)
+				{
+					 //alert(data);
+					//if(data=='BERHASIL')
+					if(data != false)
+					{
+						var href_dir = "<?php echo base_url();?>admin-cetak-faktur?pengajuan="+data;
+						//window.open(href, 'popup', 'height=500,width=300,toolbar=no');
+						
+						//window.location.href = 'uploads/file.doc';
+						window.location.href = href_dir;
+						
+						alert("DATA PENGAJUAN TERSIMPAN");
+						//location.reload();
+						
+						setTimeout(
+						function() 
+						{
+							//do something special
+							//$("#form_utama").html(data);
+							location.reload();
+						}, 1000);
+						
+					}
+					else
+					{
+						//alert("GAGAL");
+						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Terjadi gangguan jaringan !');
+					}
+				} 
+				});
+			}
+		}
+		
+		function pilih_layanan(evt)
+		{
+			var arrStrId = evt.id;
+			var arrIdSplit = arrStrId.split("-");
+			
+			var jenis = arrIdSplit[0];
+			var id_jenis_naskah = arrIdSplit[1];
+			var idx = arrIdSplit[2];
+			var nik = $("#nik_ori").val();
+			var no_pengajuan = $("#no_pengajuan_"+idx).val();
+			
+			//alert($("#nama_jenis_naskah_"+idx).val());
+			var r = confirm("Apakah anda yakin akan melakukan pengajuan untuk "+$("#nama_jenis_naskah_"+idx).val()+" ?");
+			if (r == true) 
+			{
+				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-pengajuan-view/"
+				, data: 
+						{
+							nik:nik
+							,id_jenis_naskah:id_jenis_naskah
+							,no_pengajuan:no_pengajuan
+						}
+				, cache: false
+				, success:function(data)
+				{
+					 //alert(data);
+					//if(data=='BERHASIL')
+					if(data != false)
+					{
+						$("#form_utama").html(data);
+						$("#btn_lanjut").css('display','none');
+						$("#btn_daftar").css('display','none');
+					}
+					else
+					{
+						alert("TERJADI KESALAHAN JARINGAN/INTERNET");
+					}
+				} 
+				});
+			}
+		}
+	
 		function cek_nik_pas_daftar()
 		{
 			var nik = $("#nik").val();
@@ -299,7 +516,10 @@
 					if(data=='BERHASIL')
 					//if(data != false)
 					{
-						alert('DATA BERHASIL DISIMPAN, ANDA AKAN DIARAHKAN KEHALAMAN PELAYANAN. SILAHKAN LOGIN KEMBALI')
+						alert('DATA BERHASIL DISIMPAN, ANDA AKAN DIARAHKAN KEHALAMAN PELAYANAN. SILAHKAN LOGIN KEMBALI');
+						
+						location.reload();
+						/*
 						setTimeout(
 						function() 
 						{
@@ -307,7 +527,7 @@
 							//$("#form_utama").html(data);
 							location.reload();
 						}, 4000);
-						
+						*/
 					}
 					else
 					{
@@ -321,10 +541,11 @@
 		
 		function view_daftar()
 		{
+			var nik = $("#nik").val();
 			$.ajax({type: "POST", url: "<?php echo base_url();?>warga-daftar/"
 			, data: 
 					{
-						
+						nik:nik
 					}
 			, cache: false
 			, success:function(data)
@@ -334,6 +555,8 @@
 				if(data != false)
 				{
 					$("#form_utama").html(data);
+					$("#btn_lanjut").css('display','none');
+					$("#btn_daftar").css('display','none');
 					
 				}
 				else
@@ -373,9 +596,11 @@
 					{
 						//alert("BERHASIL");
 						//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan, Selamat Datang '+data);
-						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan, Harap Menunggu.....');
+						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan dan tidak ada tunggakan pajak kendaraan, Harap Menunggu,<br/> <img src="<?php echo base_url();?>assets/global/loading.gif"> sedang memproses permintaan.....');
 						$("#nik").css('border', '3px #090 solid');
 						//$("#btn_lanjut").attr("disabled", false);
+						
+						$("#nik_ori").val(nik);
 						
 						setTimeout(
 						function() 
@@ -383,7 +608,9 @@
 							//do something special
 							//alert("Masuk ke pelayanan");
 							$("#form_utama").html(data);
-						}, 2000);
+							$("#btn_lanjut").css('display','none');
+							$("#btn_daftar").css('display','none');
+						}, 3000);
 						
 					}
 					else

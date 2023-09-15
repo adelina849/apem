@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'C_admin_login';
+$route['default_controller'] = 'C_admin_login/login_warga';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
@@ -72,11 +72,22 @@ $route['translate_uri_dashes'] = FALSE;
 	$route['warga-cek-nik'] = "C_admin_login/cek_nik";
 	$route['warga-cek-nik/(:any)'] = 'C_admin_login/cek_nik';
 	
-	$route['warga-daftar'] = "C_admin_login/daftar_warga";
-	$route['warga-daftar/(:any)'] = 'C_admin_login/daftar_warga';
+	$route['warga-daftar'] = "C_admin_login/view_daftar_warga";
+	$route['warga-daftar/(:any)'] = 'C_admin_login/view_daftar_warga';
 	
 	$route['warga-daftar-simpan'] = "C_admin_login/simpan_data_warga";
 	$route['warga-daftar-simpan/(:any)'] = 'C_admin_login/simpan_data_warga';
+	
+	$route['warga-pengajuan-view'] = "C_admin_login/view_pengajuan";
+	$route['warga-pengajuan-view/(:any)'] = 'C_admin_login/view_pengajuan';
+	
+	$route['warga-pengajuan-simpan'] = "C_admin_login/simpan_pengajuan_pelayanan";
+	$route['warga-pengajuan-simpan/(:any)'] = 'C_admin_login/simpan_pengajuan_pelayanan';
+	
+	$route['warga-pengajuan-history'] = "C_admin_login/view_history_pengajuan";
+	$route['warga-pengajuan-history/(:any)'] = 'C_admin_login/view_history_pengajuan';
+	
+	
 //LOGIN
 
 //JABATAN KARYAWAN

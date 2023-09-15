@@ -450,8 +450,8 @@
 												echo'<input type="hidden" id="ket_pengajuan_'.$no.'" value="'.$row->ket_pengajuan.'" />';
 												echo'<input type="hidden" id="penting_'.$no.'" value="'.$row->penting.'" />';
 												
-												if($row->user_updt == $this->session->userdata('ses_id_karyawan'))
-												{
+												//if($row->user_updt == $this->session->userdata('ses_id_karyawan'))
+												//{
 													echo'<td>
 		<a class="confirm-btn btn btn-success btn-sm" href="'.base_url().'admin-cetak-faktur?pengajuan='.$row->no_pengajuan.'" title = "Cetak Faktur '.($row->no_pengajuan).'" alt = "Cetak Faktur '.($row->no_pengajuan).'">Cetak</a>
 		
@@ -465,6 +465,7 @@
 		
 		<a class="confirm-btn btn btn-danger btn-sm" href="'.base_url().'admin-pengajuan-dokumen-hapus/'.$row->id_pengajuan.'" title = "Hapus Data '.($row->no_pengajuan).'" alt = "Hapus Data '.($row->no_pengajuan).'">Hapus</a>
 		</td>';
+												/*
 												}
 												else
 												{
@@ -472,6 +473,7 @@
 														Tidak Memiliki Akses
 													</td>';
 												}
+												*/
 												
 											echo'</tr>';
 											$no++;

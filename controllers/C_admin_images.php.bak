@@ -167,7 +167,7 @@ class C_admin_images extends CI_Controller {
 		if (!empty($_FILES['foto']['name']))
 		{
 			$config['upload_path'] = 'assets/global/images/';
-			$config['allowed_types'] = 'gif|jpg|png|jpeg|pdf';
+			$config['allowed_types'] = 'gif|jpg|png|jpeg';
 			$config['max_size']	= '2024';
 			//$config['max_widtd']  = '300';
 			//$config['max_height']  = '300';

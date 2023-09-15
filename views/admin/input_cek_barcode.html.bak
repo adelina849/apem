@@ -83,7 +83,7 @@
 			}
 		?>
 		
-		<input type="text" class="form-control input-sm" id="scan" name="scan" placeholder="Scan/Ketik QR Code" onchange="scan(this)" value="<?php echo $no_pengajuan;?>">
+		<input type="text" class="form-control input-sm" id="scan" name="scan" placeholder="Scan/Ketik QR Code" onchange="scan(this)">
 
         <div class="input-group-btn">
           <button id="btn_submit" type="submit" class="btn"><i class="fa fa-arrow-right text-muted"></i></button>

@@ -163,8 +163,6 @@
 	<button type="button" onclick="view('.$no.')" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
 		Hasil Pengajuan
 	</button>
-	
-	<a class="confirm-btn btn btn-success btn-sm" href="'.base_url().'admin-pengajuan-dokumen-images/'.$row->id_pengajuan.'" title = "Foto Data '.($row->no_pengajuan).'" alt = "Foto Data '.($row->no_pengajuan).'">Upload File</a>
 													</td>';
 												/*
 												}

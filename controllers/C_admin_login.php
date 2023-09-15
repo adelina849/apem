@@ -8,7 +8,7 @@
 			$this->load->helper(array('captcha','array'));
             $this->load->library(array('form_validation'));
             $this->config->load('cap');
-			$this->load->model(array('M_dash','M_penduduk'));
+			$this->load->model(array('M_dash','M_penduduk','M_pengajuan'));
 		}
 		
 		
@@ -102,7 +102,20 @@
 				$cek_nik = $cek_nik->row();
 				//echo $cek_nik->nama;
 				
-				$query_list_layanan = "SELECT * FROM tb_jenis_naskah ORDER BY nama_jenis_naskah ASC";
+				$query_list_layanan = "
+									SELECT A.* 
+										,COALESCE(
+											(
+												SELECT COUNT(id_pengajuan) AS CNT 
+												FROM tb_pengajuan 
+												WHERE sumber = '".$nik."'
+												AND id_jenis_naskah = A.id_jenis_naskah
+											) 
+											,
+											0
+											)
+											AS CNT
+									FROM tb_jenis_naskah AS A ORDER BY A.nama_jenis_naskah ASC";
 				$list_layanan = $this->M_dash->view_query_general($query_list_layanan);
 				if(!empty($list_layanan))
 				{
@@ -141,9 +154,13 @@
 								echo'<input type="hidden" id="syarat_jenis_naskah_'.$no.'" value="'.$row->syarat_jenis_naskah.'" />';
 								echo'<input type="hidden" id="ket_jenis_naskah_'.$no.'" value="'.$row->ket_jenis_naskah.'" />';
 								
+								echo'<input type="hidden" id="no_pengajuan_'.$no.'" value="" />';
+								
 								echo'<td>
 
-<a href="javascript:void(0)" class="btn btn-success btn-sm btn-flat btn-block" onclick="edit('.$no.')" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">PILIH</a>
+<a href="javascript:void(0)" class="btn btn-success btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="pilih_layanan(this)" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">PILIH</a>
+
+<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="view_history_ajuan(this)" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">LIHAT AJUAN ('.$row->CNT.')</a>
 								
 								</td>';
 								
@@ -161,57 +178,87 @@
 			}
 		}
         
-		function daftar_warga()
+		function view_daftar_warga()
 		{
+			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."'";
+			$cek_nik = $this->M_dash->view_query_general($query_cek_nik);
+			if(!empty($cek_nik))
+			{
+				$cek_nik = $cek_nik->row();
+				$nik = $cek_nik->nik;
+				$nama = $cek_nik->nama;
+				$jenis_kelamin = $cek_nik->jenis_kelamin;
+				$val_jenis_kelamin = $cek_nik->jenis_kelamin;
+				$tempat_lahir = $cek_nik->tempat_lahir;
+				$tgl_lahir = $cek_nik->tgl_lahir;
+				$tlp = $cek_nik->tlp;
+				$email = $cek_nik->email;
+				$alamat = $cek_nik->alamat;
+			}
+			else
+			{
+				$nik = "";
+				$nama = "";
+				$jenis_kelamin = "--Pilih Kelamin--";
+				$val_jenis_kelamin = "";
+				$tempat_lahir = "";
+				$tgl_lahir = date("Y-m-d");
+				$tlp = "";
+				$email = "";
+				$alamat = "";
+			}
+			
 			echo'<h2><center>FORM PENDAFTARAN</center></h2>';
 			echo'<form role="form" class="frm-input" enctype="multipart/form-data">';
 			echo'<div class="form-group">
 				  <label for="nik">NIK</label>
-				  <input type="text" id="nik" name="nik"  maxlength="35" class="required form-control" size="35" alt="NIK" title="NIK" placeholder="*NIK" onchange="cek_nik_pas_daftar()"/><span id="pesan"></span>
+				  <input type="text" id="nik" name="nik"  maxlength="35" class="required form-control" size="35" alt="NIK" title="NIK" placeholder="*NIK" onchange="cek_nik_pas_daftar()" value="'.$nik.'"/><span id="pesan"></span>
 				</div>';
 			echo'<div class="form-group">
 				  <label for="nama">Nama Karyawan</label>
-				  <input type="text" id="nama" name="nama"  maxlength="35" class="required form-control" size="35" alt="nama" title="Nama Karyawan" placeholder="*Nama"/>
+				  <input type="text" id="nama" name="nama"  maxlength="35" class="required form-control" size="35" alt="nama" title="Nama Karyawan" placeholder="*Nama" value="'.$nama.'"/>
 				</div>';
 			echo'<div class="form-group">
 				  <label for="jenis_kelamin">Jenis Kelamin</label>
 					<select name="jenis_kelamin" id="jenis_kelamin" class="required form-control select2" title="Jenis Kelamin">
-						<option value="">--Pilih Kelamin--</option>
+						<option value="'.$val_jenis_kelamin.'">'.$jenis_kelamin.'</option>
 						<option value="PRIA">PRIA</option>
 						<option value="WANITA">WANITA</option>
 					</select>
 				</div>';
 			echo'<div class="form-group">
 				  <label for="tempat_lahir">Tempat Lahir</label>
-				  <input type="text" id="tempat_lahir" name="tempat_lahir"  maxlength="35" class="required form-control" size="35" alt="Tempat Lahir" title="Tempat Lahir" placeholder="*Tempat Lahir"/>
+				  <input type="text" id="tempat_lahir" name="tempat_lahir"  maxlength="35" class="required form-control" size="35" alt="Tempat Lahir" title="Tempat Lahir" placeholder="*Tempat Lahir" value="'.$tempat_lahir.'"/>
 				</div>';
-			echo'<div class="form-group">
+			echo'
+				<div class="form-group">
 					<label>Tanggal Lahir</label>
 					<div class="input-group date">
 					  <div class="input-group-addon">
 						<i class="fa fa-calendar"></i>
 					  </div>
-					  <input name="tgl_lahir" type="text" class="required form-control pull-right settingDate" id="tgl_lahir" alt="Tanggal Lahir" title="Tanggal Lahir" value="'.date("Y-m-d").'" data-date-format="yyyy-mm-dd">
+					  <input name="tgl_lahir" type="text" class="required form-control pull-right settingDate" id="tgl_lahir" alt="Tanggal Lahir" title="Tanggal Lahir" value="'.$tgl_lahir.'" data-date-format="yyyy-mm-dd">
 					</div>
 					<!-- /.input group -->
 				</div>';
 			echo'<div class="form-group">
 				  <label for="tlp">No Tlp</label>
-				  <input type="text" id="tlp" name="tlp"  maxlength="35" onkeypress="return isNumberKey(event)" class="required form-control" size="35" alt="tlp" title="No Telpon" placeholder="*No Tlp"/>
+				  <input type="text" id="tlp" name="tlp"  maxlength="35" onkeypress="return isNumberKey(event)" class="required form-control" size="35" alt="tlp" title="No Telpon" placeholder="*No Tlp" value="'.$tlp.'"/>
 				</div>';
 			echo'<div class="form-group">
 				  <input type="hidden" id="cek_email" name="cek_email" />
 				  <label for="email">Email</label>
-				  <input type="text" id="email" name="email"  maxlength="35" class="email form-control" size="35" alt="tlp" title="Email" placeholder="Email"/> <span id="pesan2"></span>
+				  <input type="text" id="email" name="email"  maxlength="35" class="email form-control" size="35" alt="tlp" title="Email" placeholder="Email" value="'.$email.'"/> <span id="pesan2"></span>
 				</div>';
 			echo'<div class="form-group">
 				  <label for="alamat">Alamat Lengkap</label>
-				  <textarea name="alamat" id="alamat" class="required form-control" title="Alamat Lengkap" placeholder="*Alamat Lengkap"></textarea>
+				  <textarea name="alamat" id="alamat" class="required form-control" title="Alamat Lengkap" placeholder="*Alamat Lengkap">'.$alamat.'</textarea>
 				</div>';
 			echo'</form>';
 			echo'
 			<div class="col-xs-12">
-              <button type="button" id="btn_lanjut" class="btn-warga btn btn-success btn-block btn-flat" style="border:1px dotted black;" onclick="simpan_daftar_warga()">SIMPAN DATA</button>
+              <button type="button" id="btn_simpan_data_warga" class="btn-warga btn btn-success btn-block btn-flat" style="border:1px dotted black;" onclick="simpan_daftar_warga()">SIMPAN DATA</button>
             </div>
 			';
 		}
@@ -228,20 +275,45 @@
 			$email = htmlentities($_POST['email'], ENT_QUOTES, 'UTF-8');
 			$alamat = htmlentities($_POST['alamat'], ENT_QUOTES, 'UTF-8');
 			
-			$this->M_penduduk->simpan
-			(
-				$nik
-				,$nama
-				,$jenis_kelamin
-				,'' //,$status_menikah
-				,$tempat_lahir
-				,$tgl_lahir
-				,$tlp
-				,$email
-				,$alamat
-				,'ADMIN' //$from_db
-				,'KABCJR'
-			);
+			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."'";
+			$cek_nik = $this->M_dash->view_query_general($query_cek_nik);
+			if(!empty($cek_nik))
+			{
+				$cek_nik = $cek_nik->row();
+				$this->M_penduduk->edit
+				(
+					$cek_nik->id_penduduk
+					,$nik
+					,$nama
+					,$jenis_kelamin
+					,'' //,$status_menikah
+					,$tempat_lahir
+					,$tgl_lahir
+					,$tlp
+					,$email
+					,$alamat
+					,'KABCJR'
+				);
+			}
+			else
+			{
+				$this->M_penduduk->simpan
+				(
+					$nik
+					,$nama
+					,$jenis_kelamin
+					,'' //,$status_menikah
+					,$tempat_lahir
+					,$tgl_lahir
+					,$tlp
+					,$email
+					,$alamat
+					,'ADMIN' //$from_db
+					,'KABCJR'
+				);
+			}
+			
 			echo'BERHASIL';
 		}
 		
@@ -287,12 +359,362 @@
     		}
         }
         
+		function view_pengajuan()
+		{
+			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			$id_jenis_naskah = htmlentities($_POST['id_jenis_naskah'], ENT_QUOTES, 'UTF-8');
+			
+			//if((!empty( htmlentities($_POST['no_pengajuan'], ENT_QUOTES, 'UTF-8') )) && ( htmlentities($_POST['no_pengajuan'], ENT_QUOTES, 'UTF-8') != "")  )
+			if((!empty($_POST['no_pengajuan'])) && ($_POST['no_pengajuan']!= "")  )
+			{
+				$no_pengajuan = htmlentities($_POST['no_pengajuan'], ENT_QUOTES, 'UTF-8');
+			}
+			else
+			{
+				$no_pengajuan = "";
+			}
+			
+			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."'";
+			$cek_nik = $this->M_dash->view_query_general($query_cek_nik);
+			if(!empty($cek_nik))
+			{
+				$cek_nik = $cek_nik->row();
+				
+				$query_cek_jenis_naskah = "SELECT * FROM tb_jenis_naskah WHERE id_jenis_naskah = '".$id_jenis_naskah."'";
+				$cek_jenis_naskah = $this->M_dash->view_query_general($query_cek_jenis_naskah);
+				if(!empty($cek_jenis_naskah))
+				{
+					$cek_jenis_naskah = $cek_jenis_naskah->row();
+					
+					$query_cek_apakah_sudah_ada_edit = "SELECT * FROM tb_pengajuan WHERE no_pengajuan = '".$no_pengajuan."';";
+					$cek_apakah_sudah_ada_edit = $this->M_dash->view_query_general($query_cek_apakah_sudah_ada_edit);
+					if(!empty($cek_apakah_sudah_ada_edit))
+					{
+						$cek_apakah_sudah_ada_edit = $cek_apakah_sudah_ada_edit->row();
+						$kode_pengajuan = $cek_apakah_sudah_ada_edit->kode_pengajuan;
+						$perihal = $cek_apakah_sudah_ada_edit->perihal;
+						$diajukan_oleh = $cek_apakah_sudah_ada_edit->diajukan_oleh;
+						$tandatangan_oleh = $cek_apakah_sudah_ada_edit->tandatangan_oleh;
+						$tgl_surat_dibuat = $cek_apakah_sudah_ada_edit->tgl_surat_dibuat;
+						$tgl_surat_masuk = $cek_apakah_sudah_ada_edit->tgl_surat_masuk;
+						$ket_pengajuan = $cek_apakah_sudah_ada_edit->ket_pengajuan;
+						$penting = $cek_apakah_sudah_ada_edit->penting;
+					}
+					else
+					{
+						$kode_pengajuan = ""; 
+						$perihal = ""; 
+						$diajukan_oleh = ""; 
+						$tandatangan_oleh = ""; 
+						$tgl_surat_dibuat = date("Y-m-d"); 
+						$tgl_surat_masuk = date("Y-m-d"); 
+						$ket_pengajuan = ""; 
+						$penting = ""; 
+					}
+						
+					
+					echo'<h2><center>FORM PENGAJUAN '.strtoupper($cek_jenis_naskah->nama_jenis_naskah).'</center></h2>';
+					echo'<form role="form" class="frm-input" enctype="multipart/form-data">';
+					
+					echo'<input type="hidden" id="no_pengajuan" name="no_pengajuan"  maxlength="35" class="required form-control" size="35" alt="NIK" title="NIK" placeholder="*NIK" value="'.$no_pengajuan.'" readonly />';
+					
+					echo'<input type="hidden" id="id_jenis_naskah" name="id_jenis_naskah"  maxlength="35" class="required form-control" size="35" alt="NIK" title="NIK" placeholder="*NIK" value="'.$cek_jenis_naskah->id_jenis_naskah.'" readonly />';
+					
+					echo'<div class="form-group">
+						  <label for="sumber">NIK</label>
+						  <input type="text" id="sumber" name="sumber"  maxlength="35" class="required form-control" size="35" alt="NIK" title="NIK" placeholder="*NIK" value="'.$nik.'" readonly />
+						</div>';
+					echo'<div class="form-group">
+						  <label for="nama_pengaju">NAMA AKUN PEMBUAT</label>
+						  <input type="text" id="nama_pengaju" name="nama_pengaju"  maxlength="35" class="required form-control" size="35" alt="NAMA AKUN PEMBUAT" title="NAMA AKUN PEMBUAT" placeholder="*NAMA AKUN PEMBUAT"  value="'.$cek_nik->nama.'" readonly />
+						</div>';
+						
+					echo'<div class="form-group">
+						  <label for="kode_pengajuan">No Surat Pengantar (Jika Ada)</label>
+						  <input type="text" id="kode_pengajuan" name="kode_pengajuan"  maxlength="35" class="required form-control" size="35" alt="No Surat Pengantar" title="No Surat Pengantar" placeholder="*No Surat Pengantar" value="'.$kode_pengajuan.'"/>
+						</div>';
+						
+					echo'<div class="form-group">
+						  <label for="perihal">Perihal</label>
+						  <input type="text" id="perihal" name="perihal"  maxlength="35" class="required form-control" size="35" alt="Perihal" title="Perihal" placeholder="*Perihal" value="'.$perihal.'"/>
+						</div>';
+						
+					echo'<div class="form-group">
+							<label for="diajukan_oleh_dodol">Diajukan Oleh (Nama Pemohon)</label>
+							<input type="text" id="diajukan_oleh_dodol" name="diajukan_oleh_dodol"  maxlength="35" class="required form-control" size="35" alt="Diajukan Oleh" title="Diajukan Oleh" placeholder="*Diajukan Oleh" value="'.$diajukan_oleh.'"/>
+						</div>';
+					
+					echo'<div class="form-group">
+						  <label for="tandatangan_oleh">Ditanda tangani oleh</label>
+							<select name="tandatangan_oleh" id="tandatangan_oleh" class="required form-control select2" title="Tingkat Kepentingan">
+								<option value="'.$tandatangan_oleh.'">'.$tandatangan_oleh.'</option>
+								<option value="CAMAT">CAMAT</option>
+								<option value="SEKMAT">SEKMAT</option>
+								<option value="KASI">KASI</option>
+							</select>
+						</div>';
+						
+					echo'<div class="form-group">
+							<label>Tanggal Pelayanan/Dokumen dibutuhkan</label>
+							<div class="input-group date">
+							  <div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							  </div>
+							  <input name="tgl_surat_dibuat" type="text" class="required form-control pull-right settingDate" id="tgl_surat_dibuat" alt="Tanggal Dokumen Dibuat" title="Tanggal Dokumen Dibuat" value="'.$tgl_surat_dibuat.'" data-date-format="yyyy-mm-dd">
+							</div>
+							<!-- /.input group -->
+						</div>';
+						
+					echo'<div class="form-group" style="display:none;">
+							<label>Tanggal Dokumen Masuk</label>
+							<div class="input-group date">
+							  <div class="input-group-addon">
+								<i class="fa fa-calendar"></i>
+							  </div>
+							  <input name="tgl_surat_masuk" type="text" class="required form-control pull-right settingDate" id="tgl_surat_masuk" alt="Tanggal Dokumen Masuk" title="Tanggal Dokumen Masuk" value="'.$tgl_surat_masuk.'" data-date-format="yyyy-mm-dd">
+							</div>
+							<!-- /.input group -->
+						</div>';
+						
+					echo'<div class="form-group">
+							<label for="ket_pengajuan">Keterangan</label>
+							<textarea name="ket_pengajuan" id="ket_pengajuan" class="required form-control" title="Keterangan" placeholder="*Keterangan">'.$ket_pengajuan.'</textarea>
+						</div>';
+						
+					echo'<div class="form-group">
+						  <label for="penting">Tingkat Kepentingan</label>
+							<select name="penting" id="penting" class="required form-control select2" title="Tingkat Kepentingan">
+								<option value="'.$penting.'">'.$penting.'</option>
+								<option value="Kurang Penting">Kurang Penting</option>
+								<option value="Penting">Penting</option>
+								<option value="Sangat Penting">Sangat Penting</option>
+								<option value="Diutamakan">Diutamakan</option>
+							</select>
+						</div>';
+					
+					echo'</form>';
+					echo'
+					<div class="col-xs-12">
+					  <button type="button" id="btn_simpan_data_pengajuan" class="btn-warga btn btn-success btn-block btn-flat" style="border:1px dotted black;" onclick="simpan_pengajuan()">SIMPAN DATA</button>
+					</div>
+					';
+					
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		function simpan_pengajuan_pelayanan()
+		{
+			if((!empty($_POST['no_pengajuan'])) && ($_POST['no_pengajuan']!= "")  )
+			{
+				$cek_terakhir = "SELECT * FROM tb_pengajuan WHERE sumber = '".$_POST['sumber']."' AND id_jenis_naskah = '".$_POST['id_jenis_naskah']."' ORDER BY id_pengajuan DESC LIMIT 0,1; ";
+				$data_pengajuan = $this->M_dash->view_query_general($cek_terakhir);
+				if(!empty($data_pengajuan))
+				{
+					$data_pengajuan = $data_pengajuan->row();
+					$this->M_pengajuan->edit
+								(
+									$data_pengajuan->id_pengajuan
+									,$_POST['id_jenis_naskah']
+									,$_POST['no_pengajuan']
+									,$_POST['kode_pengajuan']
+									,$_POST['diajukan_oleh']
+									,$_POST['perihal']
+									,$_POST['sumber']
+									,$_POST['tandatangan_oleh']
+									,$_POST['tgl_surat_dibuat']
+									,$_POST['tgl_surat_masuk']
+									,$_POST['ket_pengajuan']
+									,$_POST['penting']
+									,$this->session->userdata('ses_id_karyawan')
+								
+								);
+					echo $_POST['no_pengajuan'];
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+			
+				$this->M_pengajuan->simpan
+				(
+					$_POST['id_jenis_naskah']
+					,$_POST['kode_pengajuan']
+					,$_POST['diajukan_oleh']
+					,$_POST['perihal']
+					,$_POST['sumber']
+					,$_POST['tandatangan_oleh']
+					,$_POST['tgl_surat_dibuat']
+					,$_POST['tgl_surat_masuk']
+					,$_POST['ket_pengajuan']
+					,$_POST['penting']
+					,'' //$this->session->userdata('ses_id_karyawan')
+					,'KABCJR' //$this->session->userdata('ses_kode_kantor')
+					,'KAB'
+				);
+				
+				//$data_pengajuan = $this->M_pengajuan->get_pengajuan('A.kode_pengajuan',$_POST['kode_pengajuan'])	;
+				//$data_pengajuan = $this->M_pengajuan->get_pengajuan('A.kode_pengajuan',$_POST['kode_pengajuan'])	;
+				
+				$cek_terakhir = "SELECT * FROM tb_pengajuan WHERE sumber = '".$_POST['sumber']."' AND id_jenis_naskah = '".$_POST['id_jenis_naskah']."' ORDER BY id_pengajuan DESC LIMIT 0,1; ";
+				$data_pengajuan = $this->M_dash->view_query_general($cek_terakhir);
+				if(!empty($data_pengajuan))
+				{
+					$data_pengajuan = $data_pengajuan->row();
+					//GENERATE QR CODE
+						$this->load->library('ciqrcode'); //pemanggilan library QR CODE
+						$config['cacheable']    = true; //boolean, the default is true
+						$config['cachedir']     = './assets/'; //string, the default is application/cache/
+						$config['errorlog']     = './assets/'; //string, the default is application/logs/
+						$config['imagedir']     = './assets/global/images/qrcode/'; //direktori penyimpanan qr code
+						$config['quality']      = true; //boolean, the default is true
+						$config['size']         = '1024'; //interger, the default is 1024
+						$config['black']        = array(224,255,255); // array, default is array(255,255,255)
+						$config['white']        = array(70,130,180); // array, default is array(0,0,0)
+						$this->ciqrcode->initialize($config);
+				 
+						$image_name=$data_pengajuan->no_pengajuan.'.png'; //buat name dari qr code sesuai dengan nim
+				 
+						$params['data'] = $data_pengajuan->no_pengajuan; //data yang akan di jadikan QR CODE
+						$params['level'] = 'H'; //H=High
+						$params['size'] = 10;
+						$params['savename'] = FCPATH.$config['imagedir'].$image_name; //simpan image QR CODE ke folder assets/images/
+						$this->ciqrcode->generate($params); // fungsi untuk generate QR CODE
+					//GENERATE QR CODE
+				}
+				echo $data_pengajuan->no_pengajuan;
+			}
+		}
+		
+		function view_history_pengajuan()
+		{
+			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			$id_jenis_naskah = htmlentities($_POST['id_jenis_naskah'], ENT_QUOTES, 'UTF-8');
+			
+			$query = "
+					SELECT * FROM tb_pengajuan AS A 
+					LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah
+					WHERE A.sumber = '".$nik."' AND A.id_jenis_naskah = '".$id_jenis_naskah."' ORDER BY A.tgl_ins DESC;";
+			
+			$cek_data_pengajuan = $this->M_dash->view_query_general($query);
+			if(!empty($cek_data_pengajuan))
+			{
+				echo'<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
+					echo'<thead>';
+					echo'<tr>';
+												echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;">No</th>';
+												echo '<th width="35%" style="background-color:red;color:white;font-weight:bold;">QRCODE</th>';
+												echo '<th width="45%" style="background-color:red;color:white;font-weight:bold;">PELAYANAN</th>';
+												echo '<th width="15%" style="background-color:red;color:white;font-weight:bold;">Aksi</th>';
+					echo'</tr>';
+					echo'</thead>';
+					
+					$list_result = $cek_data_pengajuan->result();
+					$no = 1;
+					echo '<tbody>';
+					foreach($list_result as $row)
+					{
+						echo'<tr>';
+							echo'<td>'.$no.'</td>';
+							
+							if(file_exists("assets/global/images/qrcode/".$row->no_pengajuan.".png"))
+							{
+								echo'<td >
+										<center>
+											<img id="imgQr"  width="100px" height="100px" src="'.base_url().'assets/global/images/qrcode/'.$row->no_pengajuan.'.png" />
+											<br/>
+											'.($row->no_pengajuan).'
+										</center>
+									</td>';
+							}
+							else
+							{
+								echo'<td><center>'.($row->no_pengajuan).'</center></td>';
+							}
+							
+							echo'<td>
+								<b>Jenis Dokumen : </b>'.$row->nama_jenis_naskah.' 
+								<br/> <b>No Dok : </b>'.$row->kode_pengajuan.' 
+								<br/> <b>Pemohon : </b>'.$row->diajukan_oleh.' 
+								<br/> <b>Perihal : </b>'.$row->perihal.'
+								<br/> <b>Tgl Masuk : </b>'.$row->tgl_surat_masuk.'
+							</td>';
+						
+							echo'<input type="hidden" id="id_pengajuan_'.$no.'" value="'.$row->id_pengajuan.'" />';
+							echo'<input type="hidden" id="id_jenis_naskah_'.$no.'" value="'.$row->id_jenis_naskah.'" />';
+							echo'<input type="hidden" id="sumber_'.$no.'" value="'.$row->sumber.'" />';
+							echo'<input type="hidden" id="no_pengajuan_'.$no.'" value="'.$row->no_pengajuan.'" />';
+							
+							echo'<input type="hidden" id="nama_jenis_naskah_'.$no.'" value="'.$row->nama_jenis_naskah.'" />';
+							echo'<input type="hidden" id="syarat_jenis_naskah_'.$no.'" value="'.$row->syarat_jenis_naskah.'" />';
+							echo'<input type="hidden" id="ket_jenis_naskah_'.$no.'" value="'.$row->ket_jenis_naskah.'" />';
+							
+							echo'<td>
+
+<a href="javascript:void(0)" class="btn btn-warning btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="pilih_layanan(this)" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">UBAH</a>
+
+<a href="javascript:void(0)" class="btn btn-danger btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="hapus_pengajuan(this)" title = "Hapus Data '.$row->nama_jenis_naskah.'" alt = "Hapus Data '.$row->nama_jenis_naskah.'">HAPUS</a>
+
+<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="cetak_qr(this)" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'">CETAK</a>
+
+<a href="'.base_url().'cek-barcode?no_pengajuan='.$row->no_pengajuan.'" class="btn btn-default btn-sm btn-flat btn-block" id="" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'">PROGRES</a>
+							
+							</td>';
+							
+							
+						echo'</tr>';
+						$no++;
+					}
+					echo '</tbody>';
+				echo'</table>';
+				
+			}
+			else
+			{
+				echo'TIDAK ADA DATA YANG DITAMPILKAN';
+			}
+			
+		}
+		
+		
+		function hapus_pengajuan()
+		{
+			$id_pengajuan = htmlentities($_POST['id_pengajuan'], ENT_QUOTES, 'UTF-8');
+			$this->M_pengajuan->hapus($id_pengajuan);
+			
+			//Hapus Images
+				$this->load->model('M_images');
+				$list_images = $this->M_images->get_images($id_pengajuan,'pengajuan','id',$id_pengajuan);
+				if(!empty($list_images))
+				{
+					$list_result = $list_images->result();
+					foreach($list_result as $row)
+					{
+						$this->M_images->do_upload('',$row->img_file);
+					}
+				}
+			//Hapus Images
+			
+			//header('Location: '.base_url().'admin-pengajuan-dokumen');
+			echo'BERHASIL';
+		}
+	
         public function validasi_input_captcha()
         {
             $this->form_validation->set_rules('captcha','Captcha','required|callback_check_captcha');
             return ($this->form_validation->run() == false)? False : true;
         }
-        
         
         function logout()
 		{
@@ -308,9 +730,6 @@
 			//redirect('index.php/login','location');
 			header('Location: '.base_url().'admin-login');
 		}
-        
-        
-        
         
         function auto_remove_captcha()
 		{
