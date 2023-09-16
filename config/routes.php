@@ -137,6 +137,17 @@ $route['translate_uri_dashes'] = FALSE;
 	$route['admin-jenis-tahapan-hapus/(:any)'] = 'C_admin_tahapan/hapus';
 //TAHAPAN
 
+//SYARAT
+	$route['admin-persyaratan'] = "C_admin_syarat/index";
+	$route['admin-persyaratan/(:any)'] = 'C_admin_syarat/index';
+	
+	$route['admin-persyaratan-simpan'] = "C_admin_syarat/simpan";
+	$route['admin-persyaratan-simpan/(:any)'] = 'C_admin_syarat/simpan';
+	
+	$route['admin-persyaratan-hapus'] = "C_admin_syarat/hapus";
+	$route['admin-persyaratan-hapus/(:any)'] = 'C_admin_syarat/hapus';
+//SYARAT
+
 //DATA PENDUDUK
 	$route['admin-penduduk'] = "C_admin_penduduk/index";
 	$route['admin-penduduk/(:any)'] = 'C_admin_penduduk/index';
@@ -155,6 +166,9 @@ $route['translate_uri_dashes'] = FALSE;
 	
 	$route['admin-pilih-tahapan-dokumen'] = "C_admin_pilih_tahapan_naskah/index";
 	$route['admin-pilih-tahapan-dokumen/(:any)'] = 'C_admin_pilih_tahapan_naskah/index';
+	
+	$route['admin-pilih-syarat-dokumen'] = "C_admin_pilih_tahapan_naskah/view_pengatura_persyaratan";
+	$route['admin-pilih-syarat-dokumen/(:any)'] = 'C_admin_pilih_tahapan_naskah/view_pengatura_persyaratan';
 //TAHAPAN NASKAH
 
 //PENGAJUAN NASKAH

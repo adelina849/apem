@@ -161,6 +161,14 @@
 							</li>
 					<!-- CEK AKSES TAHAPAN PROSES -->
 					
+					<!-- CEK AKSES PERSYARATAN -->
+						<li id="input-data-syarat" class="treeview">
+							  <a href="<?=base_url()?>admin-persyaratan">
+								<i class="fa fa-edit"></i> <span>Persyaratan</span>
+							  </a>
+							</li>
+					<!-- CEK AKSES PERSYARATAN -->
+					
 					<!-- CEK AKSES DATA PENDUDUK -->
 							<li id="input-data-penduduk" class="treeview">
 							  <a href="<?=base_url()?>admin-penduduk">

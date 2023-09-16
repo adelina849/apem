@@ -97,14 +97,56 @@
 	<style>	
 		@media (max-width:960px) 
 		{
+			
 			h3 
 			{
-				font-size:8px;
+				font-size:20px;
 			}
 			
+			/*
 			.btn-warga 
 			{
 				font-size:8px;
+			}
+			*/
+			
+			#box_center 
+			{
+				width:100%;
+				padding-top:0%;
+			}
+			
+			.head_box
+			{
+				padding-top:10%;
+			}
+			
+			#img_bpt 
+			{
+				width:30%;
+			}
+			
+			#img_cam 
+			{
+				width:30%;
+			}
+		}
+		
+		@media (min-width:961px) 
+		{
+			#box_center 
+			{
+				width:50%;
+			}
+			
+			#img_bpt 
+			{
+				width:25%;
+			}
+			
+			#img_cam 
+			{
+				width:25%;
 			}
 		}
 	</style>
@@ -116,11 +158,11 @@
 	<center>
 	<!-- <h1>PATEN (Pelayanan Administrasi Terpadu Kecamatan)</h1> -->
 	<!-- <img src="<?php echo base_url('assets/global/images/banner.png');?>" style="width:100%;"> -->
-	<img src="<?php echo base_url('assets/global/images/bupati_cjr.png');?>" style="width:25%;float:left;">
-	<img src="<?php echo base_url('assets/global/images/cam_sam.png');?>" style="width:25%;float:right;">
+	<img id="img_bpt" src="<?php echo base_url('assets/global/images/bupati_cjr.png');?>" style="float:left;">
+	<img id="img_cam" src="<?php echo base_url('assets/global/images/cam_sam.png');?>" style="float:right;">
 	</center>
     <!-- <div class="login-box" style="opacity:0.8;width:50%;"> -->
-	<div class="login-box" style="opacity:1;width:50%;">
+	<div id="box_center" class="login-box" style="opacity:1;">
       <div class="login-logo">
         <!-- <img src="<?php echo base_url('assets/global/images/logo.png');?>" style="width:100px;height:100px;"> -->
         <!--<img src="<?php echo base_url('direktori/image/textlogo.png');?>" style="width:100%;height:30px;">-->
@@ -129,7 +171,7 @@
 		
 		<!-- <center style="margin-top:-5%;"> -->
 		<center style="margin-top:0%;">
-		<img src="<?php echo base_url('assets/global/images/logo.png');?>" style="width:25%;">
+		<img class="head_box" src="<?php echo base_url('assets/global/images/logo.png');?>" style="width:25%;">
         <!-- <p class="login-box-msg"><h3>ANJUNGAN PATEN MANDIRI</h3></p> -->
 		<h3 style="text-shadow: 1px 1px 1px white;color:black;">ANJUNGAN PATEN MANDIRI (APEM)<br/>KECAMATAN CIBEBER</h3>
 		<h3 style="margin-top:-2%;text-shadow: 1px 1px 1px white;color:black;">DAN</h3>

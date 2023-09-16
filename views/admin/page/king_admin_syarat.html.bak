@@ -50,7 +50,44 @@
                 var htmlobjek;
                 $(document).ready(function()
                 {	
-					$('#operation').attr('class', 'active treeview');
+					$('#inputdata').attr('class', 'active treeview');
+					$('#input-data-syarat').attr('class', 'active treeview');
+					
+                    $("#nama_syarat").change(function()
+                    //$("#simpan").click(function()
+                    {  
+                
+                        var nama_syarat = $("#nama_syarat").val();
+                        $("#pesan").html("<img src='<?=base_url();?>assets/global/loading.gif'>Cek Nama Jenis Persyaratan ...");
+                
+                        if(nama_syarat=='')
+                        {
+                          $("#pesan").html('<img src="<?=base_url();?>assets/global/salah.png"> Nama Jenis Persyaratan tidak boleh kosong');
+                          $("#nama_syarat").css('border', '3px #C33 solid');
+                        }
+						else
+						$.ajax({type: "POST", url: "<?=base_url();?>index.php/C_admin_syarat/cek_persyaratan/", data: "nama_syarat="+nama_syarat, success:function(data)
+                        { 
+                        	if(data==0 || ($("#nama_syarat").val() == $("#cek_nama_syarat").val()))
+                            //if(data==0)
+                        	  {
+                        	  	$("#pesan").html('<img src="<?=base_url();?>assets/global/true.png"> ');
+                                $("#nama_syarat").css('border', '3px #090 solid');
+								$("#ket_syarat").attr("disabled", false);
+                                $("#btnsimpan").attr("disabled", false);
+                            }
+                              else
+                              {
+                              	$("#pesan").html('<img src="<?=base_url();?>assets/global/salah.png"> Nama Jenis Persyaratan telah digunakan');
+                				//$("#pesan").html(data); 
+                              	$("#nama_syarat").css('border', '3px #C33 solid');
+								$("#ket_syarat").attr("disabled", true);
+                                $("#btnsimpan").attr("disabled", true);
+                              }
+                              
+                        } 
+                        });
+                     });
                 });
             </script>
             
@@ -58,12 +95,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            Tahapan Dokumen
+            Jenis Persyaratan
           </h1>
           <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
 			<li><a href="#"><i class="fa fa-dashboard"></i> Basis Data</a></li>
-            <li class="active">Tahapan Dokumen</li>
+            <li class="active">Jenis Persyaratan</li>
             
           </ol>
         </section>
@@ -75,17 +112,54 @@
           <div class="row">
             <div class="col-md-12">
               <!-- <div class="box box-warning collapsed-box box-solid"> -->
-			  
+			  <div  id="box-form" class="box box-warning collapsed-box box-solid">
+                <div class="box-header with-border">
+                  <h3 class="box-title">Formulir Input Jenis Persyaratan</h3>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                  </div><!-- /.box-tools -->
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  
+                  
+                  <!-- ISI FORM -->
+						<form role="form" action="<?=base_url();?>admin-persyaratan-simpan" method="post" class="frm-input">
+						<input type="hidden" name="stat_edit" id="stat_edit"/>
+						<div class="box-body">
+							
+							<div class="form-group">
+							<label for="nama_syarat">Nama Jenis Persyaratan</label>
+							<input type="hidden" id="cek_nama_syarat" name="cek_nama_syarat" />
+							<input type="text" id="nama_syarat" name="nama_syarat"  maxlength="35" class="required form-control" size="35" alt="Nama Jenis Persyaratan" title="Nama Jenis Persyaratan" placeholder="*Nama Jenis Persyaratan"/><span id="pesan"></span>
+							</div>
+							
+							<div class="form-group">
+							<label for="ket_syarat">Keterangan</label>
+							<textarea name="ket_syarat" id="ket_syarat" class="required form-control" title="Keterangan" placeholder="*Keterangan"></textarea>
+							</div>
+							
+						</div><!-- /.box-body -->
+		
+						<div class="box-footer">
+							<button type="reset" class="btn btn-default">Batal</button>
+							<button type="submit" id="btnsimpan" class="confirm-btn btn btn-primary" title="Simpan Data Persyaratan">Submit</button>
+						</div>
+						</form>
+					<!-- ISI FORM -->
+                  
+                  
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
               
               
               <!-- Perbatasan table dan form -->
 					
 					<div class="box">
 						<div class="box-header">
-						<h3 class="box-title">Table Tahapan Dokumen</h3>
+						<h3 class="box-title">Table Jenis Persyaratan</h3>
 							<div class="pull-right">
 								<!-- <form action="<?=base_url();?>admin/pendaftaran-klinik-cari" method="post" class="frm-cari"> -->
-								<form action="<?=base_url();?>admin-tahapan-dokumen" method="get" class="frm-cari">
+								<form action="<?=base_url();?>admin-persyaratan" method="get" class="frm-cari">
 									<table>
 										<tr>
 											<!-- <td>Berdasarkan</td><td>:</td> -->
@@ -109,34 +183,35 @@
 						
 						
 						<?php
-								if(!empty($list_tahapan_naskah))
+								if(!empty($list_persyaratan))
 								{
 									echo'<table width="100%" id="example2" class="table table-bordered table-hover">';
 										echo '<thead>
 	<tr>';
 													echo '<th width="5%">No</th>';
-													echo '<th width="15%">Nama Jenis Dokumen</th>';
-													echo '<th width="35%">Tahapan</th>';
-													echo '<th width="35%">Persyaratan</th>';
-													echo '<th width="10%">Aksi</th>';
+													echo '<th width="30%">Nama Jenis Persyaratan</th>';
+													echo '<th width="50%">Keterangan</th>';
+													echo '<th width="15%">Aksi</th>';
 										echo '</tr>
 	</thead>';
-										$list_result = $list_tahapan_naskah->result();
-										$no =$this->uri->segment(2,0)+1;
+										$list_result = $list_persyaratan->result();
+										$no = $this->uri->segment(2,0)+1;
 										echo '<tbody>';
 										foreach($list_result as $row)
 										{
 											echo'<tr>';
 												echo'<td>'.$no.'</td>';
-												echo'<td>'.$row->nama_jenis_naskah.'</td>';
-												echo'<td>'.$row->tahapan.'</td>';
 												echo'<td>'.$row->nama_syarat.'</td>';
+												echo'<td>'.$row->ket_syarat.'</td>';
+											
+												echo'<input type="hidden" id="id_syarat_'.$no.'" value="'.$row->id_syarat.'" />';
+												echo'<input type="hidden" id="nama_syarat_'.$no.'" value="'.$row->nama_syarat.'" />';
+												echo'<input type="hidden" id="ket_syarat_'.$no.'" value="'.$row->ket_syarat.'" />';
 												
 												echo'<td>
-	<a class="confirm-btn btn btn-success btn-sm btn-flat btn-block" href="'.base_url().'admin-pilih-tahapan-dokumen/'.$row->id_jenis_naskah.'" title = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'" alt = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'">Tahapan</a>
+	<a href="javascript:void(0)" class="btn btn-warning btn-sm" onclick="edit('.$no.')" title = "Ubah Data '.$row->nama_syarat.'" alt = "Ubah Data '.$row->nama_syarat.'">Edit</a>
 	
-	<a class="confirm-btn btn btn-success btn-sm btn-flat btn-block" href="'.base_url().'admin-pilih-syarat-dokumen/'.$row->id_jenis_naskah.'" title = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'" alt = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'">Syarat</a>
-	
+	<a class="confirm-btn btn btn-danger btn-sm" href="'.base_url().'admin-persyaratan/'.$row->id_syarat.'" title = "Hapus Data '.$row->nama_syarat.'" alt = "Hapus Data '.$row->nama_syarat.'">Hapus</a>
 	</td>';
 												
 												
@@ -168,7 +243,21 @@
       </div><!-- /.content-wrapper -->
             
     		
-
+		
+<script type='text/javascript'>
+	function edit(id)
+	{
+		alert("Mode Perubahan Data, Silahkan Cek Formulir Isian !");
+		$('input[name=stat_edit]').val($('#id_syarat_'+id).val());
+		$('input[name=nama_syarat]').val($('#nama_syarat_'+id).val());
+        $('input[name=cek_nama_syarat]').val($('#cek_nama_syarat_'+id).val());
+		document.getElementById("ket_syarat").value = $('#ket_syarat_'+id).val();
+        //$('input[name=ket]').val($('#ket_'+id).val());
+		
+		
+		$('#box-form').attr('class', 'box box-warning ellapsed-box box-solid');
+	}
+</script>
       
     <!-- Bootstrap 3.3.4 -->
     <script src="<?=base_url();?>assets/adminlte/bootstrap/js/bootstrap.min.js"></script>

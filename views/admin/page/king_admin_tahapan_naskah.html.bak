@@ -130,7 +130,7 @@
 												echo'<td>'.$no.'</td>';
 												echo'<td>'.$row->nama_jenis_naskah.'</td>';
 												echo'<td>'.$row->tahapan.'</td>';
-												echo'<td>'.$row->nama_syarat.'</td>';
+												echo'<td>'.$row->tahapan.'</td>';
 												
 												echo'<td>
 	<a class="confirm-btn btn btn-success btn-sm btn-flat btn-block" href="'.base_url().'admin-pilih-tahapan-dokumen/'.$row->id_jenis_naskah.'" title = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'" alt = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'">Tahapan</a>

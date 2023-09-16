@@ -292,7 +292,7 @@ class C_admin_pilih_tahapan_naskah extends CI_Controller {
 			//echo $_POST['id_tahapan2_'.$i].'<br/>';
 			$this->M_tahapan_naskah->edit_persyaratan_naskah(
 			$id_jenis_naskah
-			,$_POST['id_syarat2_'.$i]
+			,$_POST['id_tahapan2_'.$i]
 			,$_POST['ordr_index_'.$i]);
 			//echo $_POST['id_tahapan2_'.$i];
 		}

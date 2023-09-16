@@ -87,6 +87,9 @@ $route['translate_uri_dashes'] = FALSE;
 	$route['warga-pengajuan-history'] = "C_admin_login/view_history_pengajuan";
 	$route['warga-pengajuan-history/(:any)'] = 'C_admin_login/view_history_pengajuan';
 	
+	$route['warga-pengajuan-hapus'] = "C_admin_login/hapus_pengajuan";
+	$route['warga-pengajuan-hapus/(:any)'] = 'C_admin_login/hapus_pengajuan';
+	
 	
 //LOGIN
 
@@ -133,6 +136,17 @@ $route['translate_uri_dashes'] = FALSE;
 	$route['admin-jenis-tahapan-hapus'] = "C_admin_tahapan/hapus";
 	$route['admin-jenis-tahapan-hapus/(:any)'] = 'C_admin_tahapan/hapus';
 //TAHAPAN
+
+//SYARAT
+	$route['admin-persyaratan'] = "C_admin_syarat/index";
+	$route['admin-persyaratan/(:any)'] = 'C_admin_syarat/index';
+	
+	$route['admin-persyaratan-simpan'] = "C_admin_syarat/simpan";
+	$route['admin-persyaratan-simpan/(:any)'] = 'C_admin_syarat/simpan';
+	
+	$route['admin-persyaratan-hapus'] = "C_admin_syarat/hapus";
+	$route['admin-persyaratan-hapus/(:any)'] = 'C_admin_syarat/hapus';
+//SYARAT
 
 //DATA PENDUDUK
 	$route['admin-penduduk'] = "C_admin_penduduk/index";

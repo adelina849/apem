@@ -48,7 +48,7 @@
 					,GROUP_CONCAT(
 									DISTINCT A2.nama_syarat
 									ORDER BY A2.ordr_index
-									SEPARATOR ' <br/> '
+									SEPARATOR ' <br/> '.A2.ordr_index
 								) AS nama_syarat
 					,A2.kode_kantor
 				FROM
