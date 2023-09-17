@@ -1,77 +1,10 @@
 <html>
 	<head>
-	
-	<script src="<?=base_url();?>assets/adminlte/plugins/jQuery/jQuery-2.1.4.min.js"></script>
-	<!-- SUMMERNOTE -->
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url().'assets/summernote/summernote-bs4.css';?>">
-	<script type="text/javascript" src="<?php echo base_url().'assets/summernote/summernote-bs4.js';?>"></script>
-	<script type="text/javascript">
-        $(document).ready(function(){
-            $('#format_naskah').summernote(
-			{
-				/*
-				toolbar: [
-				  ['style', ['style']],
-				  ['font', ['bold', 'underline', 'clear']],
-				  ['fontname', ['fontname']],
-				  ['color', ['color']],
-				  ['para', ['ul', 'ol', 'paragraph']],
-				  ['table', ['table']],
-				  ['insert', ['link', 'picture', 'video']],
-				  ['view', ['fullscreen', 'codeview', 'help']],
-				],
-				*/
-				height: "800px",
-                callbacks: {
-                    onImageUpload: function(image) {
-                        uploadImage(image[0]);
-                    },
-                    onMediaDelete : function(target) {
-                        deleteImage(target[0].src);
-                    }
-                }
-            });
- 
-            function uploadImage(image) {
-                var data = new FormData();
-                data.append("image", image);
-                $.ajax({
-                    url: "<?php echo site_url('C_gl_admin_post_images_summernote/upload_image')?>",
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    data: data,
-                    type: "POST",
-                    success: function(url) {
-                        $('#format_naskah').summernote("insertImage", url);
-                    },
-                    error: function(data) {
-                        console.log(data);
-                    }
-                });
-            }
- 
-            function deleteImage(src) {
-                $.ajax({
-                    data: {src : src},
-                    type: "POST",
-                    url: "<?php echo site_url('C_gl_admin_post_images_summernote/delete_image')?>",
-                    cache: false,
-                    success: function(response) {
-                        console.log(response);
-                    }
-                });
-            }
- 
-        });
-         
-		</script>
-		<!-- SUMMERNOTE -->
-	
-	
-	
+		<style>
+			@page { size: auto; margin-top:0mm;margin-bottom:0mm; }	
+		</style>
 	</head>
-	<body>
+	<body onload="window.print();" style="font-family:arial narrow;font-size:13px;font-weight:bold;margin:-1px;">
 		<!-- <textarea name="format_naskah" id="format_naskah" class="required form-control" style="" title="Isikan Artikel" placeholder="*Isikan Artikel"><?php echo $get_jenis_naskah->format_naskah;?></textarea> -->
 		
 		

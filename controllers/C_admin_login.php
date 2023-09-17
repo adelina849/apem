@@ -105,6 +105,7 @@
 									
 				$query_list_layanan = "SELECT
 							A.*
+							,CASE WHEN (LENGTH(A.format_naskah) > 3) THEN 'SUDAH' ELSE 'BELUM' END AS SDH_FORMAT
 							,COALESCE(B.tahapan,'') AS tahapan
 							,COALESCE(C.nama_syarat,'') AS nama_syarat
 							,COALESCE(D.nama_var,'') AS nama_var
@@ -222,7 +223,13 @@
 						{
 							echo'<tr>';
 								echo'<td>'.$no.'</td>';
-								echo'<td>'.$row->nama_jenis_naskah.'</td>';
+								echo'<td>
+													
+													'.$row->nama_jenis_naskah.'
+													<br/>
+													<br/><b>Sudah Ada Format :</b>
+													<br/>'.$row->SDH_FORMAT.'
+												</td>';
 								echo'<td>'.$row->tahapan.'</td>';
 								echo'<td>'.$row->nama_syarat.'</td>';
 								echo'<td>'.$row->nama_var.'</td>';
@@ -883,6 +890,9 @@
 							
 							echo'<input type="hidden" id="nama_jenis_naskah_'.$no.'" value="'.$row->nama_jenis_naskah.'" />';
 							echo'<input type="hidden" id="syarat_jenis_naskah_'.$no.'" value="'.$row->syarat_jenis_naskah.'" />';
+							
+							echo'<input type="hidden" id="tgl_surat_masuk_'.$no.'" value="'.$row->tgl_surat_masuk.'" />';
+							
 							echo'<input type="hidden" id="ket_jenis_naskah_'.$no.'" value="'.$row->ket_jenis_naskah.'" />';
 							
 							echo'<td>
@@ -895,7 +905,7 @@
 
 <a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-progress" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'" onclick="cek_progress(this)">PROGRES</a>
 
-<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-progress" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'" onclick="cek_progress(this)">DOWNLOAD DOK</a>
+<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-cetakdok" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'" onclick="cetak_dok(this)">CETAK DOKUMEN</a>
 							
 							</td>';
 							

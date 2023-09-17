@@ -259,6 +259,30 @@
     <!-- </script> -->
 	
 	<script type='text/javascript'>
+		function cetak_dok(evt)
+		{
+			var arrStrId = evt.id;
+			var arrIdSplit = arrStrId.split("-");
+			
+			var jenis = arrIdSplit[0];
+			var id_jenis_naskah = arrIdSplit[1];
+			var idx = arrIdSplit[2];
+			var nik = $("#nik_ori").val();
+			var tgl_surat_masuk = $("#tgl_surat_masuk_"+idx).val();
+			
+			var id_pengajuan = $("#id_pengajuan_"+idx).val();
+			//var id_pengajuan = arrIdSplit[1]+'-'+$("#nik_ori").val()+'-'+tgl_surat_masuk;
+			
+			var no_pengajuan = $("#no_pengajuan_"+idx).val();
+			
+			//C_admin_login/view_download_dok?id_pengajuan=358&id_jenis_naskah=3
+			var href = "<?php echo base_url();?>C_admin_login/view_download_dok?id_pengajuan="+id_pengajuan+"&id_jenis_naskah="+id_jenis_naskah;
+													
+			window.open(href, 'popup', 'height=700,width=500,toolbar=no');
+			//return false;
+			//window.location.replace("<?php echo base_url();?>gl-admin-pemeriksaan-dokter");
+		}
+	
 		function simpan_isian_var_naskah(evt)
 		{
 			var id_pengajuan = $("#id_jenis_naskah").val()+"-"+$("#sumber").val()+"-"+$("#tgl_surat_dibuat").val();
@@ -717,8 +741,10 @@
 				{
 					 //alert(data);
 					//if(data=='BERHASIL')
+					
 					if(data != false)
 					{
+					
 						//alert("BERHASIL");
 						//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan, Selamat Datang '+data);
 						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan dan tidak ada tunggakan pajak kendaraan, Harap Menunggu,<br/> <img src="<?php echo base_url();?>assets/global/loading.gif"> sedang memproses permintaan.....');
@@ -742,6 +768,7 @@
 						$("#langkah_2").css('color','green');
 						$("#langkah_2").css('font-weight','bold');
 						
+					
 					}
 					else
 					{
@@ -750,6 +777,7 @@
 						$("#nik").css('border', '3px #C33 solid');
 						//$("#btn_lanjut").attr("disabled", true);
 					}
+					
 				} 
 				});
 			}
