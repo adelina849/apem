@@ -12,6 +12,7 @@
 			$query = $this->db->query("SELECT
 				A.id_jenis_naskah
 				,A.nama_jenis_naskah
+				,CASE WHEN (LENGTH(A.format_naskah) > 3) THEN 'YA' ELSE 'TIDAK' END AS SDH_FORMAT
 				,COALESCE(B.tahapan,'') AS tahapan
 				,COALESCE(C.nama_syarat,'') AS nama_syarat
 				,COALESCE(D.nama_var,'') AS nama_var
@@ -21,7 +22,7 @@
 				SELECT A2.id_jenis_naskah
 					,A2.naskah	
 					,GROUP_CONCAT(
-									DISTINCT CONCAT('<b>- </b>',A2.tahapan)
+									DISTINCT CONCAT('<b>',ordr_index,'. </b>',A2.tahapan)
 									ORDER BY A2.ordr_index
 									SEPARATOR ' <br/>'
 								) AS tahapan
@@ -47,7 +48,7 @@
 				SELECT A2.id_jenis_naskah
 					,A2.naskah	
 					,GROUP_CONCAT(
-									DISTINCT CONCAT('<b>- </b>',A2.nama_syarat)
+									DISTINCT CONCAT('<b>',ordr_index,'. </b>',A2.nama_syarat)
 									ORDER BY A2.ordr_index
 									SEPARATOR ' <br/>'
 								) AS nama_syarat

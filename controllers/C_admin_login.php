@@ -460,6 +460,8 @@
 			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
 			$id_jenis_naskah = htmlentities($_POST['id_jenis_naskah'], ENT_QUOTES, 'UTF-8');
 			
+			
+			
 			//if((!empty( htmlentities($_POST['no_pengajuan'], ENT_QUOTES, 'UTF-8') )) && ( htmlentities($_POST['no_pengajuan'], ENT_QUOTES, 'UTF-8') != "")  )
 			if((!empty($_POST['no_pengajuan'])) && ($_POST['no_pengajuan']!= "")  )
 			{
@@ -491,7 +493,10 @@
 						$perihal = $cek_apakah_sudah_ada_edit->perihal;
 						$diajukan_oleh = $cek_apakah_sudah_ada_edit->diajukan_oleh;
 						$tandatangan_oleh = $cek_apakah_sudah_ada_edit->tandatangan_oleh;
+						
 						$tgl_surat_dibuat = $cek_apakah_sudah_ada_edit->tgl_surat_dibuat;
+						$tgl_surat_dibuat_untuk_isian = $cek_apakah_sudah_ada_edit->tgl_surat_dibuat;
+						
 						$tgl_surat_masuk = $cek_apakah_sudah_ada_edit->tgl_surat_masuk;
 						$ket_pengajuan = $cek_apakah_sudah_ada_edit->ket_pengajuan;
 						$penting = $cek_apakah_sudah_ada_edit->penting;
@@ -502,7 +507,10 @@
 						$perihal = ""; 
 						$diajukan_oleh = ""; 
 						$tandatangan_oleh = ""; 
+						
 						$tgl_surat_dibuat = date("Y-m-d"); 
+						$tgl_surat_dibuat_untuk_isian = "";
+						
 						$tgl_surat_masuk = date("Y-m-d"); 
 						$ket_pengajuan = ""; 
 						$penting = ""; 
@@ -591,8 +599,12 @@
 					
 					
 					$query_data = "
-								SELECT * 
-								FROM tb_var_naskah AS A 
+								SELECT A.*,COALESCE(B.isi,'') AS isi
+								FROM tb_var_naskah AS A
+								LEFT JOIN tb_isi_var_naskah AS B 
+									ON A.id_var_naskah = B.id_var_naskah 
+									AND B.id_jenis_naskah = '".$cek_jenis_naskah->id_jenis_naskah."'
+									AND B.id_pengajuan = '".$cek_jenis_naskah->id_jenis_naskah."-".$nik."-".$tgl_surat_dibuat_untuk_isian."'
 								WHERE A.id_jenis_naskah = '".$cek_jenis_naskah->id_jenis_naskah."' 
 								";
 					$list_data = $this->M_dash->view_query_general($query_data);
@@ -606,7 +618,7 @@
 								{
 									echo'<div class="form-group">
 										<label for="var-'.$row->id_var_naskah.'">'.$row->nama_var.'</label>
-										<input type="text" id="var-'.$row->id_var_naskah.'" name="var-'.$row->id_var_naskah.'"  maxlength="35" class="required form-control" size="35" alt="'.$row->ket.'" title="'.$row->ket.'" placeholder="*'.$row->ket.'" onkeypress="return isNumberKey(event)" value=""/>
+										<input type="text" id="var-'.$row->id_var_naskah.'" name="var-'.$row->id_var_naskah.'"  maxlength="35" class="required form-control" size="35" alt="'.$row->ket.'" title="'.$row->ket.'" placeholder="*'.$row->ket.'" onkeypress="return isNumberKey(event)" value="'.$row->isi.'" onchange="simpan_isian_var_naskah(this)"/>
 									</div>';
 								}
 								elseif($row->tipe=="TANGGAL")
@@ -617,7 +629,7 @@
 										  <div class="input-group-addon">
 											<i class="fa fa-calendar"></i>
 										  </div>
-										  <input name="var-'.$row->id_var_naskah.'" type="date" class="required form-control pull-right settingDate" id="var-'.$row->id_var_naskah.'" alt="'.$row->ket.'" title="'.$row->ket.'" value="" data-date-format="yyyy-mm-dd">
+										  <input name="var-'.$row->id_var_naskah.'" type="date" class="required form-control pull-right settingDate" id="var-'.$row->id_var_naskah.'" alt="'.$row->ket.'" title="'.$row->ket.'" onchange="simpan_isian_var_naskah(this)" value="'.$row->isi.'" data-date-format="yyyy-mm-dd">
 										</div>
 										<!-- /.input group -->
 									</div>';
@@ -626,7 +638,7 @@
 								{
 									echo'<div class="form-group">
 										<label for="var-'.$row->id_var_naskah.'">'.$row->nama_var.'</label>
-										<input type="text" id="var-'.$row->id_var_naskah.'" name="var-'.$row->id_var_naskah.'"  maxlength="35" class="required form-control" size="35" alt="'.$row->ket.'" title="'.$row->ket.'" placeholder="*'.$row->ket.'" value=""/>
+										<input type="text" id="var-'.$row->id_var_naskah.'" name="var-'.$row->id_var_naskah.'"  maxlength="35" class="required form-control" size="35" alt="'.$row->ket.'" title="'.$row->ket.'" placeholder="*'.$row->ket.'" value="'.$row->isi.'" onchange="simpan_isian_var_naskah(this)"/>
 									</div>';
 								}
 							}
@@ -700,7 +712,7 @@
 					echo'
 						<br/>
 						<div class="col-xs-12">
-						  <button type="button" id="btn_simpan_data_pengajuan" class="btn-warga btn btn-success btn-block btn-flat" style="border:1px dotted black;" onclick="simpan_pengajuan()">SIMPAN DATA</button>
+						  <button type="button" id="btn_simpan_data_pengajuan-'.$cek_jenis_naskah->id_jenis_naskah.'-1" class="btn-warga btn btn-success btn-block btn-flat" style="border:1px dotted black;" onclick="simpan_pengajuan(this)">SIMPAN DATA</button>
 						</div>
 						';
 					
@@ -773,6 +785,8 @@
 				//$data_pengajuan = $this->M_pengajuan->get_pengajuan('A.kode_pengajuan',$_POST['kode_pengajuan'])	;
 				//$data_pengajuan = $this->M_pengajuan->get_pengajuan('A.kode_pengajuan',$_POST['kode_pengajuan'])	;
 				
+				
+				//BUAT QR CODE
 				$cek_terakhir = "SELECT * FROM tb_pengajuan WHERE sumber = '".$_POST['sumber']."' AND id_jenis_naskah = '".$_POST['id_jenis_naskah']."' ORDER BY id_pengajuan DESC LIMIT 0,1; ";
 				$data_pengajuan = $this->M_dash->view_query_general($cek_terakhir);
 				if(!empty($data_pengajuan))
@@ -799,6 +813,11 @@
 						$this->ciqrcode->generate($params); // fungsi untuk generate QR CODE
 					//GENERATE QR CODE
 				}
+				//BUAT QR CODE
+				
+				//SIMPAN DATA VARIABLE NASKAH
+				//SIMPAN DATA VARIABLE NASKAH
+				
 				echo $data_pengajuan->no_pengajuan;
 			}
 		}
@@ -868,13 +887,15 @@
 							
 							echo'<td>
 
-<a href="javascript:void(0)" class="btn btn-warning btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="pilih_layanan(this)" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">UBAH</a>
+<a href="javascript:void(0)" class="btn btn-warning btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-ubah" onclick="pilih_layanan(this)" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">UBAH</a>
 
-<a href="javascript:void(0)" class="btn btn-danger btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="hapus_pengajuan(this)" title = "Hapus Data '.$row->nama_jenis_naskah.'" alt = "Hapus Data '.$row->nama_jenis_naskah.'">HAPUS</a>
+<a href="javascript:void(0)" class="btn btn-danger btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-hapus" onclick="hapus_pengajuan(this)" title = "Hapus Data '.$row->nama_jenis_naskah.'" alt = "Hapus Data '.$row->nama_jenis_naskah.'">HAPUS</a>
 
-<a href="'.base_url().'admin-cetak-faktur?pengajuan='.$row->no_pengajuan.'" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'">CETAK QR</a>
+<a href="'.base_url().'admin-cetak-faktur?pengajuan='.$row->no_pengajuan.'" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-qr" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'">CETAK QR</a>
 
-<a href="'.base_url().'cek-barcode?no_pengajuan='.$row->no_pengajuan.'" class="btn btn-default btn-sm btn-flat btn-block" id="" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'">PROGRES</a>
+<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-progress" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'" onclick="cek_progress(this)">PROGRES</a>
+
+<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-progress" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'" onclick="cek_progress(this)">DOWNLOAD DOK</a>
 							
 							</td>';
 							
@@ -914,6 +935,91 @@
 			
 			//header('Location: '.base_url().'admin-pengajuan-dokumen');
 			echo'BERHASIL';
+		}
+	
+		function simpan_isi_var_naskah()
+		{
+			$id_pengajuan = htmlentities($_POST['id_pengajuan'], ENT_QUOTES, 'UTF-8');
+			$id_jenis_naskah = htmlentities($_POST['id_jenis_naskah'], ENT_QUOTES, 'UTF-8');
+			$id_var_naskah = htmlentities($_POST['id_var_naskah'], ENT_QUOTES, 'UTF-8');
+			$isi = htmlentities($_POST['isi'], ENT_QUOTES, 'UTF-8');
+			
+			$query = "
+					SELECT * FROM tb_isi_var_naskah 
+					WHERE id_pengajuan = '".$id_pengajuan."'
+					AND id_jenis_naskah = '".$id_jenis_naskah."'
+					AND id_var_naskah = '".$id_var_naskah."'
+					";
+			$cek_isi_var_naskah = $this->M_dash->view_query_general($query);
+			if(!empty($cek_isi_var_naskah))
+			{
+				//EDIT
+				$cek_isi_var_naskah = $cek_isi_var_naskah->row();
+				$query_edit = "
+								UPDATE tb_isi_var_naskah SET isi = '".$isi."'  
+								WHERE id_pengajuan = '".$id_pengajuan."'
+								AND id_jenis_naskah = '".$id_jenis_naskah."'
+								AND id_var_naskah = '".$id_var_naskah."'
+								";
+				$this->M_dash->exec_query_general($query_edit);
+			}
+			else
+			{
+				//SIMPAN
+				$query_simpan = "INSERT INTO tb_isi_var_naskah (id_pengajuan,id_jenis_naskah,id_var_naskah,isi,tgl_ins)
+				VALUES
+				('".$id_pengajuan."','".$id_jenis_naskah."','".$id_var_naskah."','".$isi."',NOW());
+				";
+				$this->M_dash->exec_query_general($query_simpan);
+			}
+			
+			echo'BERHASIL';
+			
+		}
+	
+		function view_download_dok()
+		{
+			$id_pengajuan = htmlentities($_GET['id_pengajuan'], ENT_QUOTES, 'UTF-8');
+			$id_jenis_naskah = htmlentities($_GET['id_jenis_naskah'], ENT_QUOTES, 'UTF-8');
+			
+			//GET PENGAJUAN
+			$query_get_pengajuan = "SELECT * FROM tb_pengajuan WHERE id_pengajuan = '".$id_pengajuan."' ;";
+			$get_pengajuan = $this->M_dash->view_query_general($query_get_pengajuan);
+			if(!empty($get_pengajuan))
+			{
+				$get_pengajuan = $get_pengajuan->row();
+				
+				//GET PENDUDUK
+				$query_get_data_penduduk = "SELECT * FROM tb_penduduk WHERE nik = '".$get_pengajuan->sumber."'";
+				$get_data_penduduk = $this->M_dash->view_query_general($query_get_data_penduduk);
+				if(!empty($get_data_penduduk))
+				{
+					$get_data_penduduk = $get_data_penduduk->row();
+					
+					//GET JENIS NASKAH
+					$query_get_jenis_naskah = "SELECT * FROM tb_jenis_naskah WHERE id_jenis_naskah = '".$id_jenis_naskah."' ;";
+					$get_jenis_naskah = $this->M_dash->view_query_general($query_get_jenis_naskah);
+					if(!empty($get_jenis_naskah))
+					{
+						$get_jenis_naskah = $get_jenis_naskah->row();
+						//$data = array('page_content'=>'king_admin_tahapan','halaman'=>$halaman,'list_tahapan'=>$list_tahapan);
+						$data = array('get_pengajuan'=>$get_pengajuan,'get_data_penduduk'=>$get_data_penduduk,'get_jenis_naskah'=>$get_jenis_naskah);
+						$this->load->view('admin/page/king_admin_cetak_format_naskah.html',$data);
+					}
+					else
+					{
+						echo'TIDAK ADA DATA !';
+					}
+				}
+				else
+				{
+					echo'TIDAK ADA DATA !';
+				}
+			}
+			else
+			{
+				echo'TIDAK ADA DATA !';
+			}
 		}
 	
         public function validasi_input_captcha()

@@ -12,6 +12,7 @@
 			$query = $this->db->query("SELECT
 				A.id_jenis_naskah
 				,A.nama_jenis_naskah
+				,CASE WHEN (LENGTH(A.format_naskah) > 3) THEN 'SUDAH' ELSE 'BELUM' END AS SDH_FORMAT
 				,COALESCE(B.tahapan,'') AS tahapan
 				,COALESCE(C.nama_syarat,'') AS nama_syarat
 				,COALESCE(D.nama_var,'') AS nama_var

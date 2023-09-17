@@ -187,7 +187,8 @@
 		
 		function hapus($id)
 		{
-			$this->db->query("DELETE FROM tb_pengajuan WHERE id_pengajuan = ".$id." AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."' ;");
+			//$this->db->query("DELETE FROM tb_pengajuan WHERE id_pengajuan = ".$id." AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."' ;");
+			$this->db->query("DELETE FROM tb_pengajuan WHERE id_pengajuan = ".$id.";");
 		}
 		
 		

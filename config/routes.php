@@ -182,6 +182,10 @@ $route['translate_uri_dashes'] = FALSE;
 	
 	$route['admin-pilih-syarat-dokumen'] = "C_admin_pilih_tahapan_naskah/view_pengatura_persyaratan";
 	$route['admin-pilih-syarat-dokumen/(:any)'] = 'C_admin_pilih_tahapan_naskah/view_pengatura_persyaratan';
+	
+	$route['admin-tahapan-dokumen-format'] = "C_admin_tahapan_naskah/format_naskah";
+	$route['admin-tahapan-dokumen-format/(:any)'] = 'C_admin_tahapan_naskah/format_naskah';
+	$route['admin-tahapan-dokumen-format/(:any)/(:any)'] = 'C_admin_tahapan_naskah/format_naskah';
 //TAHAPAN NASKAH
 
 //PENGAJUAN NASKAH

@@ -182,7 +182,7 @@
         <!-- <form method="post" style="border:1px black dashed;padding:2%;"> -->
 		<div style="border:1px grey dashed;padding:2%;box-shadow: 2px 2px 2px black;">
           <div class="form-group has-feedback box-body table-responsive no-padding" id="form_utama">
-			<label style="font-size:20px;color:black;text-align:Center;width:100%;">V MASUKAN NIK V</label>
+			<label style="font-size:20px;color:black;text-align:Center;width:100%;">MASUKAN NIK </label>
             <input type="text" name="nik" id="nik" class="form-control" style="background-color:#8ff98f;color:black;border:1px solid black;" placeholder="MASUKAN NIK ANDA...." autocomplete="off" />
             <span class="glyphicon glyphicon-user form-control-feedback" style="padding-top:1.5%;"></span>
 			<br/>
@@ -220,10 +220,10 @@
 			<div class="col-xs-12" style="color:red;">
 				LANGKAH - LANGKAH PENGGUNAAN
 				<ul>
-					<li>Masukan NIK anda (Jika Belum terdaftar silahkan daftar dengan mengklik tombol "DAFTAR ATAU UBAH DATA WARGA")</li>
-					<li>Pilih Layanan/Surat yang anda inginkan</li>
-					<li>Isi data yang dibutuhkan dan Upload Persyaratan</li>
-					<li>Tunggu sampai proses selesai (anda bisa melakukan pengecekan progress dengan menggunakan QR/Bukti Tanda pendaftaran)</li>
+					<li id="langkah_1" class="langkah" style="color:green;font-weight:bold;">Masukan NIK anda (Jika Belum terdaftar silahkan daftar dengan mengklik tombol "DAFTAR ATAU UBAH DATA WARGA")</li>
+					<li id="langkah_2" class="langkah">Pilih Layanan/Surat yang anda inginkan</li>
+					<li id="langkah_3" class="langkah">Isi data yang dibutuhkan dan Upload Persyaratan</li>
+					<li id="langkah_4" class="langkah">Tunggu sampai proses selesai (anda bisa melakukan pengecekan progress dengan menggunakan QR/Bukti Tanda pendaftaran)</li>
 				</ul>
 			</div>
 			<!-- <div class="col-xs-12"> -->
@@ -259,6 +259,64 @@
     <!-- </script> -->
 	
 	<script type='text/javascript'>
+		function simpan_isian_var_naskah(evt)
+		{
+			var id_pengajuan = $("#id_jenis_naskah").val()+"-"+$("#sumber").val()+"-"+$("#tgl_surat_dibuat").val();
+			var id_jenis_naskah = $("#id_jenis_naskah").val();
+			var tgl_surat_dibuat = $("#tgl_surat_dibuat").val();
+			
+			var arrStrId = evt.id;
+			var arrIdSplit = arrStrId.split("-");
+			
+			var jenis = arrIdSplit[0];
+			var id_var_naskah = arrIdSplit[1];
+			var val = evt.value;
+			
+			$.ajax({type: "POST", url: "<?php echo base_url();?>C_admin_login/simpan_isi_var_naskah/"
+			, data: 
+					{
+						id_pengajuan:id_pengajuan,
+						id_jenis_naskah:id_jenis_naskah,
+						id_var_naskah:id_var_naskah,
+						isi:val
+					}
+			, cache: false
+			, success:function(data)
+			{
+				 //alert(data);
+				//if(data=='BERHASIL')
+				if(data != false)
+				{
+					//alert("DATA TERSIMPAN");
+				}
+				else
+				{
+					alert("GAGAL");
+					//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Terjadi gangguan jaringan !');
+				}
+			} 
+			});
+		}
+	
+		function cek_progress(evt)
+		{
+			var arrStrId = evt.id;
+			var arrIdSplit = arrStrId.split("-");
+			
+			var jenis = arrIdSplit[0];
+			var id_jenis_naskah = arrIdSplit[1];
+			var idx = arrIdSplit[2];
+			var nik = $("#nik_ori").val();
+			var id_pengajuan = $("#id_pengajuan_"+idx).val();
+			var no_pengajuan = $("#no_pengajuan_"+idx).val();
+			
+			var href = "<?php echo base_url();?>cek-barcode?no_pengajuan="+no_pengajuan;
+													
+			window.open(href, 'popup', 'height=700,width=500,toolbar=no');
+			//return false;
+			//window.location.replace("<?php echo base_url();?>gl-admin-pemeriksaan-dokter");
+		}
+		
 		function hapus_pengajuan(evt)
 		{
 			var arrStrId = evt.id;
@@ -286,7 +344,8 @@
 					if(data=='BERHASIL')
 					//if(data != false)
 					{
-						location.reload();
+						//location.reload();
+						view_history_ajuan(evt);
 					}
 					else
 					{
@@ -326,9 +385,11 @@
 			var nik = $("#nik_ori").val();
 			var no_pengajuan = $("#no_pengajuan_"+idx).val();
 			
+			/*
 			var r = confirm("Apakah anda yakin akan melihat history pengajuan untuk "+$("#nama_jenis_naskah_"+idx).val()+" ?");
 			if (r == true) 
 			{
+			*/
 				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-pengajuan-history/"
 				, data: 
 						{
@@ -346,6 +407,7 @@
 						$("#form_utama").html(data);
 						$("#btn_lanjut").css('display','none');
 						$("#btn_daftar").css('display','none');
+						window.scrollTo(xCoord, yCoord);
 					}
 					else
 					{
@@ -353,11 +415,11 @@
 					}
 				} 
 				});
-			}
+			//}
 			
 		}
 		
-		function simpan_pengajuan()
+		function simpan_pengajuan(evt)
 		{
 			var id_jenis_naskah = $("#id_jenis_naskah").val();
 			var kode_pengajuan = $("#kode_pengajuan").val();
@@ -404,15 +466,15 @@
 					//if(data=='BERHASIL')
 					if(data != false)
 					{
-						var href_dir = "<?php echo base_url();?>admin-cetak-faktur?pengajuan="+data;
-						//window.open(href, 'popup', 'height=500,width=300,toolbar=no');
-						
-						//window.location.href = 'uploads/file.doc';
-						window.location.href = href_dir;
+						//UNTUK DOWNLOAD
+							//var href_dir = "<?php echo base_url();?>admin-cetak-faktur?pengajuan="+data;
+							//window.location.href = href_dir;
+						//UNTUK DOWNLOAD
 						
 						alert("DATA PENGAJUAN TERSIMPAN");
 						//location.reload();
-						
+						view_history_ajuan(evt);
+						/*
 						setTimeout(
 						function() 
 						{
@@ -420,6 +482,7 @@
 							//$("#form_utama").html(data);
 							location.reload();
 						}, 1000);
+						*/
 						
 					}
 					else
@@ -464,6 +527,12 @@
 						$("#form_utama").html(data);
 						$("#btn_lanjut").css('display','none');
 						$("#btn_daftar").css('display','none');
+						
+						$(".langkah").css('color','red');
+						$(".langkah").css('font-weight','normal');
+						$("#langkah_3").css('color','green');
+						$("#langkah_3").css('font-weight','bold');
+						
 					}
 					else
 					{
@@ -513,6 +582,7 @@
 			} 
 			});
 		}
+		
 		function simpan_daftar_warga()
 		{
 			var nik = $("#nik").val();
@@ -664,6 +734,11 @@
 							$("#btn_lanjut").css('display','none');
 							$("#btn_daftar").css('display','none');
 						}, 3000);
+						
+						$(".langkah").css('color','red');
+						$(".langkah").css('font-weight','normal');
+						$("#langkah_2").css('color','green');
+						$("#langkah_2").css('font-weight','bold');
 						
 					}
 					else

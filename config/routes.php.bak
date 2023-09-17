@@ -158,6 +158,7 @@ $route['translate_uri_dashes'] = FALSE;
 	
 	$route['admin-kebutuhan-data-hapus'] = "C_admin_var_naskah/hapus";
 	$route['admin-kebutuhan-data-hapus/(:any)'] = 'C_admin_var_naskah/hapus';
+	$route['admin-kebutuhan-data-hapus/(:any)/(:any)'] = 'C_admin_var_naskah/hapus';
 //VARIABLE NASKAH
 
 //DATA PENDUDUK
@@ -181,6 +182,10 @@ $route['translate_uri_dashes'] = FALSE;
 	
 	$route['admin-pilih-syarat-dokumen'] = "C_admin_pilih_tahapan_naskah/view_pengatura_persyaratan";
 	$route['admin-pilih-syarat-dokumen/(:any)'] = 'C_admin_pilih_tahapan_naskah/view_pengatura_persyaratan';
+	
+	$route['admin-tahapan-dokumen-format'] = "C_admin_tahapan_naskah/index";
+	$route['admin-tahapan-dokumen-format/(:any)'] = 'C_admin_tahapan_naskah/index';
+	$route['admin-tahapan-dokumen-format/(:any)/(:any)'] = 'C_admin_tahapan_naskah/index';
 //TAHAPAN NASKAH
 
 //PENGAJUAN NASKAH

@@ -114,12 +114,12 @@
 									echo'<table width="100%" id="example2" class="table table-bordered table-hover">';
 										echo '<thead>
 	<tr>';
-													echo '<th width="5%">No</th>';
-													echo '<th width="15%">Nama Jenis Dokumen</th>';
-													echo '<th width="25%">Tahapan</th>';
-													echo '<th width="25%">Persyaratan</th>';
-													echo '<th width="25%">Kebutuhan Data</th>';
-													echo '<th width="5%">Aksi</th>';
+													echo '<th width="5%" style="background-color:red;color:white;">No</th>';
+													echo '<th width="15%" style="background-color:red;color:white;">Nama Jenis Dokumen</th>';
+													echo '<th width="25%" style="background-color:red;color:white;">Tahapan</th>';
+													echo '<th width="25%" style="background-color:red;color:white;">Persyaratan</th>';
+													echo '<th width="25%" style="background-color:red;color:white;">Kebutuhan Data</th>';
+													echo '<th width="5%" style="background-color:red;color:white;">Aksi</th>';
 										echo '</tr>
 	</thead>';
 										$list_result = $list_tahapan_naskah->result();
@@ -129,7 +129,13 @@
 										{
 											echo'<tr>';
 												echo'<td>'.$no.'</td>';
-												echo'<td>'.$row->nama_jenis_naskah.'</td>';
+												echo'<td>
+													<b>Nama Jenis Naskah :</b>
+													<br/>'.$row->nama_jenis_naskah.'
+													<br/>
+													<br/><b>Sudah Ada Format :</b>
+													<br/>'.$row->SDH_FORMAT.'
+												</td>';
 												echo'<td>'.$row->tahapan.'</td>';
 												echo'<td>'.$row->nama_syarat.'</td>';
 												echo'<td>'.$row->nama_var.'</td>';
@@ -137,9 +143,13 @@
 												
 	<a href="'.base_url().'admin-kebutuhan-data/'.md5($row->id_jenis_naskah).'" class="btn btn-default btn-sm btn-flat btn-block" onclick="edit('.$no.')" title = "Kebutuhan Data '.$row->nama_jenis_naskah.'" alt = "Kebutuhan Data '.$row->nama_jenis_naskah.'">Kebutuhan Data</a>
 	
+	<a class="confirm-btn btn btn-default btn-sm btn-flat btn-block" href="'.base_url().'admin-pilih-syarat-dokumen/'.$row->id_jenis_naskah.'" title = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'" alt = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'">Syarat</a>
+	
 	<a class="confirm-btn btn btn-default btn-sm btn-flat btn-block" href="'.base_url().'admin-pilih-tahapan-dokumen/'.$row->id_jenis_naskah.'" title = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'" alt = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'">Tahapan</a>
 	
-	<a class="confirm-btn btn btn-default btn-sm btn-flat btn-block" href="'.base_url().'admin-pilih-syarat-dokumen/'.$row->id_jenis_naskah.'" title = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'" alt = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'">Syarat</a>
+	<a class="confirm-btn btn btn-default btn-sm btn-flat btn-block" href="'.base_url().'admin-tahapan-dokumen-format/'.md5($row->id_jenis_naskah).'" title = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'" alt = "Atur Tahapan Proses Dokumen '.$row->nama_jenis_naskah.'">Format Dokumen</a>
+	
+	
 	
 	</td>';
 												

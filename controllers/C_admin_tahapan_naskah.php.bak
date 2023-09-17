@@ -142,8 +142,8 @@ class C_admin_tahapan_naskah extends CI_Controller {
 				$query = "UPDATE tb_jenis_naskah SET format_naskah = '".$format_naskah."' WHERE id_jenis_naskah = '".$id_jenis_naskah."' AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."';";
 				
 				$this->M_dash->exec_query_general($query);
-				echo'BERHASIL';
-				//echo $query;
+				//echo'BERHASIL';
+				echo $query;
 			}
 			else
 			{
