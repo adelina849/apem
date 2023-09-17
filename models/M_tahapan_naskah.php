@@ -14,15 +14,16 @@
 				,A.nama_jenis_naskah
 				,COALESCE(B.tahapan,'') AS tahapan
 				,COALESCE(C.nama_syarat,'') AS nama_syarat
+				,COALESCE(D.nama_var,'') AS nama_var
 			FROM tb_jenis_naskah AS A
 			LEFT JOIN
 			(
 				SELECT A2.id_jenis_naskah
 					,A2.naskah	
 					,GROUP_CONCAT(
-									DISTINCT A2.tahapan
+									DISTINCT CONCAT('<b>',ordr_index,'. </b>',A2.tahapan)
 									ORDER BY A2.ordr_index
-									SEPARATOR ' <br/> '
+									SEPARATOR ' <br/>'
 								) AS tahapan
 					,A2.kode_kantor
 				FROM
@@ -36,7 +37,7 @@
 					FROM tb_tahapan_naskah AS A
 					LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
 					LEFT JOIN tb_tahapan AS C ON A.id_tahapan  = C.id_tahapan  AND A.kode_kantor = C.kode_kantor
-					WHERE COALESCE(B.nama_jenis_naskah,'') LIKE '%".$cari."%'
+					-- WHERE COALESCE(B.nama_jenis_naskah,'') LIKE '%".$cari."%'
 				) AS A2
 				GROUP BY A2.id_jenis_naskah,A2.naskah,A2.kode_kantor
 			) AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
@@ -46,9 +47,9 @@
 				SELECT A2.id_jenis_naskah
 					,A2.naskah	
 					,GROUP_CONCAT(
-									DISTINCT A2.nama_syarat
+									DISTINCT CONCAT('<b>',ordr_index,'. </b>',A2.nama_syarat)
 									ORDER BY A2.ordr_index
-									SEPARATOR ' <br/> '
+									SEPARATOR ' <br/>'
 								) AS nama_syarat
 					,A2.kode_kantor
 				FROM
@@ -65,7 +66,33 @@
 					WHERE COALESCE(B.nama_jenis_naskah,'') LIKE '%".$cari."%'
 				) AS A2
 				GROUP BY A2.id_jenis_naskah,A2.naskah,A2.kode_kantor
-			) AS C ON A.id_jenis_naskah = C.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
+			) AS C ON A.id_jenis_naskah = C.id_jenis_naskah AND A.kode_kantor = C.kode_kantor
+			
+			
+			LEFT JOIN
+			(
+				SELECT A2.id_jenis_naskah
+					,A2.naskah	
+					,GROUP_CONCAT(
+									DISTINCT CONCAT('<b>',ordr_index,'. </b>',A2.nama_var)
+									ORDER BY A2.ordr_index
+									SEPARATOR ' <br/>'
+								) AS nama_var
+					,A2.kode_kantor
+				FROM
+				(
+					SELECT 
+						A.id_var_naskah 
+						,A.id_jenis_naskah,A.idx AS ordr_index
+						,COALESCE(B.nama_jenis_naskah,'') AS naskah
+						,COALESCE(A.nama_var,'') AS nama_var
+						,A.kode_kantor
+					FROM tb_var_naskah AS A
+					LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
+					WHERE COALESCE(B.nama_jenis_naskah,'') LIKE '%".$cari."%'
+				) AS A2
+				GROUP BY A2.id_jenis_naskah,A2.naskah,A2.kode_kantor
+			) AS D ON A.id_jenis_naskah = D.id_jenis_naskah AND A.kode_kantor = D.kode_kantor
 			
 			
 			WHERE COALESCE(A.nama_jenis_naskah,'') LIKE '%".$cari."%' ORDER BY A.nama_jenis_naskah ASC LIMIT ".$offset.",".$limit);

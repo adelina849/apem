@@ -50,40 +50,36 @@
                 var htmlobjek;
                 $(document).ready(function()
                 {	
-					$('#inputdata').attr('class', 'active treeview');
-					$('#input-data-jenis-naskah').attr('class', 'active treeview');
+					$('#operation').attr('class', 'active treeview');
 					
-                    $("#nama_jenis_naskah").change(function()
+                    $("#nama_var").change(function()
                     //$("#simpan").click(function()
                     {  
                 
-                        var nama_jenis_naskah = $("#nama_jenis_naskah").val();
-                        $("#pesan").html("<img src='<?=base_url();?>assets/global/loading.gif'>Cek Nama Jenis Naskah ...");
+                        var nama_var = $("#nama_var").val();
+                        $("#pesan").html("<img src='<?=base_url();?>assets/global/loading.gif'>Cek Nama Jenis Tahapan ...");
                 
-                        if(nama_jenis_naskah=='')
+                        if(nama_var=='')
                         {
-                          $("#pesan").html('<img src="<?=base_url();?>assets/global/salah.png"> Nama Jenis Naskah tidak boleh kosong');
-                          $("#nama_jenis_naskah").css('border', '3px #C33 solid');
+                          $("#pesan").html('<img src="<?=base_url();?>assets/global/salah.png"> Nama Jenis Tahapan tidak boleh kosong');
+                          $("#nama_var").css('border', '3px #C33 solid');
                         }
 						else
-						$.ajax({type: "POST", url: "<?=base_url();?>index.php/C_admin_jenis_naskah/cek_jenis_naskah/", data: "nama_jenis_naskah="+nama_jenis_naskah, success:function(data)
+						$.ajax({type: "POST", url: "<?=base_url();?>index.php/C_admin_var_naskah/cek_var_naskah/", data: "nama_var="+nama_var, success:function(data)
                         { 
-                        	if(data==0 || ($("#nama_jenis_naskah").val() == $("#cek_nama_jenis_naskah").val()))
+                        	//if(data==0 || ($("#nama_var").val() == $("#cek_nama_var").val()))
+							if(data=="BERHASIL" || ($("#nama_var").val() == $("#cek_nama_var").val()))
                             //if(data==0)
                         	  {
-                        	  	$("#pesan").html('<img src="<?=base_url();?>assets/global/true.png">');
-                                $("#nama_jenis_naskah").css('border', '3px #090 solid');
-                                $("#syarat_jenis_naskah").attr("disabled", false);
-								$("#ket_jenis_naskah").attr("disabled", false);
+                        	  	$("#pesan").html('<img src="<?=base_url();?>assets/global/true.png"> ');
+                                $("#nama_var").css('border', '3px #090 solid');
                                 $("#btnsimpan").attr("disabled", false);
                             }
                               else
                               {
-                              	$("#pesan").html('<img src="<?=base_url();?>assets/global/salah.png"> Nama Jenis Naskah telah digunakan');
+                              	$("#pesan").html('<img src="<?=base_url();?>assets/global/salah.png"> Nama Jenis Tahapan telah digunakan');
                 				//$("#pesan").html(data); 
-                              	$("#nama_jenis_naskah").css('border', '3px #C33 solid');
-                                $("#syarat_jenis_naskah").attr("disabled", true);
-								$("#ket_jenis_naskah").attr("disabled", true);
+                              	$("#nama_var").css('border', '3px #C33 solid');
                                 $("#btnsimpan").attr("disabled", true);
                               }
                               
@@ -97,12 +93,12 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            Jenis Dokumen
+            Variable Data Yang Dibutuhkan Untuk <?php echo $get_jenis_naskah->nama_jenis_naskah;?>
           </h1>
           <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
 			<li><a href="#"><i class="fa fa-dashboard"></i> Basis Data</a></li>
-            <li class="active">Jenis Dokumen</li>
+            <li class="active">Kebutuhan Data</li>
             
           </ol>
         </section>
@@ -114,9 +110,9 @@
           <div class="row">
             <div class="col-md-12">
               <!-- <div class="box box-warning collapsed-box box-solid"> -->
-			  <div  id="box-form" class="box box-warning collapsed-box box-solid">
+			  <div  id="box-form" class="box box-default collapsed-box box-solid">
                 <div class="box-header with-border">
-                  <h3 class="box-title">Formulir Input Jenis Dokumen</h3>
+                  <h3 class="box-title">Formulir Input Kebutuha Data</h3>
                   <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
                   </div><!-- /.box-tools -->
@@ -125,31 +121,37 @@
                   
                   
                   <!-- ISI FORM -->
-						<form role="form" action="<?=base_url();?>admin-jenis-dokumen-simpan" method="post" class="frm-input">
+						<form role="form" action="<?=base_url();?>admin-kebutuhan-data-simpan" method="post" class="frm-input">
 						<input type="hidden" name="stat_edit" id="stat_edit"/>
+						<input type="hidden" name="id_jenis_naskah" id="id_jenis_naskah" value="<?php echo $get_jenis_naskah->id_jenis_naskah;?>"/>
 						<div class="box-body">
 							
 							<div class="form-group">
-							<label for="nama_jenis_naskah">Nama Jenis Dokumen</label>
-							<input type="hidden" id="cek_nama_jenis_naskah" name="cek_nama_jenis_naskah" />
-							<input type="text" id="nama_jenis_naskah" name="nama_jenis_naskah"  maxlength="35" class="required form-control" size="35" alt="Nama Jenis Dokumen" title="Nama Jenis Dokumen" placeholder="*Nama Jenis Dokumen"/><span id="pesan"></span>
+							<label for="nama_var">Nama Kebutuhan Data</label>
+							<input type="hidden" id="cek_nama_var" name="cek_nama_var" />
+							<input type="text" id="nama_var" name="nama_var"  maxlength="35" class="required form-control" size="35" alt="Nama Kebutuhan Data" title="Nama Kebutuhan Data" placeholder="*Nama Kebutuhan Data"/><span id="pesan"></span>
 							</div>
 							
 							<div class="form-group">
-							<label for="syarat_jenis_naskah">Syarat dan ketentuan</label>
-							<textarea name="syarat_jenis_naskah" id="syarat_jenis_naskah" class="required form-control" title="Syarat dan ketentuan" placeholder="*Syarat dan ketentuan"></textarea>
+							  <label for="tipe">Jenis/Tipe data yang dibutuhkan</label>
+								<select name="tipe" id="tipe" class="required form-control select2" title="Jenis Kelamin">
+									<option value="">.:Pilih Jenis Data:.</option>
+									<option value="TEXT">TEXT</option>
+									<option value="NUMBER">NUMBER</option>
+									<option value="TANGGAL">TANGGAL</option>
+								</select>
 							</div>
 							
 							<div class="form-group">
-							<label for="ket_jenis_naskah">Keterangan</label>
-							<textarea name="ket_jenis_naskah" id="ket_jenis_naskah" class="required form-control" title="Keterangan" placeholder="*Keterangan"></textarea>
+							<label for="ket">Keterangan</label>
+							<textarea name="ket" id="ket" class="required form-control" title="Keterangan" placeholder="*Keterangan"></textarea>
 							</div>
 							
 						</div><!-- /.box-body -->
 		
 						<div class="box-footer">
 							<button type="reset" class="btn btn-default">Batal</button>
-							<button type="submit" id="btnsimpan" class="confirm-btn btn btn-primary" title="Simpan Data Jenis Naskah/Dokumen">Submit</button>
+							<button type="submit" id="btnsimpan" class="confirm-btn btn btn-primary" title="Simpan Data Tahapan">Submit</button>
 						</div>
 						</form>
 					<!-- ISI FORM -->
@@ -163,10 +165,10 @@
 					
 					<div class="box">
 						<div class="box-header">
-						<h3 class="box-title">Table Jenis Dokumen</h3>
+						<h3 class="box-title">Table Jenis Tahapan</h3>
 							<div class="pull-right">
 								<!-- <form action="<?=base_url();?>admin/pendaftaran-klinik-cari" method="post" class="frm-cari"> -->
-								<form action="<?=base_url();?>admin-jenis-dokumen" method="get" class="frm-cari">
+								<form action="<?=base_url();?>admin-kebutuhan-data" method="get" class="frm-cari">
 									<table>
 										<tr>
 											<!-- <td>Berdasarkan</td><td>:</td> -->
@@ -190,40 +192,46 @@
 						
 						
 						<?php
-								if(!empty($list_jenis_naskah))
+								if(!empty($list_var_naskah))
 								{
 									echo'<table width="100%" id="example2" class="table table-bordered table-hover">';
 										echo '<thead>
 	<tr>';
 													echo '<th width="5%">No</th>';
-													echo '<th width="25%">Nama Jenis Dokumen</th>';
-													echo '<th width="25%">Syarat Ketentuan</th>';
-													echo '<th width="30%">Keterangan</th>';
+													echo '<th width="20%">Nama Kebutuhan Data</th>';
+													echo '<th width="15%">Tipe Data</th>';
+													echo '<th width="40%">Keterangan</th>';
+													echo '<th width="5%">Index</th>';
 													echo '<th width="15%">Aksi</th>';
 										echo '</tr>
 	</thead>';
-										$list_result = $list_jenis_naskah->result();
-										$no =$this->uri->segment(2,0)+1;
+										$list_result = $list_var_naskah->result();
+										$no =$this->uri->segment(3,0)+1;
 										echo '<tbody>';
 										foreach($list_result as $row)
 										{
 											echo'<tr>';
 												echo'<td>'.$no.'</td>';
-												echo'<td>'.$row->nama_jenis_naskah.'</td>';
-												echo'<td>'.$row->syarat_jenis_naskah.'</td>';
-												echo'<td>'.$row->ket_jenis_naskah.'</td>';
-											
+												echo'<td>'.$row->nama_var.'</td>';
+												echo'<td>'.$row->tipe.'</td>';
+												echo'<td>'.$row->ket.'</td>';
+												echo'<td><input type="text" id="idx_'.$no.'" size="3" maxlength="3" value="'.$row->idx.'" onkeypress="return isNumberKey(event)" onchange="ubah_idx(this)" /></td>';
+												
+												echo'<input type="hidden" id="id_var_naskah_'.$no.'" value="'.$row->id_var_naskah.'" />';
 												echo'<input type="hidden" id="id_jenis_naskah_'.$no.'" value="'.$row->id_jenis_naskah.'" />';
-												echo'<input type="hidden" id="nama_jenis_naskah_'.$no.'" value="'.$row->nama_jenis_naskah.'" />';
-												echo'<input type="hidden" id="syarat_jenis_naskah_'.$no.'" value="'.$row->syarat_jenis_naskah.'" />';
-												echo'<input type="hidden" id="ket_jenis_naskah_'.$no.'" value="'.$row->ket_jenis_naskah.'" />';
+												echo'<input type="hidden" id="nama_var_'.$no.'" value="'.$row->nama_var.'" />';
+												echo'<input type="hidden" id="tipe_'.$no.'" value="'.$row->tipe.'" />';
+												
+												//echo'<input type="hidden" id="idx_'.$no.'" value="'.$row->idx.'" />';
+												
+												echo'<input type="hidden" id="ket_'.$no.'" value="'.$row->ket.'" />';
+												echo'<input type="hidden" id="kode_kantor_'.$no.'" value="'.$row->kode_kantor.'" />';
+
 												
 												echo'<td>
+	<a href="javascript:void(0)" class="btn btn-warning btn-sm" onclick="edit('.$no.')" title = "Ubah Data '.$row->nama_var.'" alt = "Ubah Data '.$row->nama_var.'">Edit</a>
 	
-	
-	<a href="javascript:void(0)" class="btn btn-warning btn-sm btn-flat btn-block" onclick="edit('.$no.')" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">Edit</a>
-	
-	<a class="confirm-btn btn btn-danger btn-sm btn-flat btn-block" href="'.base_url().'admin-jenis-dokumen/'.$row->id_jenis_naskah.'" title = "Hapus Data '.$row->nama_jenis_naskah.'" alt = "Hapus Data '.$row->nama_jenis_naskah.'">Hapus</a>
+	<a class="confirm-btn btn btn-danger btn-sm" href="'.base_url().'admin-kebutuhan-data-hapus/'.md5($row->id_var_naskah).'/'.md5($row->id_jenis_naskah).'" title = "Hapus Data '.$row->nama_var.'" alt = "Hapus Data '.$row->nama_var.'">Hapus</a>
 	</td>';
 												
 												
@@ -257,18 +265,82 @@
     		
 		
 <script type='text/javascript'>
+	function ubah_idx(evt)
+	{
+		var arrStrId = evt.id;
+		var arrIdSplit = arrStrId.split("_");
+		
+		var val = evt.value;
+		var jenis = arrIdSplit[0];
+		var idx = arrIdSplit[1];
+		var id_var_naskah = $("#id_var_naskah_"+idx).val();
+		//alert(val);
+		
+		/*
+		var r = confirm("Apakah anda yakin akan menghapus pengajuan untuk "+$("#no_pengajuan_"+idx).val()+" ?");
+		if (r == true) 
+		{
+		*/
+			$.ajax({type: "POST", url: "<?php echo base_url();?>/C_admin_var_naskah/ubah_idx/"
+			, data: 
+					{
+						id_var_naskah:id_var_naskah
+						,idx:val
+					}
+			, cache: false
+			, success:function(data)
+			{
+				 //alert(data);
+				if(data=='BERHASIL')
+				//if(data != false)
+				{
+					//location.reload();
+					//$(evt.id).css('border','1px green solid');
+					//alert("BERHASIL");
+					$("#idx_"+idx).css('border','1px green solid');
+					$("#idx_"+idx).css('background-color','green');
+					$("#idx_"+idx).css('color','white');
+				}
+				else
+				{
+					alert("TERJADI KESALAHAN JARINGAN/INTERNET");
+				}
+			} 
+			});
+		
+		//}
+	}
+
 	function edit(id)
 	{
 		alert("Mode Perubahan Data, Silahkan Cek Formulir Isian !");
-		$('input[name=stat_edit]').val($('#id_jenis_naskah_'+id).val());
-		$('input[name=nama_jenis_naskah]').val($('#nama_jenis_naskah_'+id).val());
-        $('input[name=cek_nama_jenis_naskah]').val($('#cek_nama_jenis_naskah_'+id).val());
-		document.getElementById("syarat_jenis_naskah").value = $('#syarat_jenis_naskah_'+id).val();
-		document.getElementById("ket_jenis_naskah").value = $('#ket_jenis_naskah_'+id).val();
-        //$('input[name=ket]').val($('#ket_'+id).val());
+		$('input[name=stat_edit]').val($('#id_var_naskah_'+id).val());
 		
+		$('input[name=id_var_naskah]').val($('#id_var_naskah_'+id).val());
+		$('input[name=id_jenis_naskah]').val($('#id_jenis_naskah_'+id).val());
+		$('input[name=nama_var]').val($('#nama_var_'+id).val());
 		
+		//$('input[name=tipe]').val($('#tipe_'+id).val());
+		document.getElementById("tipe").options.item(0).text = $('#tipe_'+id).val();
+		document.getElementById("tipe").options.item(0).value = $('#tipe_'+id).val();
+		
+		$('input[name=idx]').val($('#idx_'+id).val());
+		
+		//$('input[name=ket]').val($('#ket_'+id).val());
+		document.getElementById("ket").value = $('#ket_'+id).val();
+		
+		//$('input[name=kode_kantor]').val($('#kode_kantor_'+id).val());
+
 		$('#box-form').attr('class', 'box box-warning ellapsed-box box-solid');
+	}
+	
+	function isNumberKey(evt)
+	{
+    	var charCode = (evt.which) ? evt.which : event.keyCode
+    	if (charCode > 31 && (charCode < 48 || charCode > 57))
+    	
+    	return false;
+    	return true;
 	}
 </script>
       

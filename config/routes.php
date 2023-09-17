@@ -148,6 +148,19 @@ $route['translate_uri_dashes'] = FALSE;
 	$route['admin-persyaratan-hapus/(:any)'] = 'C_admin_syarat/hapus';
 //SYARAT
 
+//VARIABLE NASKAH
+	$route['admin-kebutuhan-data'] = "C_admin_var_naskah/index";
+	$route['admin-kebutuhan-data/(:any)'] = 'C_admin_var_naskah/index';
+	$route['admin-kebutuhan-data/(:any)/(:any)'] = 'C_admin_var_naskah/index';
+	
+	$route['admin-kebutuhan-data-simpan'] = "C_admin_var_naskah/simpan";
+	$route['admin-kebutuhan-data-simpan/(:any)'] = 'C_admin_var_naskah/simpan';
+	
+	$route['admin-kebutuhan-data-hapus'] = "C_admin_var_naskah/hapus";
+	$route['admin-kebutuhan-data-hapus/(:any)'] = 'C_admin_var_naskah/hapus';
+	$route['admin-kebutuhan-data-hapus/(:any)/(:any)'] = 'C_admin_var_naskah/hapus';
+//VARIABLE NASKAH
+
 //DATA PENDUDUK
 	$route['admin-penduduk'] = "C_admin_penduduk/index";
 	$route['admin-penduduk/(:any)'] = 'C_admin_penduduk/index';

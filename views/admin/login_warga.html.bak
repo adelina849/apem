@@ -46,18 +46,18 @@
 	}
 	</style>
 	
-	<script type="text/javascript" src="<?=base_url();?>assets/admin/js/jquery.validate.min.js"></script>
+	<!-- <script type="text/javascript" src="<?=base_url();?>assets/admin/js/jquery.validate.min.js"></script> -->
 	
-	<script type="text/javascript">
-	$(document).ready(function() {
-		$('.frm-input').validate();
+	<!-- <script type="text/javascript"> -->
+	<!-- $(document).ready(function() { -->
+		<!-- $('.frm-input').validate(); -->
 		
-		$('.confirm-btn').click(function(){
-		var answer = confirm(jQuery(this).attr('title'));
-		return answer;
-		});
-	});
-	</script>
+		<!-- $('.confirm-btn').click(function(){ -->
+		<!-- var answer = confirm(jQuery(this).attr('title')); -->
+		<!-- return answer; -->
+		<!-- }); -->
+	<!-- }); -->
+	<!-- </script> -->
 			
     <style type="text/css">
       .login-page, .register-page {
@@ -123,7 +123,7 @@
 			
 			#img_bpt 
 			{
-				width:30%;
+				width:29%;
 			}
 			
 			#img_cam 
@@ -136,17 +136,17 @@
 		{
 			#box_center 
 			{
-				width:50%;
+				width:61%;
 			}
 			
 			#img_bpt 
 			{
-				width:25%;
+				width:19%;
 			}
 			
 			#img_cam 
 			{
-				width:25%;
+				width:20%;
 			}
 		}
 	</style>
@@ -182,9 +182,9 @@
         <!-- <form method="post" style="border:1px black dashed;padding:2%;"> -->
 		<div style="border:1px grey dashed;padding:2%;box-shadow: 2px 2px 2px black;">
           <div class="form-group has-feedback box-body table-responsive no-padding" id="form_utama">
-			<label style="color:black;text-align:Center;width:100%;">MASUKAN NIK </label>
-            <input type="text" name="nik" id="nik" class="form-control" placeholder="MASUKAN NIK ANDA...." autocomplete="off" />
-            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+			<label style="font-size:20px;color:black;text-align:Center;width:100%;">V MASUKAN NIK V</label>
+            <input type="text" name="nik" id="nik" class="form-control" style="background-color:#8ff98f;color:black;border:1px solid black;" placeholder="MASUKAN NIK ANDA...." autocomplete="off" />
+            <span class="glyphicon glyphicon-user form-control-feedback" style="padding-top:1.5%;"></span>
 			<br/>
 			<center>
 				<span id="pesan"></span>
@@ -209,13 +209,23 @@
               <!-- </div> -->
             <!-- </div> -->
             <div class="col-xs-12">
-              <button type="button" id="btn_lanjut" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik()">CEK TAGIHAN DAN MULAI PELAYANAN</button>
+              <button type="button" id="btn_lanjut" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik()">MULAI PELAYANAN DAN CEK TAGIHAN</button>
 			  
               <button type="button" id="btn_daftar" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="view_daftar()">DAFTAR ATAU UBAH DATA WARGA</button>
 			  
 			  <button type="button" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="location.reload();">ULANGI</button>
 			  <br/>
             </div>
+			
+			<div class="col-xs-12" style="color:red;">
+				LANGKAH - LANGKAH PENGGUNAAN
+				<ul>
+					<li>Masukan NIK anda (Jika Belum terdaftar silahkan daftar dengan mengklik tombol "DAFTAR ATAU UBAH DATA WARGA")</li>
+					<li>Pilih Layanan/Surat yang anda inginkan</li>
+					<li>Isi data yang dibutuhkan dan Upload Persyaratan</li>
+					<li>Tunggu sampai proses selesai (anda bisa melakukan pengecekan progress dengan menggunakan QR/Bukti Tanda pendaftaran)</li>
+				</ul>
+			</div>
 			<!-- <div class="col-xs-12"> -->
 				<!-- <a href="<?php echo base_url();?>cek-barcode" class="btn btn-primary btn-block btn-flat">Cek Status Pengajuan</a> -->
 			<!-- </div> -->
@@ -232,20 +242,21 @@
     </div><!-- /.login-box -->
 
     <!-- jQuery 2.1.4 -->
-    <script src="<?=base_url();?>assets/adminlte/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <!-- <script src="<?=base_url();?>assets/adminlte/plugins/jQuery/jQuery-2.1.4.min.js"></script> -->
     <!-- Bootstrap 3.3.4 -->
     <!-- <script src="<?=base_url();?>assets/adminlte/bootstrap/js/bootstrap.min.js"></script> -->
-    <!-- iCheck -->
-    <script src="<?=base_url();?>assets/adminlte/plugins/iCheck/icheck.min.js"></script>
-    <script>
-      $(function () {
-        $('input').iCheck({
-          checkboxClass: 'icheckbox_square-blue',
-          radioClass: 'iradio_square-blue',
-          increaseArea: '20%' // optional
-        });
-      });
-    </script>
+    
+	<!-- iCheck -->
+    <!-- <script src="<?=base_url();?>assets/adminlte/plugins/iCheck/icheck.min.js"></script> -->
+    <!-- <script> -->
+      <!-- $(function () { -->
+        <!-- $('input').iCheck({ -->
+          <!-- checkboxClass: 'icheckbox_square-blue', -->
+          <!-- radioClass: 'iradio_square-blue', -->
+          <!-- increaseArea: '20%' // optional -->
+        <!-- }); -->
+      <!-- }); -->
+    <!-- </script> -->
 	
 	<script type='text/javascript'>
 		function hapus_pengajuan(evt)
@@ -668,17 +679,77 @@
 		}
 		
 		function isNumberKey(evt)
-		{
-			var charCode = (evt.which) ? evt.which : event.keyCode
-			if (charCode > 31 && (charCode < 48 || charCode > 57))
-			
-			return false;
-			return true;
-		}
-		
-	</script>
+	{
+    	var charCode = (evt.which) ? evt.which : event.keyCode
+    	if (charCode > 31 && (charCode < 48 || charCode > 57))
+    	
+    	return false;
+    	return true;
+	}
 	
-	<!-- Bootstrap 3.3.4 -->
+	function insert(id)
+	{
+		$('input[name=id_jenis_naskah]').val($('#id_jenis_naskah2_'+id).val());
+		$('input[name=nama_jenis_naskah]').val($('#nama_jenis_naskah2_'+id).val());
+		//$('input[name=ket_kat_uang_masuk]').val($('#ket_kat_uang_masuk2_'+id).val());
+	}
+	
+	function FormatCurrency(objNum)
+	{
+	   var num = objNum.value
+	   var ent, dec;
+	   if (num != '' && num != objNum.oldvalue)
+	   {
+		 num = HapusTitik(num);
+		 if (isNaN(num))
+		 {
+		   objNum.value = (objNum.oldvalue)?objNum.oldvalue:'';
+		 } else {
+		   var ev = (navigator.appName.indexOf('Netscape') != -1)?Event:event;
+		   if (ev.keyCode == 190 || !isNaN(num.split('.')[1]))
+		   {
+			 alert(num.split('.')[1]);
+			 objNum.value = TambahTitik(num.split('.')[0])+'.'+num.split('.')[1];
+		   }
+		   else
+		   {
+			 objNum.value = TambahTitik(num.split('.')[0]);
+		   }
+		   objNum.oldvalue = objNum.value;
+		 }
+	   }
+	}
+	function HapusTitik(num)
+	{
+	   return (num.replace(/\./g, ''));
+	}
+
+	function TambahTitik(num)
+	{
+	   numArr=new String(num).split('').reverse();
+	   for (i=3;i<numArr.length;i+=3)
+	   {
+		 numArr[i]+='.';
+	   }
+	   return numArr.reverse().join('');
+	} 
+			
+	function formatCurrency(num) {
+	   num = num.toString().replace(/\$|\./g,'');
+	   if(isNaN(num))
+	   num = "0";
+	   sign = (num == (num = Math.abs(num)));
+	   num = Math.floor(num*100+0.50000000001);
+	   cents = num0;
+	   num = Math.floor(num/100).toString();
+	   for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
+	   num = num.substring(0,num.length-(4*i+3))+'.'+
+	   num.substring(num.length-(4*i+3));
+	   return (((sign)?'':'-') + num);
+	}
+</script>
+      
+    <!-- Bootstrap 3.3.4 -->
 	<script src="<?=base_url();?>assets/adminlte/bootstrap/js/bootstrap.min.js"></script>
 	<!-- Slimscroll -->
 	<script src="<?=base_url();?>assets/adminlte/plugins/slimScroll/jquery.slimscroll.min.js"></script>
@@ -694,7 +765,11 @@
 	
 	<!-- bootstrap datepicker -->
 	<script src="<?=base_url();?>/assets/adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-    
+	
+	<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	
     <script>
       $(function () {
 		//Date picker
@@ -744,6 +819,7 @@
         });
       });
     </script>
+    
 	
   </body>
 </html>

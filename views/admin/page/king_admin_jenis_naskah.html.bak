@@ -219,7 +219,7 @@
 												echo'<input type="hidden" id="ket_jenis_naskah_'.$no.'" value="'.$row->ket_jenis_naskah.'" />';
 												
 												echo'<td>
-	
+	<a href="'.base_url().'admin-kebutuhan-data/'.md5($row->id_jenis_naskah).'" class="btn btn-default btn-sm btn-flat btn-block" onclick="edit('.$no.')" title = "Kebutuhan Data '.$row->nama_jenis_naskah.'" alt = "Kebutuhan Data '.$row->nama_jenis_naskah.'">Kebutuhan Data</a>
 	
 	<a href="javascript:void(0)" class="btn btn-warning btn-sm btn-flat btn-block" onclick="edit('.$no.')" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">Edit</a>
 	
