@@ -1,9 +1,7 @@
-<html>
-	<head>
-		<style>
-			@page { size: auto; margin-top:0mm;margin-bottom:0mm; }	
-		</style>
-	</head>
+
+	<style>
+		@page { size: auto; margin-top:0mm;margin-bottom:0mm; }	
+	</style>
 	<body onload="window.print();" style="font-family:arial narrow;font-size:13px;font-weight:bold;margin:1%;">
 		<!-- <textarea name="format_naskah" id="format_naskah" class="required form-control" style="" title="Isikan Artikel" placeholder="*Isikan Artikel"><?php echo $get_jenis_naskah->format_naskah;?></textarea> -->
 		
@@ -74,21 +72,21 @@
 			//echo ($string);
 			//echo htmlspecialchars_decode($string);
 			
-			echo 
+			$string_fix =  
 				html_entity_decode
 				(
 				htmlspecialchars_decode
 				(
-				str_replace('[','<div> $get_data_penduduk->',
-				str_replace(']','</div>',$get_jenis_naskah->format_naskah)
+				str_replace('[','$get_data_penduduk->',
+				str_replace(']','',$get_jenis_naskah->format_naskah)
 				)
 				)
 				);
+				
+				echo $string_fix;
 				
 			
 			
 			
 		?>
-		
-	</body>
-</html>
+	<body>

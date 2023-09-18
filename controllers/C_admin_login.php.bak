@@ -204,15 +204,15 @@
 				$list_layanan = $this->M_dash->view_query_general($query_list_layanan);
 				if(!empty($list_layanan))
 				{
-					echo'<table width="150%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
+					echo'<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
 						echo'<thead>';
 						echo'<tr>';
 													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;">No</th>';
 													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;">NAMA PELAYANAN</th>';
-													echo '<th width="30%" style="background-color:red;color:white;font-weight:bold;">TAHAPAN</th>';
-													echo '<th width="30%" style="background-color:red;color:white;font-weight:bold;">PERSYARATAN</th>';
-													echo '<th width="40%" style="background-color:red;color:white;font-weight:bold;">DATA</th>';
-													echo '<th width="15%" style="background-color:red;color:white;font-weight:bold;">Aksi</th>';
+													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;">TAHAPAN</th>';
+													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;">PERSYARATAN</th>';
+													echo '<th width="30%" style="background-color:red;color:white;font-weight:bold;">DATA</th>';
+													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;">Aksi</th>';
 						echo'</tr>';
 						echo'</thead>';
 						
@@ -227,7 +227,7 @@
 													
 													'.$row->nama_jenis_naskah.'
 													<br/>
-													<br/><b>Sudah Ada Format :</b>
+													<br/><b>Sudah Ada Format:</b>
 													<br/>'.$row->SDH_FORMAT.'
 												</td>';
 								echo'<td>'.$row->tahapan.'</td>';
@@ -905,7 +905,7 @@
 
 <a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-progress" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'" onclick="cek_progress(this)">PROGRES</a>
 
-<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-progress" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'" onclick="cetak_dok(this)">CETAK DOKUMEN</a>
+<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-cetakdok" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'" onclick="cetak_dok(this)">CETAK DOKUMEN</a>
 							
 							</td>';
 							

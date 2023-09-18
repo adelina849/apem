@@ -204,15 +204,15 @@
 				$list_layanan = $this->M_dash->view_query_general($query_list_layanan);
 				if(!empty($list_layanan))
 				{
-					echo'<table width="150%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
+					echo'<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
 						echo'<thead>';
 						echo'<tr>';
 													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;">No</th>';
 													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;">NAMA PELAYANAN</th>';
-													echo '<th width="30%" style="background-color:red;color:white;font-weight:bold;">TAHAPAN</th>';
-													echo '<th width="30%" style="background-color:red;color:white;font-weight:bold;">PERSYARATAN</th>';
-													echo '<th width="40%" style="background-color:red;color:white;font-weight:bold;">DATA</th>';
-													echo '<th width="15%" style="background-color:red;color:white;font-weight:bold;">Aksi</th>';
+													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;">TAHAPAN</th>';
+													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;">PERSYARATAN</th>';
+													echo '<th width="30%" style="background-color:red;color:white;font-weight:bold;">DATA</th>';
+													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;">Aksi</th>';
 						echo'</tr>';
 						echo'</thead>';
 						
@@ -227,7 +227,7 @@
 													
 													'.$row->nama_jenis_naskah.'
 													<br/>
-													<br/><b>Sudah Ada Format :</b>
+													<br/><b>Sudah Ada Format:</b>
 													<br/>'.$row->SDH_FORMAT.'
 												</td>';
 								echo'<td>'.$row->tahapan.'</td>';
@@ -1014,7 +1014,8 @@
 						$get_jenis_naskah = $get_jenis_naskah->row();
 						//$data = array('page_content'=>'king_admin_tahapan','halaman'=>$halaman,'list_tahapan'=>$list_tahapan);
 						$data = array('get_pengajuan'=>$get_pengajuan,'get_data_penduduk'=>$get_data_penduduk,'get_jenis_naskah'=>$get_jenis_naskah);
-						$this->load->view('admin/page/king_admin_cetak_format_naskah.html',$data);
+						//$this->load->view('admin/page/king_admin_cetak_format_naskah.html',$data);
+						$this->load->view('admin/page/king_admin_cetak_format_naskah.php',$data);
 					}
 					else
 					{
