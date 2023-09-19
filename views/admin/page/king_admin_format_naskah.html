@@ -177,7 +177,7 @@
 								Silahkan atur format untuk Dokumen <?php echo $get_jenis_naskah->nama_jenis_naskah;?>. Atur format sedemikian rupa agar sesuai dengan format yang diinginkan. Nantinya format ini akan menjadi format hasil cetak dokumen.
 								<br/>
 								<br/>
-								Untuk memasukan data warga pembuat silahkan anda sisipkan data sebagai berikut :
+								<font style="color:red;">Untuk memasukan data warga pembuat silahkan anda sisipkan data sebagai berikut :</font>
 								<ul>
 									<li>NIK : [nik]</li>
 									<li>Nama Lengkap sesuai KTP : [nama]</li>
@@ -194,7 +194,7 @@
 								if(!empty($get_var_naskah))
 								{
 									echo'<br/>
-									Untuk memasukan data yang harus diisi di dokumen silahkan sisipkan data sebagai berikut :';
+									<font style="color:red;">Untuk memasukan data yang harus diisi di dokumen silahkan sisipkan data sebagai berikut :</font>';
 									$list_result = $get_var_naskah->result();
 									$no = 1;
 									echo'<ul>';
@@ -205,6 +205,12 @@
 									echo'</ul>';
 								}
 								?>
+								
+								<br/>
+								<font style="color:red;">Untuk memasukan data - data silahkan sertakan :</font>
+								<ul>
+									<li>Tanggal Lahir ini : @tanggal@</li>
+								</ul>
 							
 						</div><!-- /.box-body -->
 					</div><!-- /.box -->

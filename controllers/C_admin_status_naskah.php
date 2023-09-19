@@ -6,7 +6,7 @@ class C_admin_status_naskah extends CI_Controller {
 	{
 		parent::__construct();
 		// Your own constructor code
-		$this->load->model(array('M_status_naskah'));
+		$this->load->model(array('M_status_naskah','M_dash'));
 		
 	}
 	
@@ -137,7 +137,109 @@ class C_admin_status_naskah extends CI_Controller {
 	
 	public function simpan_hasil_pengajuan()
 	{
-		 $this->M_status_naskah->hasil_pengajuan($_POST['id_pengajuan'],$_POST['hasil_pengajuan'],$_POST['ket_hasil']);
+		$this->M_status_naskah->hasil_pengajuan($_POST['id_pengajuan'],$_POST['hasil_pengajuan'],$_POST['ket_hasil']);
+		
+		$query_get_data = "
+						SELECT * 
+						FROM tb_pengajuan AS A 
+						LEFT JOIn tb_penduduk AS B 
+							ON A.kode_kantor = B.kode_kantor 
+							AND A.sumber = B.nik 
+						LEFT JOIN tb_jenis_naskah AS C 
+							ON A.kode_kantor = C.kode_kantor
+							AND A.id_jenis_naskah = C.id_jenis_naskah
+						WHERE A.id_pengajuan = '".$_POST['id_pengajuan']."' 
+						AND A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."' ;
+					";
+		$get_data = $this->M_dash->view_query_general($query_get_data);
+		if(!empty($get_data))
+		{
+			$get_data = $get_data->row();
+			
+			//KIRIM EMAIL
+				$this->load->config('email');
+				$this->load->library('email');
+				
+				$pesan = "
+					<html>
+					   <head>
+						 <title>Selamat, Pelayanan Anda Telah Selesai</title>
+					   </head>
+					   <body>
+						 <p>Assalamualaikum Wr,Wb,</p>
+						 <p>Hi ".$get_data->nama." Terima kasih telah menggunakan layayan Aplikasi <b>ANJUNGAN PATEN MANDIRI (APEM) KECAMATAN CIBEBER</b>. Berikut kami sampaikan informasi hasil dari pengajuan pelayanan anda :</p>
+						 
+						  <table border='0'>
+							  <tbody>
+								<tr>
+									<td>No Registrasi</td>
+									<td>:</td>
+									<td>".$get_data->no_pengajuan."</td>
+								</tr>
+								<tr>
+									<td>Jenis Pelayanan</td>
+									<td>:</td>
+									<td>".$get_data->nama_jenis_naskah."</td>
+								</tr>
+								<tr>
+									<td>Tanggal Pengajuan</td>
+									<td>:</td>
+									<td>".$get_data->tgl_surat_dibuat."</td>
+								</tr>
+								<tr>
+									<td>Perihal</td>
+									<td>:</td>
+									<td>".$get_data->perihal."</td>
+								</tr>
+								<tr>
+									<td>Hasil Pengajuan</td>
+									<td>:</td>
+									<td>".$get_data->hasil_pengajuan."</td>
+								</tr>
+								<tr>
+									<td>Keterangan Hasil</td>
+									<td>:</td>
+									<td>".$get_data->ket_hasil."</td>
+								</tr>
+							  </tbody>
+						 </table>
+
+						 <p>Anda bisa melakukan pengecekan dengan menggunakan fasilitas QR Code yang tertera pada bukti terima.<br></p>
+
+						 <p>Hormat kami, 
+							<br>
+							<br>
+							<center>
+							Petugas
+							<b>ANJUNGAN PATEN MANDIRI (APEM) KECAMATAN CIBEBER</b>
+							</center>
+						 </p>
+					   </body>
+					 </html>
+				";
+
+				$from = $this->config->item('smtp_user');
+				//$to = $email;
+				$to = $get_data->email;
+				$subject = 'Pendaftaran  akun Megafire Berhasil';
+				$message = $pesan;
+
+				$this->email->set_newline("\r\n");
+				$this->email->from($from);
+				$this->email->to($to);
+				$this->email->subject($subject);
+				$this->email->message($message);
+
+				if ($this->email->send()) 
+				{
+					// echo 'Your Email has successfully been sent.';
+				} else 
+				{
+					show_error($this->email->print_debugger());
+				} 
+			//KIRIM EMAIL
+		}
+		 
 	}
 	
 	function cek_status_naskah()

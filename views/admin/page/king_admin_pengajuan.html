@@ -393,14 +393,14 @@
 						<?php
 								if(!empty($list_pengajuan))
 								{
-									echo'<table width="100%" id="example2" class="table table-bordered table-hover">';
+									echo'<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
 										echo '<thead>
 	<tr>';
 													echo '<th width="5%">No</th>';
-													echo '<th width="10%">Barcode</th>';
-													echo '<th width="30%">No Dokumen - Perihal</th>';
-													echo '<th width="20%">Sumber</th>';
-													echo '<th width="35%">Aksi</th>';
+													echo '<th width="15%">Barcode</th>';
+													echo '<th width="35%">No Dokumen - Perihal</th>';
+													echo '<th width="25%">Sumber</th>';
+													echo '<th width="20%" colspan="2">Aksi</th>';
 										echo '</tr>
 	</thead>';
 										$list_result = $list_pengajuan->result();
@@ -410,6 +410,17 @@
 										{
 											echo'<tr>';
 												echo'<td><input type="hidden" id="no_'.$row->id_pengajuan.'" value="'.$row->id_pengajuan.'" />'.$no.'</td>';
+												
+												if($row->hasil_pengajuan == '')
+												{
+													$format = "color:red;";
+													$format_dok = "display:none;";
+												}
+												else
+												{
+													$format = "color:black;";
+													$format_dok = "";
+												}
 												
 												if(file_exists("assets/global/images/qrcode/".$row->no_pengajuan.".png"))
 												{
@@ -423,7 +434,9 @@
 												}
 												else
 												{
-													echo'<td><center>'.($row->no_pengajuan).'</center></td>';
+													echo'<td>
+														<center>'.($row->no_pengajuan).'</center>
+													</td>';
 												}
 												
 												echo'<td>
@@ -432,7 +445,18 @@
 														<br/> <b>Perihal : </b>'.$row->perihal.'
 														<br/> <b>Tgl Masuk : </b>'.$row->tgl_surat_masuk.'
 													</td>';
-												echo'<td>'.$row->sumber.'</td>';
+												echo'<td>
+														<b>NIK : </b>'.$row->sumber.'
+														<br/>
+														<br/>
+														<div style="padding:2%;border:1px dotted black;'.$format.'">
+														<b>Hasil : </b>'.$row->hasil_pengajuan.'
+														<br/> <b>Ket Hasil : </b>'.$row->ket_hasil.'
+														</div>
+														
+														<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-cetakdok" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'" onclick="cetak_dok(this)" style="'.$format_dok.'"><span class="glyphicon glyphicon-print " style="padding-top:1.5%;"></span> Cetak Dokumen</a>
+														
+													</td>';
 												//echo'<td>'.number_format($row->nominal,0,',','.').'</td>';
 												
 												echo'<input type="hidden" id="id_pengajuan_'.$no.'" value="'.$row->id_pengajuan.'" />';
@@ -452,18 +476,39 @@
 												
 												//if($row->user_updt == $this->session->userdata('ses_id_karyawan'))
 												//{
-													echo'<td>
-		<a class="confirm-btn btn btn-success btn-sm" href="'.base_url().'admin-cetak-faktur?pengajuan='.$row->no_pengajuan.'" title = "Cetak Faktur '.($row->no_pengajuan).'" alt = "Cetak Faktur '.($row->no_pengajuan).'">Cetak</a>
+		echo'<td>
+		<a href="javascript:void(0)" class="btn btn-default btn-sm btn-block btn-flat" onclick="edit('.$no.')" title = "Ubah Data '.($row->no_pengajuan).'" alt = "Ubah Data '.($row->no_pengajuan).'"> <span class="glyphicon glyphicon-edit " style="padding-top:1.5%;"></span> Edit  </a>
 		
-		<button type="button" onclick="view('.$no.')" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal_detail">
-			view
+		
+		
+		<a class="confirm-btn btn btn-default btn-sm btn-block btn-flat" href="'.base_url().'admin-cetak-faktur?pengajuan='.$row->no_pengajuan.'" title = "Cetak Faktur '.($row->no_pengajuan).'" alt = "Cetak Faktur '.($row->no_pengajuan).'"> <span class="glyphicon glyphicon-print " style="padding-top:1.5%;"></span> Cetak QR</a>
+		
+		<!-- <button type="button" onclick="view('.$no.')" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal_detail"> -->
+			<!-- view -->
+		<!-- </button> -->
+		
+		
+		
+		<button type="button" onclick="view_isi_syarat_naskah(this)" id="btn_view_isi_syarat-'.$no.'" class="confirm-btn btn btn-default btn-sm btn-block btn-flat" data-toggle="modal" data-target="#myModal_isi_syarat_naskah" title="Tampilkan Form Pengian Persyaratan">
+			<span class="glyphicon glyphicon-check " style="padding-top:1.5%;"></span> Persyaratan
 		</button>
 		
-		<a class="confirm-btn btn btn-success btn-sm" href="'.base_url().'admin-pengajuan-dokumen-images/'.$row->id_pengajuan.'" title = "Foto Data '.($row->no_pengajuan).'" alt = "Foto Data '.($row->no_pengajuan).'">Gambar</a>
-													
-		<a href="javascript:void(0)" class="btn btn-warning btn-sm" onclick="edit('.$no.')" title = "Ubah Data '.($row->no_pengajuan).'" alt = "Ubah Data '.($row->no_pengajuan).'">Edit</a>
 		
-		<a class="confirm-btn btn btn-danger btn-sm" href="'.base_url().'admin-pengajuan-dokumen-hapus/'.$row->id_pengajuan.'" title = "Hapus Data '.($row->no_pengajuan).'" alt = "Hapus Data '.($row->no_pengajuan).'">Hapus</a>
+		</td>';
+		
+		
+		echo'<td>
+		
+		
+		<a class="confirm-btn btn btn-default btn-sm btn-block btn-flat" href="'.base_url().'admin-pengajuan-dokumen-hapus/'.$row->id_pengajuan.'" title = "Hapus Data '.($row->no_pengajuan).'" alt = "Hapus Data '.($row->no_pengajuan).'"> <span class="glyphicon glyphicon-trash " style="padding-top:1.5%;"></span> Hapus</a>
+		
+		<a class="confirm-btn btn btn-default btn-sm btn-block btn-flat" href="'.base_url().'admin-pengajuan-dokumen-images/'.$row->id_pengajuan.'" title = "Foto Data '.($row->no_pengajuan).'" alt = "Foto Data '.($row->no_pengajuan).'"> <span class="glyphicon glyphicon-camera " style="padding-top:1.5%;"></span> Gambar</a>
+		
+		
+		<button type="button" onclick="view_isi_var_naskah(this)" id="btn_view_isi_naskah-'.$no.'" class="confirm-btn btn btn-default btn-sm btn-block btn-flat" data-toggle="modal" data-target="#myModal_var_naskah" title="Tampilkan Form Pengian Data">
+			<span class="glyphicon glyphicon-pencil " style="padding-top:1.5%;"></span> Pengisian Data
+		</button>
+		
 		</td>';
 												/*
 												}
@@ -492,7 +537,7 @@
 						<center>
                         <div class="halaman"><?php echo $halaman;?></div>
                         </center>
-						</div><!-- /.box-body -->
+						</div><!-- /.box-body
 					</div><!-- /.box -->
 					
 					
@@ -632,8 +677,98 @@
 							</div>
 						</div>
 						</div>
-
-					<!-- Show MOdal - TABLE 1 Data Penduduk -->
+					<!-- Show MOdal - TABLE 2 Data Penduduk -->
+					
+					<!-- Show MOdal - TABLE 3 DATA PENGISIAN -->
+					<div class="modal fade" id="myModal_var_naskah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="myModalLabel_var_naskah">List Data Pengisian Layanan</h4>
+							</div>
+							<div class="modal-body">
+								
+								<input type="hidden" id="id_jenis_naskah_isi_var" />
+								<input type="hidden" id="nik_isi_var" />
+								<input type="hidden" id="tgl_surat_dibuat_isi_var" />
+								<input type="hidden" id="idx_isi_var" />
+								
+								<!-- ISI BODY -->
+								<div class="box">
+									<p id="no_pengajuan_isi_var" style="padding:3%;"></p>
+									<!-- <div class="box-header"> -->
+									<!-- <h3 class="box-title">Pengisian Data Pelayanan</h3> -->
+										<!-- <div class="pull-right"> -->
+											
+												<!-- <table> -->
+													<!-- <tr> -->
+														<!-- <td> -->
+															<!-- <input type="text" id="cari-tmp-var_naskah" name="cari-tmp"  maxlength="35" class="text form-control" size="35" alt="tlp" title="Cari data" placeholder="...Cari" value="<?php if (!empty($_GET['cari'])){echo $_GET['cari'];} ?>"/> -->
+														<!-- </td> -->
+														<!-- <td><a href="javascript:void(0)" id="btn-cari-var_naskah" onclick="tampilkan_penduduk()" class="btn btn-success btn-sm btn-flat btn-block" title = "Cari Jenis Dokumen" >Cari</a></td> -->
+														
+														<!-- </td> -->
+														<!-- <td><a href="javascript:void(0)" id="btn-tambah-penduduk" onclick="tambah_penduduk()" class="btn btn-warning btn-sm btn-flat btn-block" title = "Tambah penduduk" >Tambah Penduduk</a></td> -->
+													<!-- </tr> -->
+												<!-- </table> -->
+										<!-- </div> -->
+									<!-- </div> -->
+									<div  id="tb_isi_var_naskah" class="box-body">
+										
+									</div><!-- /.box-body -->
+								</div><!-- /.box -->
+								<!-- ISI BODY -->
+								
+								
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+							</div>
+							</div>
+						</div>
+						</div>
+					<!-- Show MOdal - TABLE 3 DATA PENGISIAN -->
+					
+					<!-- Show MOdal - TABLE 4 DATA ISI PERSYARATAN -->
+					<div class="modal fade" id="myModal_isi_syarat_naskah" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="myModalLabel_isi_syarat_naskah">List Data Pengisian Layanan</h4>
+							</div>
+							<div class="modal-body">
+								
+								<input type="hidden" id="id_jenis_naskah_isi_syarat_naskah" />
+								<input type="hidden" id="nik_isi_syarat_naskah" />
+								<input type="hidden" id="tgl_surat_dibuat_isi_syarat_naskah" />
+								<input type="hidden" id="idx_isi_syarat_naskah" />
+								
+								<!-- ISI BODY -->
+								<div class="box">
+									<p id="no_pengajuan_isi_syarat_naskah" style="padding:3%;"></p>
+									<div  id="tb_isi_syarat_naskah" class="box-body">
+										
+									</div><!-- /.box-body -->
+								</div><!-- /.box -->
+								<!-- ISI BODY -->
+								
+								
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+							</div>
+							</div>
+						</div>
+						</div>
+					<!-- Show MOdal - TABLE 4 DATA ISI PERSYARATAN -->
+					
+					
+					
+					
 					
 					
 					
@@ -647,6 +782,273 @@
     		
 		
 <script type='text/javascript'>
+	function view_isi_syarat_naskah(evt)
+	{
+									
+		var arrStrId = evt.id;
+		var arrIdSplit = arrStrId.split("-");
+		//alert(arrStrId);
+		
+		var idx_isi_syarat_naskah = arrIdSplit[1];
+		var id_pengajuan_isi_syarat_naskah = $("#id_pengajuan_"+idx_isi_syarat_naskah).val();
+		var id_jenis_naskah_isi_syarat_naskah = $("#id_jenis_naskah_"+idx_isi_syarat_naskah).val();
+		var nik_isi_syarat_naskah = $("#sumber_"+idx_isi_syarat_naskah).val();
+		var tgl_surat_dibuat_isi_syarat_naskah = $("#tgl_surat_dibuat_"+idx_isi_syarat_naskah).val();
+		
+		//alert(tgl_surat_dibuat_isi_syarat_naskah);
+		
+		$("#idx_isi_syarat_naskah").val(idx_isi_syarat_naskah);
+		$("#id_jenis_naskah_isi_syarat_naskah").val(id_jenis_naskah_isi_syarat_naskah);
+		$("#nik_isi_syarat_naskah").val(nik_isi_syarat_naskah);
+		$("#tgl_surat_dibuat_isi_syarat_naskah").val(tgl_surat_dibuat_isi_syarat_naskah);
+		
+		
+		
+		$("#no_pengajuan_isi_syarat_naskah").html("No Pengajuan : "+$("#no_pengajuan_"+idx_isi_syarat_naskah).val()+"<br/>Diajukan Oleh : "+$("#diajukan_oleh_"+idx_isi_syarat_naskah).val()+"<br/>Jenis Pelayanan : "+$("#nama_jenis_naskah_"+idx_isi_syarat_naskah).val());
+		
+		/*
+		alert(idx_isi_syarat_naskah);
+		alert(id_pengajuan_isi_syarat_naskah);
+		alert(tgl_surat_dibuat_isi_syarat_naskah);
+		*/
+		
+		
+		$.ajax({type: "POST", url: "<?php echo base_url();?>C_admin_pengajuan/view_isian_syarat_naskah/"
+		, data: 
+				{
+					nik_isi_syarat_naskah:nik_isi_syarat_naskah,
+					id_jenis_naskah_isi_syarat_naskah:id_jenis_naskah_isi_syarat_naskah,
+					tgl_surat_dibuat_isi_syarat_naskah:tgl_surat_dibuat_isi_syarat_naskah
+				}
+		, cache: false
+		, success:function(data)
+		{
+			 //alert(data);
+			//if(data=='BERHASIL')
+			if(data != false)
+			{
+				//alert("DATA TERSIMPAN");
+				$("#tb_isi_syarat_naskah").html(data);
+			}
+			else
+			{
+				//alert("GAGAL");
+				$("#tb_isi_syarat_naskah").html("<center>TIDAK ADA DATA YANG DITAMPILKAN</center>");
+				//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Terjadi gangguan jaringan !');
+			}
+		} 
+		});
+		
+		
+	}
+	
+	/*
+	function simpan_isi_syarat_naskah(no)
+	{
+		
+		$("#idx_isi_syarat_naskah").val(idx_isi_syarat_naskah);
+		$("#id_jenis_naskah_isi_syarat_naskah").val(id_jenis_naskah_isi_syarat_naskah);
+		$("#nik_isi_syarat_naskah").val(nik_isi_syarat_naskah);
+		$("#tgl_surat_dibuat_isi_syarat_naskah").val(tgl_surat_dibuat_isi_syarat_naskah);
+	
+		
+		//var id_pengajuan = $("#id_pengajuan_for_isi_syarat_naskah-"+no).val();
+		
+		var id_pengajuan = $("#id_jenis_naskah_isi_syarat_naskah").val()+"-"+$("#nik_isi_syarat_naskah").val()+"-"+$("#tgl_surat_dibuat_isi_syarat_naskah").val();
+		
+		var id_pengajuan_format_for_isi_syarat_naskah = $("#id_jenis_naskah_isi_syarat_naskah").val()+"-"+$("#nik_isi_syarat_naskah").val()+"-"+$("#tgl_surat_dibuat_isi_syarat_naskah").val();
+		var id_jenis_naskah = $("#id_jenis_naskah_isi_syarat_naskah-"+no).val(); 
+		var id_syarat_naskah = $("#id_syarat_naskah_for_isi_syarat_naskah-"+no).val(); 
+		
+		
+		$.ajax
+		(
+			{
+				type: "POST"
+				,url: "<?php echo base_url();?>C_admin_login/simpan_isi_syarat_naskah/"
+				, data: 
+						{
+							id_pengajuan:id_pengajuan,
+							id_pengajuan_format_for_isi_syarat_naskah:id_pengajuan_format_for_isi_syarat_naskah,
+							id_jenis_naskah:id_jenis_naskah,
+							id_syarat_naskah:id_syarat_naskah
+						}
+				, cache: false
+				, success:function(data)
+				{ 
+					if(data=='BERHASIL')
+					{
+						//BERHASIL
+					}
+					else
+					{
+						alert("Ada masalah dengan koneksi ke server");
+					}
+				} 
+			}
+		);
+		
+			
+		
+	}
+	*/
+	
+	function simpan_isi_syarat_naskah(no)
+	{
+		var id_pengajuan = $("#id_pengajuan_for_isi_syarat_naskah-"+no).val();
+		var id_pengajuan_format_for_isi_syarat_naskah = $("#id_pengajuan_format_for_isi_syarat_naskah-"+no).val();
+		var id_jenis_naskah = $("#id_jenis_naskah_for_isi_syarat_naskah-"+no).val(); 
+		var id_syarat_naskah = $("#id_syarat_naskah_for_isi_syarat_naskah-"+no).val(); 
+		
+		
+		$.ajax
+		(
+			{
+				type: "POST"
+				,url: "<?php echo base_url();?>C_admin_login/simpan_isi_syarat_naskah/"
+				, data: 
+						{
+							id_pengajuan:id_pengajuan,
+							id_pengajuan_format_for_isi_syarat_naskah:id_pengajuan_format_for_isi_syarat_naskah,
+							id_jenis_naskah:id_jenis_naskah,
+							id_syarat_naskah:id_syarat_naskah
+						}
+				, cache: false
+				, success:function(data)
+				{ 
+					if(data=='BERHASIL')
+					{
+						//BERHASIL
+					}
+					else
+					{
+						alert("Ada masalah dengan koneksi ke server");
+					}
+				} 
+			}
+		);
+		
+			
+		
+	}
+
+	function cetak_dok(evt)
+	{
+		var arrStrId = evt.id;
+		var arrIdSplit = arrStrId.split("-");
+		
+		var jenis = arrIdSplit[0];
+		var id_jenis_naskah = arrIdSplit[1];
+		var idx = arrIdSplit[2];
+		var nik = $("#nik_ori").val();
+		var tgl_surat_masuk = $("#tgl_surat_masuk_"+idx).val();
+		
+		var id_pengajuan = $("#id_pengajuan_"+idx).val();
+		//var id_pengajuan = arrIdSplit[1]+'-'+$("#nik_ori").val()+'-'+tgl_surat_masuk;
+		
+		var no_pengajuan = $("#no_pengajuan_"+idx).val();
+		
+		//C_admin_login/view_download_dok?id_pengajuan=358&id_jenis_naskah=3
+		var href = "<?php echo base_url();?>C_admin_login/view_download_dok?id_pengajuan="+id_pengajuan+"&id_jenis_naskah="+id_jenis_naskah;
+												
+		window.open(href, 'popup', 'height=700,width=500,toolbar=no');
+		//return false;
+		//window.location.replace("<?php echo base_url();?>gl-admin-pemeriksaan-dokter");
+	}
+
+	function view_isi_var_naskah(evt)
+	{
+		var arrStrId = evt.id;
+		var arrIdSplit = arrStrId.split("-");
+		
+		var idx_isi_var = arrIdSplit[1];
+		var id_pengajuan_isi_var = $("#id_pengajuan_"+idx_isi_var).val();
+		var id_jenis_naskah_isi_var = $("#id_jenis_naskah_"+idx_isi_var).val();
+		var nik_isi_var = $("#sumber_"+idx_isi_var).val();
+		var tgl_surat_dibuat_isi_var = $("#tgl_surat_dibuat_"+idx_isi_var).val();
+		
+		$("#idx_isi_var").val(idx_isi_var);
+		$("#id_jenis_naskah_isi_var").val(id_jenis_naskah_isi_var);
+		$("#nik_isi_var").val(nik_isi_var);
+		$("#tgl_surat_dibuat_isi_var").val(tgl_surat_dibuat_isi_var);
+		
+		
+		$("#no_pengajuan_isi_var").html("No Pengajuan : "+$("#no_pengajuan_"+idx_isi_var).val()+"<br/>Diajukan Oleh : "+$("#diajukan_oleh_"+idx_isi_var).val()+"<br/>Jenis Pelayanan : "+$("#nama_jenis_naskah_"+idx_isi_var).val());
+		
+		//alert(idx_isi_var);
+		//alert(id_pengajuan_isi_var);
+		//alert(tgl_surat_dibuat_isi_var);
+		
+		$.ajax({type: "POST", url: "<?php echo base_url();?>C_admin_pengajuan/view_isian_var_naskah/"
+		, data: 
+				{
+					nik_isi_var:nik_isi_var,
+					id_jenis_naskah_isi_var:id_jenis_naskah_isi_var,
+					tgl_surat_dibuat_isi_var:tgl_surat_dibuat_isi_var
+				}
+		, cache: false
+		, success:function(data)
+		{
+			 //alert(data);
+			//if(data=='BERHASIL')
+			if(data != false)
+			{
+				//alert("DATA TERSIMPAN");
+				$("#tb_isi_var_naskah").html(data);
+			}
+			else
+			{
+				//alert("GAGAL");
+				$("#tb_isi_var_naskah").html("<center>TIDAK ADA DATA YANG DITAMPILKAN</center>");
+				//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Terjadi gangguan jaringan !');
+			}
+		} 
+		});
+		
+	}
+
+	function simpan_isian_var_naskah(evt)
+	{						
+		var id_pengajuan = $("#id_jenis_naskah_isi_var").val()+"-"+$("#nik_isi_var").val()+"-"+$("#tgl_surat_dibuat_isi_var").val();
+		var id_jenis_naskah = $("#id_jenis_naskah_isi_var").val();
+		var tgl_surat_dibuat = $("#tgl_surat_dibuat_isi_var").val();
+		
+		var arrStrId = evt.id;
+		var arrIdSplit = arrStrId.split("-");
+		
+		var jenis = arrIdSplit[0];
+		var id_var_naskah = arrIdSplit[1];
+		var val = evt.value;
+		
+		$.ajax({type: "POST", url: "<?php echo base_url();?>C_admin_login/simpan_isi_var_naskah/"
+		, data: 
+				{
+					id_pengajuan:id_pengajuan,
+					id_jenis_naskah:id_jenis_naskah,
+					id_var_naskah:id_var_naskah,
+					isi:val
+				}
+		, cache: false
+		, success:function(data)
+		{
+			 //alert(data);
+			//if(data=='BERHASIL')
+			if(data != false)
+			{
+				//alert("DATA TERSIMPAN");
+				$("#var-"+id_var_naskah).css('border', '3px #090 solid');
+			}
+			else
+			{
+				alert("GAGAL");
+				//$("#tb_isi_var_naskah").html("<center>TIDAK ADA DATA YANG DITAMPILKAN</center>");
+				
+				//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Terjadi gangguan jaringan !');
+			}
+		} 
+		});
+	}
+
 	function tambah_penduduk(id)
 	{	
 		//var kode_produk = $("#kode_produk_"+id).val();

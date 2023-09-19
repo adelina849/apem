@@ -116,8 +116,8 @@
 													echo '<th width="5%">No</th>';
 													echo '<th width="10%">Barcode</th>';
 													echo '<th width="45%">No Dokumen - Perihal</th>';
-													echo '<th width="10%">Status</th>';
-													echo '<th width="30%">Aksi</th>';
+													echo '<th width="25%">Status</th>';
+													echo '<th width="15%">Aksi</th>';
 										echo '</tr>
 	</thead>';
 										$list_result = $list_status_naskah->result();
@@ -128,6 +128,15 @@
 											echo'<tr>';
 												echo'<td><input type="hidden" id="no_'.$row->id_pengajuan.'" value="'.$row->id_pengajuan.'" />'.$no.'</td>';
 												
+												if($row->hasil_pengajuan == '')
+												{
+													$format = "color:red;";
+												}
+												else
+												{
+													$format = "color:black;";
+												}
+												
 												echo'<td>'.($row->no_pengajuan).'</td>';
 												echo'<td>
 														<b>Jenis Dokumen : </b>'.$row->nama_jenis_naskah.' 
@@ -137,9 +146,13 @@
 													</td>';
 												echo'<td>
 														<b>Tahapan : </b>'.$row->tahapan.' 
-														<br/> <b>Valid : </b>'.$row->sts.'
-														<br/> <b>(%) : </b>'.$row->prsn.'%
-													
+														<br/> <b>Valid : </b>'.$row->sts.' Tahapan (</b>'.$row->prsn.'%)
+														<br/>
+														<br/>
+														<div style="padding:2%;border:1px dotted black;'.$format.'">
+														<b>Hasil : </b>'.$row->hasil_pengajuan.'
+														<br/> <b>Ket Hasil : </b>'.$row->ket_hasil.'
+														</div>
 													</td>';
 												//echo'<td>'.number_format($row->nominal,0,',','.').'</td>';
 												
@@ -158,13 +171,13 @@
 												//if($row->user_updt == $this->session->userdata('ses_id_karyawan'))
 												//{
 													echo'<td>	
-	<a class="confirm-btn btn btn-success btn-sm" href="'.base_url().'admin-detail-status-dokumen/'.$row->id_pengajuan.'" title = "Ubah Status '.($row->no_pengajuan).'" alt = "Ubah Status '.($row->no_pengajuan).'">Ubah Status</a>
+	<a class="confirm-btn btn btn-success btn-sm btn-flat btn-block" href="'.base_url().'admin-detail-status-dokumen/'.$row->id_pengajuan.'" title = "Ubah Status '.($row->no_pengajuan).'" alt = "Ubah Status '.($row->no_pengajuan).'">Ubah Status</a>
 	
-	<button type="button" onclick="view('.$no.')" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
+	<button type="button" onclick="view('.$no.')" class="btn btn-primary btn-sm btn-flat btn-block" data-toggle="modal" data-target="#myModal">
 		Hasil Pengajuan
 	</button>
 	
-	<a class="confirm-btn btn btn-success btn-sm" href="'.base_url().'admin-pengajuan-dokumen-images/'.$row->id_pengajuan.'" title = "Foto Data '.($row->no_pengajuan).'" alt = "Foto Data '.($row->no_pengajuan).'">Upload File</a>
+	<a class="confirm-btn btn btn-default btn-sm btn-flat btn-block" href="'.base_url().'admin-pengajuan-dokumen-images/'.$row->id_pengajuan.'" title = "Foto Data '.($row->no_pengajuan).'" alt = "Foto Data '.($row->no_pengajuan).'">Upload File</a>
 													</td>';
 												/*
 												}
@@ -247,6 +260,8 @@
 												  <label for="hasil_pengajuan">Keputusan</label>
 												  <select name="hasil_pengajuan" id="hasil_pengajuan" class="required form-control select2" title="Keputusan">
 													<option value=""></option>
+													<option value="KOMPLIT">KOMPLIT</option>
+													<option value="PERBAIKI">PERBAIKI</option>
 													<option value="DISPOSISI">DISPOSISI</option>
 													<option value="DITOLAK">DITOLAK</option>
 													<option value="DIREKOMENDASIKAN">DIREKOMENDASIKAN</option>

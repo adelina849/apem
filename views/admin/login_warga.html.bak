@@ -355,12 +355,12 @@
 				if(data != false)
 				{
 					//alert("DATA TERSIMPAN");
-					$("#"+evt.id).css('border','2px solid green');
+					$("#"+evt.id).css('border','12px solid green');
 				}
 				else
 				{
 					alert("GAGAL");
-					$("#"+evt.id).css('border','2px solid red');
+					$("#"+evt.id).css('border','12px solid red');
 					//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Terjadi gangguan jaringan !');
 				}
 			} 
