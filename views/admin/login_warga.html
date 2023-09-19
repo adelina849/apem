@@ -446,6 +446,7 @@
 		function simpan_pengajuan(evt)
 		{
 			var id_jenis_naskah = $("#id_jenis_naskah").val();
+			var nama_jenis_naskah = $("#nama_jenis_naskah").val();
 			var kode_pengajuan = $("#kode_pengajuan").val();
 			var no_pengajuan = $("#no_pengajuan").val();
 			var perihal = $("#perihal").val();
@@ -458,6 +459,7 @@
 			var ket_pengajuan = $("#ket_pengajuan").val();
 			var penting = $("#penting").val();
 			
+			
 			if(perihal == '')
 			{
 				alert('Kolom Perihal Harus Diisi !');
@@ -468,54 +470,47 @@
 			}
 			else
 			{
-				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-pengajuan-simpan/"
-				, data: 
+			
+				//SIMPAN
+					$.ajax({type: "POST", url: "<?php echo base_url();?>warga-pengajuan-simpan/"
+					, data: 
+							{
+								id_jenis_naskah:id_jenis_naskah,
+								no_pengajuan:no_pengajuan,
+								kode_pengajuan:kode_pengajuan,
+								perihal:perihal,
+								sumber:sumber,
+								diajukan_oleh:diajukan_oleh,
+								tandatangan_oleh:tandatangan_oleh,
+								tgl_surat_dibuat:tgl_surat_dibuat,
+								tgl_surat_masuk:tgl_surat_masuk,
+								ket_pengajuan:ket_pengajuan,
+								penting:penting
+							}
+					, cache: false
+					, success:function(data)
+					{
+						 //alert(data);
+						//if(data=='BERHASIL')
+						if(data != false)
 						{
-							id_jenis_naskah:id_jenis_naskah,
-							no_pengajuan:no_pengajuan,
-							kode_pengajuan:kode_pengajuan,
-							perihal:perihal,
-							sumber:sumber,
-							diajukan_oleh:diajukan_oleh,
-							tandatangan_oleh:tandatangan_oleh,
-							tgl_surat_dibuat:tgl_surat_dibuat,
-							tgl_surat_masuk:tgl_surat_masuk,
-							ket_pengajuan:ket_pengajuan,
-							penting:penting
+							//UNTUK DOWNLOAD
+								//var href_dir = "<?php echo base_url();?>admin-cetak-faktur?pengajuan="+data;
+								//window.location.href = href_dir;
+							//UNTUK DOWNLOAD
+							
+							alert("DATA PENGAJUAN TERSIMPAN");
+							//location.reload();
+							view_history_ajuan(evt);
 						}
-				, cache: false
-				, success:function(data)
-				{
-					 //alert(data);
-					//if(data=='BERHASIL')
-					if(data != false)
-					{
-						//UNTUK DOWNLOAD
-							//var href_dir = "<?php echo base_url();?>admin-cetak-faktur?pengajuan="+data;
-							//window.location.href = href_dir;
-						//UNTUK DOWNLOAD
-						
-						alert("DATA PENGAJUAN TERSIMPAN");
-						//location.reload();
-						view_history_ajuan(evt);
-						/*
-						setTimeout(
-						function() 
+						else
 						{
-							//do something special
-							//$("#form_utama").html(data);
-							location.reload();
-						}, 1000);
-						*/
-						
-					}
-					else
-					{
-						//alert("GAGAL");
-						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Terjadi gangguan jaringan !');
-					}
-				} 
-				});
+							//alert("GAGAL");
+							$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Terjadi gangguan jaringan !');
+						}
+					} 
+					});
+				//SIMPAN
 			}
 		}
 		
@@ -534,38 +529,66 @@
 			var r = confirm("Apakah anda yakin akan melakukan pengajuan untuk "+$("#nama_jenis_naskah_"+idx).val()+" ?");
 			if (r == true) 
 			{
-				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-pengajuan-view/"
-				, data: 
+				//CEK, JANGAN MEMASUKAN NIK, PENGAJUAN DAN TGL YANG SAMA
+					$.ajax({type: "POST", url: "<?php echo base_url();?>C_admin_login/cek_satu_nik_satu_hari_ajuan/"
+					, data: 
+							{
+								id_jenis_naskah:id_jenis_naskah,
+								nik:nik
+							}
+					, cache: false
+					, success:function(data)
+					{ //CEK, JANGAN MEMASUKAN NIK, PENGAJUAN DAN TGL YANG SAMA
+						 //alert(data);
+						if(data=='BERHASIL')
+						//if(data != false)
 						{
-							nik:nik
-							,id_jenis_naskah:id_jenis_naskah
-							,no_pengajuan:no_pengajuan
+							
+							//MASUK
+							$.ajax({type: "POST", url: "<?php echo base_url();?>warga-pengajuan-view/"
+							, data: 
+									{
+										nik:nik
+										,id_jenis_naskah:id_jenis_naskah
+										,no_pengajuan:no_pengajuan
+									}
+							, cache: false
+							, success:function(data)
+							{
+								 //alert(data);
+								//if(data=='BERHASIL')
+								if(data != false)
+								{
+									$("#form_utama").html(data);
+									$("#btn_lanjut").css('display','none');
+									$("#btn_daftar").css('display','none');
+									
+									$(".langkah").css('color','red');
+									$(".langkah").css('font-weight','normal');
+									$("#langkah_3").css('color','green');
+									$("#langkah_3").css('font-weight','bold');
+									
+									window.scrollTo(xCoord, yCoord);
+									
+								}
+								else
+								{
+									alert("TERJADI KESALAHAN JARINGAN/INTERNET");
+								}
+							} 
+							});
+							//MASUK
+					
 						}
-				, cache: false
-				, success:function(data)
-				{
-					 //alert(data);
-					//if(data=='BERHASIL')
-					if(data != false)
-					{
-						$("#form_utama").html(data);
-						$("#btn_lanjut").css('display','none');
-						$("#btn_daftar").css('display','none');
-						
-						$(".langkah").css('color','red');
-						$(".langkah").css('font-weight','normal');
-						$("#langkah_3").css('color','green');
-						$("#langkah_3").css('font-weight','bold');
-						
-						window.scrollTo(xCoord, yCoord);
-						
-					}
-					else
-					{
-						alert("TERJADI KESALAHAN JARINGAN/INTERNET");
-					}
-				} 
-				});
+						else
+						{
+							alert("ANDA HANYA BISA MELAKUKAN 1 PELAYANAN "+$("#nama_jenis_naskah_"+idx).val()+" YANG SAMA PADA 1 TANGGAL YANG SAMA !");
+							//$("#btn_simpan_data_pengajuan").attr("disabled", true);
+							//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Terjadi gangguan jaringan !');
+						}
+					} 
+					});
+					//CEK, JANGAN MEMASUKAN NIK, PENGAJUAN DAN TGL YANG SAMA
 			}
 		}
 	

@@ -5,7 +5,7 @@
 		public function __construct()
 		{
 			parent::__construct();
-			$this->load->helper(array('captcha','array'));
+			$this->load->helper(array('captcha','array','myHelper_helper'));
             $this->load->library(array('form_validation'));
             $this->config->load('cap');
 			$this->load->model(array('M_dash','M_penduduk','M_pengajuan'));
@@ -207,12 +207,12 @@
 					echo'<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
 						echo'<thead>';
 						echo'<tr>';
-													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;">No</th>';
-													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;">NAMA PELAYANAN</th>';
-													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;">TAHAPAN</th>';
-													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;">PERSYARATAN</th>';
-													echo '<th width="30%" style="background-color:red;color:white;font-weight:bold;">DATA</th>';
-													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;">Aksi</th>';
+													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">No</th>';
+													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">NAMA PELAYANAN</th>';
+													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">TAHAPAN</th>';
+													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">PERSYARATAN</th>';
+													echo '<th width="30%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">DATA</th>';
+													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">Aksi</th>';
 						echo'</tr>';
 						echo'</thead>';
 						
@@ -222,17 +222,19 @@
 						foreach($list_result as $row)
 						{
 							echo'<tr>';
-								echo'<td>'.$no.'</td>';
-								echo'<td>
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">'.$no.'</td>';
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">
 													
 													'.$row->nama_jenis_naskah.'
+													<!--
 													<br/>
 													<br/><b>Sudah Ada Format:</b>
 													<br/>'.$row->SDH_FORMAT.'
+													-->
 												</td>';
-								echo'<td>'.$row->tahapan.'</td>';
-								echo'<td>'.$row->nama_syarat.'</td>';
-								echo'<td>'.$row->nama_var.'</td>';
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">'.$row->tahapan.'</td>';
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">'.$row->nama_syarat.'</td>';
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">'.$row->nama_var.'</td>';
 								/*
 								echo'<td>'.
 											str_replace('6.','<br/>6.',
@@ -253,11 +255,11 @@
 								
 								echo'<input type="hidden" id="no_pengajuan_'.$no.'" value="" />';
 								
-								echo'<td>
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">
 
 <a href="javascript:void(0)" class="btn btn-success btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="pilih_layanan(this)" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">PILIH</a>
 
-<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="view_history_ajuan(this)" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">LIHAT AJUAN ('.$row->CNT.')</a>
+<a href="javascript:void(0)" class="btn btn-danger btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="view_history_ajuan(this)" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">LIHAT AJUAN ('.$row->CNT.')</a>
 								
 								</td>';
 								
@@ -529,6 +531,8 @@
 					
 					echo'<input type="hidden" id="no_pengajuan" name="no_pengajuan"  maxlength="35" class="required form-control" size="35" alt="NIK" title="NIK" placeholder="*NIK" value="'.$no_pengajuan.'" readonly />';
 					
+					echo'<input type="hidden" id="nama_jenis_naskah" name="nama_jenis_naskah"  maxlength="35" class="required form-control" size="35" alt="NIK" title="NIK" placeholder="*NIK" value="'.strtoupper($cek_jenis_naskah->nama_jenis_naskah).'" readonly />';
+					
 					echo'<input type="hidden" id="id_jenis_naskah" name="id_jenis_naskah"  maxlength="35" class="required form-control" size="35" alt="NIK" title="NIK" placeholder="*NIK" value="'.$cek_jenis_naskah->id_jenis_naskah.'" readonly />';
 					
 					echo'<div class="form-group">
@@ -719,7 +723,7 @@
 					echo'
 						<br/>
 						<div class="col-xs-12">
-						  <button type="button" id="btn_simpan_data_pengajuan-'.$cek_jenis_naskah->id_jenis_naskah.'-1" class="btn-warga btn btn-success btn-block btn-flat" style="border:1px dotted black;" onclick="simpan_pengajuan(this)">SIMPAN DATA</button>
+						  <button type="button" id="btn_simpan_data_pengajuan-'.$cek_jenis_naskah->id_jenis_naskah.'-1" class="btn-warga btn btn-success btn-block btn-flat btn_simpan_data_pengajuan" style="border:1px dotted black;" onclick="simpan_pengajuan(this)">SIMPAN DATA</button>
 						</div>
 						';
 					
@@ -1012,9 +1016,23 @@
 					if(!empty($get_jenis_naskah))
 					{
 						$get_jenis_naskah = $get_jenis_naskah->row();
+						
+						$id_pengajuan_format = $get_jenis_naskah->id_jenis_naskah."-".$get_pengajuan->sumber."-".$get_pengajuan->tgl_surat_dibuat;
+						//GET VAIRABLE
+						$query_get_isian_naskah = "
+							SELECT
+								A.*
+								,COALESCE(B.nama_var,'') AS var_naskah
+							FROM tb_isi_var_naskah AS A 
+							LEFT JOIN tb_var_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.id_var_naskah = B.id_var_naskah AND B.id_jenis_naskah = '".$get_jenis_naskah->id_jenis_naskah."'
+							WHERE A.id_jenis_naskah = '".$get_jenis_naskah->id_jenis_naskah."' 
+							AND A.id_pengajuan = '".$id_pengajuan_format."';
+							-- AND A.id_pengajuan = '1-3203042104900001-2023-09-19';
+						";
+						$get_isian_naskah = $this->M_dash->view_query_general($query_get_isian_naskah);
+						
 						//$data = array('page_content'=>'king_admin_tahapan','halaman'=>$halaman,'list_tahapan'=>$list_tahapan);
-						$data = array('get_pengajuan'=>$get_pengajuan,'get_data_penduduk'=>$get_data_penduduk,'get_jenis_naskah'=>$get_jenis_naskah);
-						//$this->load->view('admin/page/king_admin_cetak_format_naskah.html',$data);
+						$data = array('get_pengajuan'=>$get_pengajuan,'get_data_penduduk'=>$get_data_penduduk,'get_jenis_naskah'=>$get_jenis_naskah,'get_isian_naskah'=>$get_isian_naskah,'id_pengajuan_format'=>$id_pengajuan_format);
 						$this->load->view('admin/page/king_admin_cetak_format_naskah.php',$data);
 					}
 					else
@@ -1033,6 +1051,29 @@
 			}
 		}
 	
+		function cek_satu_nik_satu_hari_ajuan()
+		{
+			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			$id_jenis_naskah = htmlentities($_POST['id_jenis_naskah'], ENT_QUOTES, 'UTF-8');
+			//$tgl_surat_masuk = htmlentities($_POST['tgl_surat_masuk'], ENT_QUOTES, 'UTF-8');
+			
+			//$query = "SELECT * FROM tb_pengajuan WHERE id_jenis_naskah = '".$id_jenis_naskah."' AND sumber = '".$nik."' AND tgl_surat_masuk = '".$tgl_surat_masuk."';";
+			$query = "SELECT * FROM tb_pengajuan WHERE id_jenis_naskah = '".$id_jenis_naskah."' AND sumber = '".$nik."' AND DATE(tgl_surat_masuk) = DATE(NOW());";
+			
+			$get_pengajuan = $this->M_dash->view_query_general($query);
+			if(!empty($get_pengajuan))
+			{
+				//SUDAAH ADA
+				echo "GAGAL";
+			}
+			else
+			{
+				echo "BERHASIL";
+			}
+			
+		}
+		
+		
         public function validasi_input_captcha()
         {
             $this->form_validation->set_rules('captcha','Captcha','required|callback_check_captcha');
