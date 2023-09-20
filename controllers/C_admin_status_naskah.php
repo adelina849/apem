@@ -166,6 +166,12 @@ class C_admin_status_naskah extends CI_Controller {
 						 <title>Selamat, Pelayanan Anda Telah Selesai</title>
 					   </head>
 					   <body>
+					   
+	<center>
+	<img id='img_bpt' src='".base_url('assets/global/images/bupati_cjr.png')."' style='float:left;'>
+	<img id='img_cam' src='".base_url('assets/global/images/cam_sam.png')."' style='float:right;'>
+	</center>
+	
 						 <p>Assalamualaikum Wr,Wb,</p>
 						 <p>Hi ".$get_data->nama." Terima kasih telah menggunakan layayan Aplikasi <b>ANJUNGAN PATEN MANDIRI (APEM) KECAMATAN CIBEBER</b>. Berikut kami sampaikan informasi hasil dari pengajuan pelayanan anda :</p>
 						 
@@ -221,7 +227,7 @@ class C_admin_status_naskah extends CI_Controller {
 				$from = $this->config->item('smtp_user');
 				//$to = $email;
 				$to = $get_data->email;
-				$subject = 'Pendaftaran  akun Megafire Berhasil';
+				$subject = 'Selamat Pengajuan '.$get_data->nama_jenis_naskah.' Telah Selesai';
 				$message = $pesan;
 
 				$this->email->set_newline("\r\n");

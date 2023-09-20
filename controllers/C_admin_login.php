@@ -577,8 +577,9 @@
 								<option value="KASI">KASI</option>
 							</select>
 						</div>';
-						
-					echo'<div class="form-group">
+					
+					//INI YANG DIAPAKI UNTUK DI
+					echo'<div class="form-group" style="display:none;">
 							<label>Tanggal Pelayanan/Dokumen dibutuhkan</label>
 							<div class="input-group date">
 							  <div class="input-group-addon">
@@ -588,6 +589,7 @@
 							</div>
 							<!-- /.input group -->
 						</div>';
+					//INI YANG DIAPAKI UNTUK DI
 						
 					echo'<div class="form-group" style="display:none;">
 							<label>Tanggal Dokumen Masuk</label>
@@ -761,7 +763,7 @@
 									
 									echo'<input type="hidden" id="id_pengajuan_for_isi_syarat_naskah-'.$no.'" value="'.$row->id_pengajuan_format_isi_syarat_naskah.'" />';
 									
-									echo'<input type="hidden" id="id_pengajuan_format_for_isi_syarat_naskah-'.$no.'" value="'.$id_jenis_naskah.'-'.$nik.'-'.$tgl_surat_dibuat_untuk_isian.'" />';
+									echo'<input type="hidden" id="id_pengajuan_format_for_isi_syarat_naskah-'.$no.'" value="'.$id_jenis_naskah.'-'.$nik.'-'.$tgl_surat_dibuat.'" />';
 									
 									
 									
@@ -921,6 +923,11 @@
 								 <title>Permintaan Pelayanan Diterima</title>
 							   </head>
 							   <body>
+	<center>
+	<img id='img_bpt' src='".base_url('assets/global/images/bupati_cjr.png')."' style='float:left;'>
+	<img id='img_cam' src='".base_url('assets/global/images/cam_sam.png')."' style='float:right;'>
+	</center>
+	
 								 <p>Assalamualaikum Wr,Wb,</p>
 								 <p>Hi ".$_POST['diajukan_oleh']." Terima kasih telah melakukan penaftaran pelayanan Pada Aplikasi pelayanan <b>ANJUNGAN PATEN MANDIRI (APEM) KECAMATAN CIBEBER</b>. Berikut kami sampaikan informasi pendaftara anda :</p>
 								 
@@ -966,7 +973,7 @@
 						$from = $this->config->item('smtp_user');
 						//$to = $email;
 						$to = $get_data_penduduk->email;
-						$subject = 'Pendaftaran  akun Megafire Berhasil';
+						$subject = 'Pengajuan Dokumen '.$_POST['nama_jenis_naskah'];
 						$message = $pesan;
 
 						$this->email->set_newline("\r\n");
