@@ -94,7 +94,7 @@
 			}
 			
 			//3. DATA FORMAT
-			$string = str_replace('@tanggal@',tanggal(date('Y-m-d')),$string);
+			$string = str_replace('@tanggal@',$this->tanggal(date('Y-m-d')),$string);
 			//3. DATA FORMAT
 			
 			
