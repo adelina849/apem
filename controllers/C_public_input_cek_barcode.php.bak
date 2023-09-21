@@ -27,7 +27,7 @@
 			
 			if((!empty($_GET['code'])) && ($_GET['code']!= "")  )
 			{
-				$no_pengajuan = str_replace("'","",$_GET['code']);
+				$no_pengajuan = str_replace("'","",$_POST['code']);
 			}
 			else
 			{

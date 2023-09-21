@@ -165,27 +165,17 @@
 						<div class="box-header">
 						<h3 class="box-title">Table Jenis Dokumen</h3>
 							<div class="pull-right">
-								<!-- <form action="<?=base_url();?>admin/pendaftaran-klinik-cari" method="post" class="frm-cari"> -->
 								<form action="<?=base_url();?>admin-jenis-dokumen" method="get" class="frm-cari">
 									<table>
 										<tr>
-											<!-- <td>Berdasarkan</td><td>:</td> -->
-											<!-- <td>
-												<select name="berdasarkan" title="Cari Berdasarkan" class="form-control">
-													<option value=""><?php if (!empty($_GET['berdasarkan'])){echo $_GET['berdasarkan'];} ?></option>
-													<option value="spesialisasi">Spesialisasi</option>
-													<option value="pendidikan">Pendidikan</option>
-												</select>
-											</td> -->
 											<td>
-												<!-- <input type="text" name="cari"  maxlength="35" class="text form-control" size="35" alt="tlp" title="Cari data" placeholder="...Cari" value="<?php if (!empty($_GET['berdasarkan'])){echo $_GET['cari'];} ?>"/> -->
 												<input type="text" name="cari"  maxlength="35" class="text form-control" size="35" alt="tlp" title="Cari data" placeholder="...Cari" value="<?php if (!empty($_GET['cari'])){echo $_GET['cari'];} ?>"/>
 											</td>
 										</tr>
 									</table>
 								</form>
 							</div>
-						</div><!-- /.box-header -->
+						</div>
 						<div class="box-body">
 						
 						

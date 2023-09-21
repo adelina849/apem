@@ -202,17 +202,37 @@
 						WHERE COALESCE(A.nama_jenis_naskah,'') LIKE '%%' ORDER BY A.nama_jenis_naskah ";
 				
 				$list_layanan = $this->M_dash->view_query_general($query_list_layanan);
+				
+				echo'<div class="box">
+					<div class="box-header">
+					<h3 class="box-title">TABLE JENIS DOKUMEN</h3>
+						<div class="pull-right">
+							<table>
+								<tr>
+									<td>
+										<input type="text" id="cari_layanan" name="cari_layanan"  maxlength="35" class="text form-control" size="35" alt="tlp" title="Cari data" placeholder="...Cari" value="" />
+									</td>
+									<td>
+										<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" onclick="view_layanan()" title = "Cari Dokumen" alt = "Cari Dokumen" style="border: 1px dotted blue;">CARI LAYANAN</a>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="box-body" id="table_layanan">
+					';
+					
 				if(!empty($list_layanan))
 				{
 					echo'<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
 						echo'<thead>';
 						echo'<tr>';
-													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">No</th>';
-													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">NAMA PELAYANAN</th>';
-													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">TAHAPAN</th>';
-													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">PERSYARATAN</th>';
-													echo '<th width="30%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">DATA</th>';
-													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">Aksi</th>';
+													echo '<th width="5%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">No</th>';
+													echo '<th width="20%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">NAMA PELAYANAN</th>';
+													echo '<th width="20%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">TAHAPAN</th>';
+													echo '<th width="20%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">PERSYARATAN</th>';
+													echo '<th width="30%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">DATA</th>';
+													echo '<th width="5%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">AKSI</th>';
 						echo'</tr>';
 						echo'</thead>';
 						
@@ -270,11 +290,196 @@
 						echo '</tbody>';
 					echo'</table>';
 				}
+				echo'</div>';
 			}
 			else
 			{
 				return false;
 			}
+		}
+		
+		function view_layanan()
+		{
+			$cari_layanan = htmlentities($_POST['cari_layanan'], ENT_QUOTES, 'UTF-8');
+			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			
+			$query_list_layanan = "SELECT
+							A.*
+							,CASE WHEN (LENGTH(A.format_naskah) > 3) THEN 'SUDAH' ELSE 'BELUM' END AS SDH_FORMAT
+							,COALESCE(B.tahapan,'') AS tahapan
+							,COALESCE(C.nama_syarat,'') AS nama_syarat
+							,COALESCE(D.nama_var,'') AS nama_var
+							,
+							COALESCE(
+							(
+								SELECT COUNT(id_pengajuan) AS CNT 
+								FROM tb_pengajuan 
+								WHERE sumber = '".$nik."'
+								AND id_jenis_naskah = A.id_jenis_naskah
+							) 
+							,
+							0
+							)
+							AS CNT
+						FROM tb_jenis_naskah AS A
+						LEFT JOIN
+						(
+							SELECT A2.id_jenis_naskah
+								,A2.naskah	
+								,GROUP_CONCAT(
+												DISTINCT CONCAT('<b>',ordr_index,'. </b>',A2.tahapan)
+												ORDER BY A2.ordr_index
+												SEPARATOR ' <br/>'
+											) AS tahapan
+								,A2.kode_kantor
+							FROM
+							(
+								SELECT 
+									A.id_tahapan_naskah 
+									,A.id_tahapan,A.id_jenis_naskah,A.ordr_index
+									,COALESCE(B.nama_jenis_naskah,'') AS naskah
+									,COALESCE(C.nama_tahapan,'') AS tahapan
+									,A.kode_kantor
+								FROM tb_tahapan_naskah AS A
+								LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
+								LEFT JOIN tb_tahapan AS C ON A.id_tahapan  = C.id_tahapan  AND A.kode_kantor = C.kode_kantor
+								-- WHERE COALESCE(B.nama_jenis_naskah,'') LIKE '%%'
+							) AS A2
+							GROUP BY A2.id_jenis_naskah,A2.naskah,A2.kode_kantor
+						) AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
+						
+						LEFT JOIN
+						(
+							SELECT A2.id_jenis_naskah
+								,A2.naskah	
+								,GROUP_CONCAT(
+												DISTINCT CONCAT('<b>',ordr_index,'. </b>',A2.nama_syarat)
+												ORDER BY A2.ordr_index
+												SEPARATOR ' <br/>'
+											) AS nama_syarat
+								,A2.kode_kantor
+							FROM
+							(
+								SELECT 
+									A.id_syarat_naskah 
+									,A.id_syarat,A.id_jenis_naskah,A.ordr_index
+									,COALESCE(B.nama_jenis_naskah,'') AS naskah
+									,COALESCE(C.nama_syarat,'') AS nama_syarat
+									,A.kode_kantor
+								FROM tb_persyaratan_naskah AS A
+								LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
+								LEFT JOIN tb_persyaratan AS C ON A.id_syarat  = C.id_syarat  AND A.kode_kantor = C.kode_kantor
+								-- WHERE COALESCE(B.nama_jenis_naskah,'') LIKE '%%'
+							) AS A2
+							GROUP BY A2.id_jenis_naskah,A2.naskah,A2.kode_kantor
+						) AS C ON A.id_jenis_naskah = C.id_jenis_naskah AND A.kode_kantor = C.kode_kantor
+						
+						
+						LEFT JOIN
+						(
+							SELECT A2.id_jenis_naskah
+								,A2.naskah	
+								,GROUP_CONCAT(
+												DISTINCT CONCAT('<b>',ordr_index,'. </b>',A2.nama_var)
+												ORDER BY A2.ordr_index
+												SEPARATOR ' <br/>'
+											) AS nama_var
+								,A2.kode_kantor
+							FROM
+							(
+								SELECT 
+									A.id_var_naskah 
+									,A.id_jenis_naskah,A.idx AS ordr_index
+									,COALESCE(B.nama_jenis_naskah,'') AS naskah
+									,COALESCE(A.nama_var,'') AS nama_var
+									,A.kode_kantor
+								FROM tb_var_naskah AS A
+								LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
+								-- WHERE COALESCE(B.nama_jenis_naskah,'') LIKE '%%'
+							) AS A2
+							GROUP BY A2.id_jenis_naskah,A2.naskah,A2.kode_kantor
+						) AS D ON A.id_jenis_naskah = D.id_jenis_naskah AND A.kode_kantor = D.kode_kantor
+						WHERE COALESCE(A.nama_jenis_naskah,'') LIKE '%".$cari_layanan."%' ORDER BY A.nama_jenis_naskah ";
+				
+				$list_layanan = $this->M_dash->view_query_general($query_list_layanan);
+				
+				
+				if(!empty($list_layanan))
+				{
+					echo'<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
+						echo'<thead>';
+						echo'<tr>';
+													echo '<th width="5%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">No</th>';
+													echo '<th width="20%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">NAMA PELAYANAN</th>';
+													echo '<th width="20%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">TAHAPAN</th>';
+													echo '<th width="20%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">PERSYARATAN</th>';
+													echo '<th width="30%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">DATA</th>';
+													echo '<th width="5%" style="text-align:center;background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">AKSI</th>';
+						echo'</tr>';
+						echo'</thead>';
+						
+						$list_result = $list_layanan->result();
+						$no = 1;
+						echo '<tbody>';
+						foreach($list_result as $row)
+						{
+							echo'<tr>';
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">'.$no.'</td>';
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">
+													
+													'.$row->nama_jenis_naskah.'
+													<!--
+													<br/>
+													<br/><b>Sudah Ada Format:</b>
+													<br/>'.$row->SDH_FORMAT.'
+													-->
+												</td>';
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">'.$row->tahapan.'</td>';
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">'.$row->nama_syarat.'</td>';
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">'.$row->nama_var.'</td>';
+								
+								echo'<input type="hidden" id="id_jenis_naskah_'.$no.'" value="'.$row->id_jenis_naskah.'" />';
+								echo'<input type="hidden" id="nama_jenis_naskah_'.$no.'" value="'.$row->nama_jenis_naskah.'" />';
+								echo'<input type="hidden" id="syarat_jenis_naskah_'.$no.'" value="'.$row->syarat_jenis_naskah.'" />';
+								echo'<input type="hidden" id="ket_jenis_naskah_'.$no.'" value="'.$row->ket_jenis_naskah.'" />';
+								
+								echo'<input type="hidden" id="no_pengajuan_'.$no.'" value="" />';
+								
+								echo'<td style="border-bottom: 1px solid grey;border-collapse: separate;color:black;">
+
+<a href="javascript:void(0)" class="btn btn-success btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="pilih_layanan(this)" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">PILIH</a>
+
+<a href="javascript:void(0)" class="btn btn-danger btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'" onclick="view_history_ajuan(this)" title = "Ubah Data '.$row->nama_jenis_naskah.'" alt = "Ubah Data '.$row->nama_jenis_naskah.'">LIHAT AJUAN ('.$row->CNT.')</a>
+								
+								</td>';
+								
+								
+							echo'</tr>';
+							$no++;
+						}
+						echo '</tbody>';
+					echo'</table>';
+				}
+				else
+				{
+					echo'<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
+						echo'<thead>';
+						echo'<tr>';
+													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">No</th>';
+													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">NAMA PELAYANAN</th>';
+													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">TAHAPAN</th>';
+													echo '<th width="20%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">PERSYARATAN</th>';
+													echo '<th width="30%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">DATA</th>';
+													echo '<th width="5%" style="background-color:red;color:white;font-weight:bold;border: 1px solid black;border-collapse: separate;">Aksi</th>';
+						echo'</tr>';
+						echo'</thead>';
+						echo'<tr>';
+							echo'<td colspan="6" style="text-align:center;">';
+								echo'PENCARIAN TIDAK DITEMUKAN DATA';
+							echo'</td>';
+						echo'</tr>';
+					echo'</table>';
+				}
 		}
         
 		function view_daftar_warga()
@@ -1046,11 +1251,15 @@
 							{
 								$format = "display:none;";
 								$format_dok = "display:none;";
+								$nb = '<div style="padding:2%;border:1px dotted black;color:red;">
+									NB : Dokumen bisa dicetak jika sudah diperiksa dan acc admin
+								<div>';
 							}
 							else
 							{
 								$format = "color:black;";
 								$format_dok = "";
+								$nb = "";
 							}
 							
 							echo'<td>
@@ -1062,6 +1271,7 @@
 								
 								<br/>
 								<br/>
+								'.$nb.'
 								<div style="padding:2%;border:1px dotted black;'.$format.'">
 								<b>Hasil : </b>'.$row->hasil_pengajuan.'
 								<br/> <b>Ket Hasil : </b>'.$row->ket_hasil.'
@@ -1087,7 +1297,7 @@
 
 <a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-hapus" onclick="hapus_pengajuan(this)" title = "Hapus Data '.$row->nama_jenis_naskah.'" alt = "Hapus Data '.$row->nama_jenis_naskah.'"> <span class="glyphicon glyphicon-trash " style="padding-top:1.5%;"></span>HAPUS</a>
 
-<a href="'.base_url().'admin-cetak-faktur?pengajuan='.$row->no_pengajuan.'" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-qr" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'"> <span class="glyphicon glyphicon-print " style="padding-top:1.5%;"></span> CETAK QR</a>
+<a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-qr" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'" onclick="cetak_qr_view_langsung_print(this)"> <span class="glyphicon glyphicon-print " style="padding-top:1.5%;"></span> CETAK QR</a>
 
 <a href="javascript:void(0)" class="btn btn-default btn-sm btn-flat btn-block" id="btn-'.$row->id_jenis_naskah.'-'.$no.'-progress" title = "Cetak Data '.$row->nama_jenis_naskah.'" alt = "Cetak Data '.$row->nama_jenis_naskah.'" onclick="cek_progress(this)"> <span class="glyphicon glyphicon-hourglass " style="padding-top:1.5%;"></span> PROGRES</a>
 
@@ -1301,6 +1511,22 @@
 			
 		}
 		
+		function cetak_print_qr_code()
+		{
+			$no_pengajuan = htmlentities($_GET['code'], ENT_QUOTES, 'UTF-8');
+			$query = "SELECT * FROM tb_pengajuan WHERE no_pengajuan = '".$no_pengajuan."' ;";
+			$get_data_pengajuan = $this->M_dash->view_query_general($query);
+			if(!empty($get_data_pengajuan))
+			{
+				$get_data_pengajuan = $get_data_pengajuan->row();
+				$data = array('get_data_pengajuan'=>$get_data_pengajuan);
+				$this->load->view('admin/page/king_admin_print_qr.php',$data);
+			}
+			else
+			{
+				echo'TIDAK ADA DATA YANG DITAMPILKAN';
+			}
+		}
 		
         public function validasi_input_captcha()
         {
@@ -1368,6 +1594,34 @@
 				return true;
 				
 			}
+		}
+		
+		function tanggal($var = '')
+		{
+		$tgl = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember");
+		$pecah = explode("-", $var);
+		return $pecah[2]." ".$tgl[$pecah[1] - 1]." ".$pecah[0];
+		}
+		
+		function Terbilang($x)
+		{
+		  $abil = array("", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas");
+		  if ($x < 12)
+			return " " . $abil[$x];
+		  elseif ($x < 20)
+			return Terbilang($x - 10) . " Belas";
+		  elseif ($x < 100)
+			return Terbilang($x / 10) . " Puluh" . Terbilang($x % 10);
+		  elseif ($x < 200)
+			return " seratus" . Terbilang($x - 100);
+		  elseif ($x < 1000)
+			return Terbilang($x / 100) . " Ratus" . Terbilang($x % 100);
+		  elseif ($x < 2000)
+			return " seribu" . Terbilang($x - 1000);
+		  elseif ($x < 1000000)
+			return Terbilang($x / 1000) . " Ribu" . Terbilang($x % 1000);
+		  elseif ($x < 1000000000)
+			return Terbilang($x / 1000000) . " Juta" . Terbilang($x % 1000000);
 		}
 	}
 
