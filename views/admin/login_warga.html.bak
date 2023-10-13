@@ -272,7 +272,7 @@
 	<script type='text/javascript'>
 		function cetak_qr_view_langsung_print(evt)
 		{
-			alert("MULAI");
+			//alert("MULAI");
 			var arrStrId = evt.id;
 			var arrIdSplit = arrStrId.split("-");
 			
@@ -281,12 +281,12 @@
 			var idx = arrIdSplit[2];
 			var nik = $("#nik_ori").val();
 			var tgl_surat_masuk = $("#tgl_surat_masuk_"+idx).val();
-			alert("1");
+			//alert("1");
 			
 			var id_pengajuan = $("#id_pengajuan_"+idx).val();
 			//var id_pengajuan = arrIdSplit[1]+'-'+$("#nik_ori").val()+'-'+tgl_surat_masuk;
 			var no_pengajuan = $("#no_pengajuan_"+idx).val();
-			alert("2");
+			//alert("2");
 			
 			
 			//C_admin_login/view_download_dok?id_pengajuan=358&id_jenis_naskah=3
