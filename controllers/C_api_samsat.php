@@ -51,15 +51,15 @@ class C_api_samsat extends CI_Controller {
 	public function get_json_pajak($nik)
 	{		
 		// production
-		$client_id = "KWGP2Pw49N2upObSbKwHBndfTR8a";
-		$client_credential = "521On9j8r9HmhnovMXJbnr0NtfYa";
+		$client_id = "_NrXe69JftV9Bm4HcENriwglz0ga";
+		$client_credential = "PGq7P6WhU5uFvIVVwU8F8DOXZyMa";
 		$user_samsat = "cianjur";
 		$pass_samsat = "Ru4c1JpkL0";
 
 		// url get Token SPLP
-		$urlTokenSPLP = 'https://splp.jabarprov.go.id:9453/oauth2/token';
+		$urlTokenSPLP = 'https://splp.layanan.go.id/oauth2/token';
 		// url API SamsAT pada SPLP
-		$urlSPLPSIPANDU = 'https://splp.jabarprov.go.id:8253/samsatkabkot/1/cianjur/get_vehicle_list_by_nik';
+		$urlSPLPSIPANDU = 'https://api-splp.layanan.go.id/t/jabarprov.go.id/samsatkabkot/1/cianjur/get_vehicle_list_by_nik';
 		
 	
 		$token = "Bearer " . $this->token_splp();
@@ -71,8 +71,8 @@ class C_api_samsat extends CI_Controller {
 		{
 			$headers      = [
 				'Content-Type:application/json',
-				'Authorization : Basic ' . $basic_auth,
-				'SPLP_Auth : ' . $token
+				'Authorization: ' . $token,
+				'auth: Basic ' . $basic_auth
 
 			];
 			return $headers;
@@ -113,7 +113,6 @@ class C_api_samsat extends CI_Controller {
 		));
 		$response = curl_exec($curl);
 		curl_close($curl);
-		
 		//echo $response;
 		return $response;
 	}
@@ -121,16 +120,18 @@ class C_api_samsat extends CI_Controller {
 	//function token_splp($client_id, $client_credential, $urlTokenSPLP)
 	public function token_splp()
 	{
+		
 		// production
-		$client_id = "KWGP2Pw49N2upObSbKwHBndfTR8a";
-		$client_credential = "521On9j8r9HmhnovMXJbnr0NtfYa";
+		$client_id = "_NrXe69JftV9Bm4HcENriwglz0ga";
+		$client_credential = "PGq7P6WhU5uFvIVVwU8F8DOXZyMa";
 		$user_samsat = "cianjur";
 		$pass_samsat = "Ru4c1JpkL0";
 
 		// url get Token SPLP
-		$urlTokenSPLP = 'https://splp.jabarprov.go.id:9453/oauth2/token';
+		$urlTokenSPLP = 'https://splp.layanan.go.id/oauth2/token';
 		// url API SamsAT pada SPLP
-		$urlSPLPSIPANDU = 'https://splp.jabarprov.go.id:8253/samsatkabkot/1/cianjur/get_vehicle_list_by_nik';
+		$urlSPLPSIPANDU = 'https://api-splp.layanan.go.id/t/jabarprov.go.id/samsatkabkot/1/cianjur/get_vehicle_list_by_nik';
+
 		
 		$ch = curl_init();
 

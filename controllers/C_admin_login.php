@@ -216,74 +216,78 @@
 					$pjk_statusBlokir = "";
 					$pjk_ketBlokir = "";
 					
-					foreach ($obj->data as $item) 
+					if(!empty($obj->data))
 					{
-						if($item->statusTunggakan == true)
+						foreach ($obj->data as $item) 
 						{
-							$pjk_namaPemilik = $item->namaPemilik;
-							$pjk_alamatPemilik = $item->alamatPemilik;
-							$pjk_nopol = $item->nomorPolisi;
-							$pjk_merek = $item->merek;
-							$pjk_jenisKendaraan = $item->jenis;
-							$pjk_tanggalAkhirPajak = $item->tanggalAkhirPajak;
-							$pjk_statusBlokir = $item->statusBlokir;
-							$pjk_ketBlokir = $item->keteranganBlokir;
-							
-							echo'
-							<div class="box">
-								<div class="box-header">
+							//if($item->statusTunggakan == true)
+							if($item->statusTunggakan == '1')
+							{
+								$pjk_namaPemilik = $item->namaPemilik;
+								$pjk_alamatPemilik = $item->alamatPemilik;
+								$pjk_nopol = $item->nomorPolisi;
+								$pjk_merek = $item->merek;
+								$pjk_jenisKendaraan = $item->jenis;
+								$pjk_tanggalAkhirPajak = $item->tanggalAkhirPajak;
+								$pjk_statusBlokir = $item->statusBlokir;
+								$pjk_ketBlokir = $item->keteranganBlokir;
 								
-								<center>
-								<h3 class="box-title" style="color:red;">MOHON MAAF, ANDA MEMILIKI TAGIHAN PAJAK KENDARAAN BERMOTOR</h3>
-								</center>
-									<br/>
-									<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;color:red;">
-										<tr>
-											<td>Nama Pemilik</td>
-											<td>:</td>
-											<td>'.$pjk_namaPemilik.'</td>
-										</tr>
-										<tr>
-											<td>Alamat Pemilik</td>
-											<td>:</td>
-											<td>'.$pjk_alamatPemilik.'</td>
-										</tr>
-										<tr>
-											<td>No Polisi</td>
-											<td>:</td>
-											<td>'.$pjk_nopol.'</td>
-										</tr>
-										<tr>
-											<td>Merek</td>
-											<td>:</td>
-											<td>'.$pjk_merek.'</td>
-										</tr>
-										<tr>
-											<td>Jenis Kendaraan</td>
-											<td>:</td>
-											<td>'.$pjk_jenisKendaraan.'</td>
-										</tr>
-										<tr>
-											<td>Tanggal Pajak</td>
-											<td>:</td>
-											<td>'.$pjk_tanggalAkhirPajak.'</td>
-										</tr>
-										<tr>
-											<td>Status Blokir</td>
-											<td>:</td>
-											<td>'.$pjk_statusBlokir.'</td>
-										</tr>
-										<tr>
-											<td>Keterangan Blokir</td>
-											<td>:</td>
-											<td>'.$pjk_ketBlokir.'</td>
-										</tr>
-									</table>
+								echo'
+								<div class="box">
+									<div class="box-header">
+									
+									<center>
+									<h3 class="box-title" style="color:red;">MOHON MAAF, ANDA MEMILIKI TAGIHAN PAJAK KENDARAAN BERMOTOR</h3>
+									</center>
+										<br/>
+										<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;color:red;">
+											<tr>
+												<td>Nama Pemilik</td>
+												<td>:</td>
+												<td>'.$pjk_namaPemilik.'</td>
+											</tr>
+											<tr>
+												<td>Alamat Pemilik</td>
+												<td>:</td>
+												<td>'.$pjk_alamatPemilik.'</td>
+											</tr>
+											<tr>
+												<td>No Polisi</td>
+												<td>:</td>
+												<td>'.$pjk_nopol.'</td>
+											</tr>
+											<tr>
+												<td>Merek</td>
+												<td>:</td>
+												<td>'.$pjk_merek.'</td>
+											</tr>
+											<tr>
+												<td>Jenis Kendaraan</td>
+												<td>:</td>
+												<td>'.$pjk_jenisKendaraan.'</td>
+											</tr>
+											<tr>
+												<td>Tanggal Pajak</td>
+												<td>:</td>
+												<td>'.$pjk_tanggalAkhirPajak.'</td>
+											</tr>
+											<tr>
+												<td>Status Blokir</td>
+												<td>:</td>
+												<td>'.$pjk_statusBlokir.'</td>
+											</tr>
+											<tr>
+												<td>Keterangan Blokir</td>
+												<td>:</td>
+												<td>'.$pjk_ketBlokir.'</td>
+											</tr>
+										</table>
+									</div>
 								</div>
-							</div>
-							';
-							
-							//exit;
+								';
+								
+								//exit;
+							}
 						}
 					}
 				//CEK apakah ada pajak
@@ -1712,18 +1716,18 @@
 		
 		
 		
-		public function get_json_pajak($nik)
+		function get_json_pajak($nik)
 		{		
 			// production
-			$client_id = "KWGP2Pw49N2upObSbKwHBndfTR8a";
-			$client_credential = "521On9j8r9HmhnovMXJbnr0NtfYa";
+			$client_id = "_NrXe69JftV9Bm4HcENriwglz0ga";
+			$client_credential = "PGq7P6WhU5uFvIVVwU8F8DOXZyMa";
 			$user_samsat = "cianjur";
 			$pass_samsat = "Ru4c1JpkL0";
 
 			// url get Token SPLP
-			$urlTokenSPLP = 'https://splp.jabarprov.go.id:9453/oauth2/token';
+			$urlTokenSPLP = 'https://splp.layanan.go.id/oauth2/token';
 			// url API SamsAT pada SPLP
-			$urlSPLPSIPANDU = 'https://splp.jabarprov.go.id:8253/samsatkabkot/1/cianjur/get_vehicle_list_by_nik';
+			$urlSPLPSIPANDU = 'https://api-splp.layanan.go.id/t/jabarprov.go.id/samsatkabkot/1/cianjur/get_vehicle_list_by_nik';
 			
 		
 			$token = "Bearer " . $this->token_splp();
@@ -1735,8 +1739,8 @@
 			{
 				$headers      = [
 					'Content-Type:application/json',
-					'Authorization : Basic ' . $basic_auth,
-					'SPLP_Auth : ' . $token
+					'Authorization: ' . $token,
+					'auth: Basic ' . $basic_auth
 
 				];
 				return $headers;
@@ -1777,24 +1781,24 @@
 			));
 			$response = curl_exec($curl);
 			curl_close($curl);
-			
 			//echo $response;
 			return $response;
 		}
 		
 		//function token_splp($client_id, $client_credential, $urlTokenSPLP)
-		public function token_splp()
+		function token_splp()
 		{
 			// production
-			$client_id = "KWGP2Pw49N2upObSbKwHBndfTR8a";
-			$client_credential = "521On9j8r9HmhnovMXJbnr0NtfYa";
+			$client_id = "_NrXe69JftV9Bm4HcENriwglz0ga";
+			$client_credential = "PGq7P6WhU5uFvIVVwU8F8DOXZyMa";
 			$user_samsat = "cianjur";
 			$pass_samsat = "Ru4c1JpkL0";
 
 			// url get Token SPLP
-			$urlTokenSPLP = 'https://splp.jabarprov.go.id:9453/oauth2/token';
+			$urlTokenSPLP = 'https://splp.layanan.go.id/oauth2/token';
 			// url API SamsAT pada SPLP
-			$urlSPLPSIPANDU = 'https://splp.jabarprov.go.id:8253/samsatkabkot/1/cianjur/get_vehicle_list_by_nik';
+			$urlSPLPSIPANDU = 'https://api-splp.layanan.go.id/t/jabarprov.go.id/samsatkabkot/1/cianjur/get_vehicle_list_by_nik';
+
 			
 			$ch = curl_init();
 
