@@ -407,7 +407,10 @@
 											<tr>
 												<td>Tanggal Pajak</td>
 												<td>:</td>
-												<td>'.$pjk_tanggalAkhirPajak.'</td>
+												<td>
+													'.$pjk_tanggalAkhirPajak.'
+													<input type="hidden" id="pjk_tanggalAkhirPajak-'.str_replace(" ","",$pjk_nopol).'" value="'.$pjk_tanggalAkhirPajak.'"/>
+												</td>
 											</tr>
 											<tr>
 												<td>Status Blokir</td>
@@ -513,7 +516,9 @@
 										<!-- </div> -->
 										
 										<br/>
+										<center>
 										<span id="pesan"></span>
+										</center>
 									</center>
 									
 									</div>
@@ -527,11 +532,13 @@
 						<br/>
 						
 						<!-- <div class="col-xs-12"> -->
-							<button type="button" class="btn-warga btn btn-warning btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik_to_cetak_taghan_pelayanan()">CETAK TAGIHAN DAN LANJUT KE PELAYANAN</button>
+							<button type="button" class="btn-warga btn btn-warning btn-block btn-flat" style="border:1px dotted black;" onclick="pajak_to_layanan()">CETAK TAGIHAN DAN LANJUT KE PELAYANAN</button>
 						<!-- </div> -->
 						
 						<br/>
+						<center>
 						<span id="pesan"></span>
+						</center>
 						';
 					}
 					else
@@ -544,7 +551,7 @@
 								<img style="width:50%;" src="'.base_url('assets/global/images/cam_sam.png').'">
 								<br/>
 								<br/>
-								<h3 class="box-title" style="color:green;text-shadow: 1px 1px 1px grey;">APAKAH ANDA MEMILIKI KENDARAAN YANG BUKAN ATAS NAMA ANDA ? 
+								<h3 class="box-title" style="color:green;text-shadow: 1px 1px 1px grey;">TIDAK DITEMUKAN DATA KENDARAAN ATAS NAMA ANDA, APAKAH ANDA MEMILIKI KENDARAAN YANG BUKAN ATAS NAMA ANDA ? 
 								<br/>
 								JIKA IYA SEGERA BBN (BEA BALIK NAMA) KENDARAAN ANDA
 								</h3>
@@ -557,7 +564,9 @@
 								<!-- </div> -->
 								
 								<br/>
+								<center>
 								<span id="pesan"></span>
+								</center>
 							</center>
 							
 							</div>
@@ -2024,6 +2033,7 @@
 			$alasanTidakMilikLagi = htmlentities($_POST['alasanTidakMilikLagi'], ENT_QUOTES, 'UTF-8');
 			$tindakan = htmlentities($_POST['tindakan'], ENT_QUOTES, 'UTF-8');
 			$jawabanTindakan = htmlentities($_POST['jawabanTindakan'], ENT_QUOTES, 'UTF-8');
+			$pjk_tanggalAkhirPajak = htmlentities($_POST['pjk_tanggalAkhirPajak'], ENT_QUOTES, 'UTF-8');
 			
 			
 			$query = "
@@ -2044,6 +2054,7 @@
 										,alasanTidakMilikLagi = '".$alasanTidakMilikLagi."'
 										,tindakan = '".$tindakan."'
 										,jawabanTindakan = '".$jawabanTindakan."'
+										,pjk_tanggalAkhirPajak = '".$pjk_tanggalAkhirPajak."'
 								WHERE nik = '".$nik."'
 								AND nopol = '".$nopol."'
 								";
@@ -2063,6 +2074,8 @@
 									,alasanTidakMilikLagi
 									,tindakan
 									,jawabanTindakan
+									,pjk_tanggalAkhirPajak
+									,tgl_ins
 								)
 								VALUES
 								(
@@ -2073,6 +2086,8 @@
 									,'".$alasanTidakMilikLagi."'
 									,'".$tindakan."'
 									,'".$jawabanTindakan."'
+									,'".$pjk_tanggalAkhirPajak."'
+									,NOW()
 								)
 								";
 				$this->M_dash->exec_query_general($query_edit);
@@ -2081,9 +2096,101 @@
 			}
 		}
 		
+		function cek_apa_sudah_isi_data_pajak()
+		{
+			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			
+			//HASIL CEK PAJAK DIMUNCULKAN JIKA BISA PAKE JSON
+			//CEK apakah ada pajak
+				
+				$jsonobj = $this->get_json_pajak($nik);
+				$obj = json_decode($jsonobj);
+				
+				$pjk_namaPemilik = "";
+				$pjk_alamatPemilik = "";
+				$pjk_nopol = "";
+				$pjk_merek = "";
+				$pjk_jenisKendaraan = "";
+				$pjk_tanggalAkhirPajak = "";
+				$pjk_statusBlokir = "";
+				$pjk_ketBlokir = "";
+				
+				if(!empty($obj->data))
+				{
+					foreach ($obj->data as $item) 
+					{
+						//if($item->statusTunggakan == true)
+						if($item->statusTunggakan == '1')
+						{
+							$pjk_namaPemilik = $item->namaPemilik;
+							$pjk_alamatPemilik = $item->alamatPemilik;
+							$pjk_nopol = $item->nomorPolisi;
+							$pjk_merek = $item->merek;
+							$pjk_jenisKendaraan = $item->jenis;
+							$pjk_tanggalAkhirPajak = $item->tanggalAkhirPajak;
+							$pjk_statusBlokir = $item->statusBlokir;
+							$pjk_ketBlokir = $item->keteranganBlokir;
+							
+							$noPol_ori = $item->nomorPolisi;
+							
+							$query = "
+									SELECT * FROM tb_data_pajak 
+									WHERE nik = '".$nik."'
+									AND nopol = '".str_replace(" ","",$pjk_nopol)."'
+									";
+							$cek_data_pajak = $this->M_dash->view_query_general($query);
+							if(!empty($cek_data_pajak))
+							{
+								$cek_data_pajak = $cek_data_pajak->row();
+								/*
+								$isMilikSendiri = $cek_data_pajak->isMilikSendiri;
+								$alasanTidakMilikLagi = $cek_data_pajak->alasanTidakMilikLagi;
+								$tindakan = $cek_data_pajak->tindakan;
+								$jawabanTindakan = $cek_data_pajak->jawabanTindakan;
+								*/
+								$hasil_cek = "SELESAI";
+								
+							}
+							else
+							{
+								/*
+								$isMilikSendiri = "";
+								$alasanTidakMilikLagi = "";
+								$tindakan = "";
+								$jawabanTindakan = "";
+								*/
+								$hasil_cek = "BELUM";
+							}
+							
+							
+						}
+						else
+						{
+							$hasil_cek = "BELUM";
+						}
+					}
+				}
+				else
+				{
+					$hasil_cek = "BELUM";
+				}
+				
+			echo $hasil_cek;
+		}
+		
 		function cetak_tagihan()
 		{
-			$this->load->view('admin/page/cetak_tagihan_pajak.html');
+			//$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			$nik = $_GET['nik'];
+			
+			$jsonobj = $this->get_json_pajak($nik);
+			
+			$tgl = $this->tanggal(date('Y-m-d'));
+			$data = array('jsonobj'=>$jsonobj, 'nik' => $nik,'tgl'=>$tgl);
+			
+			//$data = array();
+			
+			$this->load->view('admin/page/cetak_tagihan_pajak.html',$data);
 		}
 	}
 

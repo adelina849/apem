@@ -2,38 +2,283 @@
 	<style>
 		@page { size: auto; margin-top:0mm;margin-bottom:0mm; }	
 	</style>
-	<body>
+	
+	<style>
+		@media print 
+		{
+			.pagebreak 
+			{ 
+				page-break-before: always;
+			} /* page-break-after works, as well */
+		}
+	</style>
+	<!-- <body> -->
 	<!-- <body onload="window.print();" style="font-family:arial narrow;font-size:13px;font-weight:bold;margin:1%;"> -->
-		<table style="width:100%">
-			<tr>
-				<td style="width:20%;text-align:center;;border-bottom:1px solid black;">
-					<img id="img_bpt" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Coat_of_arms_of_West_Java.svg/640px-Coat_of_arms_of_West_Java.svg.png" style="width:75%;">
-				</td>
-				<td style="width:80%;text-align:center;padding-right:10%;border-bottom:1px solid black;">
-					<font style="font-family:arial narrow;font-size:14px;font-weight:normal;">
-						PEMERINTAH PROVINSI JAWA BARAT
-						<br/>
-						BADAN PENDAPATAN DAERAH
-					</font>
-					<br/>
-					<font style="font-family:arial narrow;font-size:18px;font-weight:bold;">
-						PUSAT PENGELOLAAN PENDAPATAN DAERAH
-						<br/>
-						WILAYAH KOTA CIANJUR
-					</font>
-					<br/>
-					<font style="font-family:Tahoma;font-size:9px;font-weight:normal;">
-						Jl. Dr. Muwardi Nomor 118 Bypass Cianjur 43216
-						<br/>
-						HP 082123333136 Website : www.bapenda.jabarprov.go.id  Email : cianjurpppd@gmail.com 
-					</font>
-				</td>
-			</tr>
-		</table>
-		
-		
+	<body onload="window.print();" style="margin:1%;">
+		<?php
 			
+			$obj = json_decode($jsonobj);
+					
+			$pjk_namaPemilik = "";
+			$pjk_alamatPemilik = "";
+			$pjk_nopol = "";
+			$pjk_merek = "";
+			$pjk_jenisKendaraan = "";
+			$pjk_tanggalAkhirPajak = "";
+			$pjk_statusBlokir = "";
+			$pjk_ketBlokir = "";
 			
+			if(!empty($obj->data))
+			{
+				foreach ($obj->data as $item) 
+				{
+					//if($item->statusTunggakan == true)
+					if($item->statusTunggakan == '1')
+					{
+						$pjk_namaPemilik = $item->namaPemilik;
+						$pjk_alamatPemilik = $item->alamatPemilik;
+						$pjk_nopol = $item->nomorPolisi;
+						$pjk_merek = $item->merek;
+						$pjk_jenisKendaraan = $item->jenis;
+						$pjk_tanggalAkhirPajak = $item->tanggalAkhirPajak;
+						$pjk_statusBlokir = $item->statusBlokir;
+						$pjk_ketBlokir = $item->keteranganBlokir;
+						
+						$noPol_ori = $item->nomorPolisi;
+						
+						$query = "
+								SELECT * FROM tb_data_pajak 
+								WHERE nik = '".$nik."'
+								AND nopol = '".str_replace(" ","",$pjk_nopol)."'
+								";
+						$cek_data_pajak = $this->M_dash->view_query_general($query);
+						if(!empty($cek_data_pajak))
+						{
+							$cek_data_pajak = $cek_data_pajak->row();
+							
+							
+							$isMilikSendiri = $cek_data_pajak->isMilikSendiri;
+							$alasanTidakMilikLagi = $cek_data_pajak->alasanTidakMilikLagi;
+							$tindakan = $cek_data_pajak->tindakan;
+							$jawabanTindakan = $cek_data_pajak->jawabanTindakan;
+							
+							
+						}
+						else
+						{
+							$isMilikSendiri = "";
+							$alasanTidakMilikLagi = "";
+							$tindakan = "";
+							$jawabanTindakan = "";
+						}
+						
+						
+						?>
+							<table style="width:100%;" class="pagebreak">
+								<tr>
+									<td style="width:20%;text-align:center;;border-bottom:1px solid black;">
+										<br/>
+										<img id="img_bpt" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Coat_of_arms_of_West_Java.svg/640px-Coat_of_arms_of_West_Java.svg.png" style="width:45%;">
+									</td>
+									<td colspan="2" style="width:80%;text-align:center;padding-right:20%;border-bottom:1px solid black;">
+										<br/>
+										<font style="font-family:arial narrow;font-size:14px;font-weight:normal;">
+											PEMERINTAH PROVINSI JAWA BARAT
+											<br/>
+											BADAN PENDAPATAN DAERAH
+										</font>
+										<br/>
+										<font style="font-family:arial narrow;font-size:18px;font-weight:bold;">
+											PUSAT PENGELOLAAN PENDAPATAN DAERAH
+											<br/>
+											WILAYAH KOTA CIANJUR
+										</font>
+										<br/>
+										<font style="font-family:Tahoma;font-size:9px;font-weight:normal;">
+											Jl. Dr. Muwardi Nomor 118 Bypass Cianjur 43216
+											<br/>
+											HP 082123333136 Website : www.bapenda.jabarprov.go.id  Email : cianjurpppd@gmail.com 
+										</font>
+									</td>
+								</tr>
+								<tr>
+									<td style="width:20%;"></td>
+									<td style="width:40%;"></td>
+									<td style="width:40%;">Cianjur, <?php echo $tgl;?></td>
+								</tr>
+								<tr style="line-height:10px;">
+									<td style="width:20%;"></td>
+									<td style="width:40%;"></td>
+									<td style="width:40%;">Kepada :</td>
+								</tr>
+								<tr style="line-height:10px;">
+									<td colspan="2" style="width:60%;">
+										<table style="width:100%;">
+											<tr>
+												<td style="width:20%;">Nomor</td>
+												<td style="width:5%;">:</td>
+												<td style="width:75%;">284/KU.03.02/TU</td>
+											</tr>
+										</table>
+									</td>
+									<td style="width:40%;">Yth.</td>
+								</tr>
+								<tr style="line-height:10px;">
+									<td colspan="2" style="width:60%;">
+										<table style="width:100%;">
+											<tr>
+												<td style="width:20%;">Sifat</td>
+												<td style="width:5%;">:</td>
+												<td style="width:75%;">Biasa</td>
+											</tr>
+										</table>
+									</td>
+									<td style="width:40%;"><?php echo $pjk_namaPemilik;?></td>
+								</tr>
+								<tr style="line-height:10px;">
+									<td colspan="2" style="width:60%;">
+										<table style="width:100%;">
+											<tr>
+												<td style="width:20%;">Lampiran</td>
+												<td style="width:5%;">:</td>
+												<td style="width:75%;">1 (satu) berkas</td>
+											</tr>
+										</table>
+									</td>
+									<td style="width:40%;">Di</td>
+								</tr>
+								<tr style="line-height:10px;">
+									<td colspan="2" style="width:60%;">
+										<table style="width:100%;">
+											<tr>
+												<td style="width:20%;">Hal</td>
+												<td style="width:5%;">:</td>
+												<td style="width:75%;">Tagihan Pajak Kendaraan Bermotor</td>
+											</tr>
+										</table>
+									</td>
+									<td style="width:40%;">Tempat</td>
+								</tr>
+								<tr>
+									<td style="width:30%;text-align:center;"></td>
+									<td colspan="1" style="width:40%;text-align:center;border-bottom:1px solid black;">
+										<!-- <br/> -->
+										<font style="font-weight:bold;">
+											SURAT TAGIHAN PAJAK DAERAH
+											<br/>
+											(STPD)
+										</font>
+									</td>
+									<td style="width:30%;text-align:center;"></td>
+								</tr>
+								<tr>
+									<!-- <td style="width:10%;text-align:center;"></td> -->
+									<td colspan="3" style="width:100%;padding-left:5%;padding-right:5%;text-align:justify;border-bottom:0px solid black;">
+										<!-- <br/> -->
+										<p>
+											Berdasarkan Undang Undang Nomor 22 Tahun 2009 tentang  Lalu Lintas dan Angkutan Jalan, Pasal 74 ayat (2) huruf b pemilik Kendaraan Bermotor tidak melakukan registrasi ulang sekurang-kurangnya 2 (dua) tahun setelah habis masa berlaku Surat Tanda Nomor Kendaraan Bermotor dapat dihapus dari daftar registrasi dan identifikasi Kendaraan Bermotor, Kendaraan Bermotor yang telah dihapus sebagaimana dimaksud pada ayat (1) tidak dapat diregistrasi kembali. Peraturan Daerah Nomor 13 Tahun 2011 tentang Pajak Daerah Provinsi Jawa Barat pasal (14) Bahwa setiap orang yang menguasai kendaraan bermotor diwajibkan untuk membayar Pajak Kendaraan Bermotor yang sudah terdaftar.
+										</p>
+										<p>
+											Sesuai Data pada Database Samsat, kendaraan dengan <b>NOPOL <?php echo $pjk_nopol;?>. BELUM MELAKUKAN PEMBAYARAN PAJAK KENDARAAN BERMOTOR</b>, dengan data kendaraan sebagai berikut:
+										</p>
+									</td>
+									<!-- <td style="width:10%;text-align:center;"></td> -->
+								</tr>
+								
+								<tr>
+									<!-- <td style="width:10%;text-align:center;"></td> -->
+									<td colspan="3" style="width:100%;padding-left:15%;padding-right:5%;text-align:justify;border-bottom:0px solid black;">
+										<table style="width:100%;">
+											<tr>
+												<td style="width:35%;">Nomor Polisi/Registrasi</td>
+												<td style="width:5%;">:</td>
+												<td style="width:60%;"><?php echo $pjk_nopol;?></td>
+											</tr>
+											<tr>
+												<td style="width:35%;">Nama Pemilik</td>
+												<td style="width:5%;">:</td>
+												<td style="width:60%;"><?php echo $pjk_namaPemilik;?></td>
+											</tr>
+											<tr>
+												<td style="width:35%;">Alamat</td>
+												<td style="width:5%;">:</td>
+												<td style="width:60%;"><?php echo $pjk_alamatPemilik;?></td>
+											</tr>
+											<tr>
+												<td style="width:35%;">Merk</td>
+												<td style="width:5%;">:</td>
+												<td style="width:60%;"><?php echo $pjk_merek;?></td>
+											</tr>
+											<tr>
+												<td style="width:35%;">Tahun</td>
+												<td style="width:5%;">:</td>
+												<td style="width:60%;"></td>
+											</tr>
+											<tr>
+												<td style="width:35%;">Tanggal Jatuh Tempo</td>
+												<td style="width:5%;">:</td>
+												<td style="width:60%;"><?php echo $pjk_tanggalAkhirPajak;?></td>
+											</tr>
+										</table>
+									</td>
+									<!-- <td style="width:10%;text-align:center;"></td> -->
+								</tr>
+								
+								<tr>
+									<!-- <td style="width:10%;text-align:center;"></td> -->
+									<td colspan="3" style="width:100%;padding-left:5%;padding-right:5%;text-align:justify;border-bottom:0px solid black;">
+										<p>
+											Sehubungan dengan hal tersebut, agar Saudara melunasi tunggakan pajak kendaraan tersebut pada <b>Kantor Bersama/SAMSAT Cianjur Jl. Raya Bandung KM 3, Sabandar, Karangtengah.</b> Keterangan lebih lanjut silahkan menghubungi Petugas SAMSAT. Telp/Hp. 150 410 / 0811 2230 1818.
+										</p>
+										<p>
+											Demikian kami sampaikan, atas perhatiannya kami ucapkan terimakasih.
+										</p>
+									</td>
+									<!-- <td style="width:10%;text-align:center;"></td> -->
+								</tr>
+								<tr>
+									<td colspan="1" style=""></td>
+									<td colspan="2" style="text-align:center;padding-left:5%;">
+										KEPALA PUSAT PENGELOLAAN PENDAPATAN DAERAH
+										<br/>
+										WILAYAH KOTA CIANJUR
+									</td>
+								</tr>
+								<tr>
+									<td colspan="1" style=""></td>
+									<td colspan="2" style="text-align:center;padding-left:5%;">
+										
+										<img id="img_bpt" src="<?php echo base_url('assets/global/images/ttdPakNiko.png');?>" style="width:25%;">
+										<br/>
+										<b>
+										Dr. IRVAN NIKO FIRMANSYAH, S.STP, M.Si
+										</b>
+										<br/>
+										Penata TK. I
+										<br/>
+										NIP. 19840620 200312 1 001
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3" style="">
+										Ket :
+										<br/>
+										 - Abaikan surat ini apabila sudah melakukan pembayaran.
+										 <br/>
+										 - Anda bisa melakukan pembayaran pajak online dengan menggunakan aplikasi <b>sapawarga,sambara dan signal.</b> atau secara offline di kantor samsat terdekat.
+										 <br/>
+										 - Follow instagram kami di <b>samsatcianjur</b>
+										 
+									</td>
+								</tr>
+							</table>
+						
+						<?php
+					
+					}	
+				}	
+			}
 			
+		?>
 		
 	<body>

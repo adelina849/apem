@@ -241,7 +241,7 @@
 					<!-- CEK AKSES Kategori LAPORAN -->
 					
 					<!-- CEK AKSES JENIS LAPORAN -->
-							<li id="laporan-pajak"><a href="<?=base_url()?>admin-laporan-pajak"><i class="fa fa-money"></i> Pajak</a></li>
+							<li id="laporan-pajak"><a href="<?=base_url()?>admin-status-dokumen"><i class="fa fa-money"></i> Pajak</a></li>
 					<!-- CEK AKSES JENIS LAPORAN -->
 					
 				  </ul>

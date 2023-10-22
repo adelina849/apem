@@ -228,15 +228,12 @@ $route['translate_uri_dashes'] = FALSE;
 //LAPORAN
 	$route['admin-laporan-dokumen'] = "C_admin_laporan/index";
 	$route['admin-laporan-dokumen/(:any)'] = 'C_admin_laporan/index';
-	$route['admin-laporan-dokumen/(:any)/(:any)'] = 'C_admin_laporan/index';
 	
 	$route['admin-laporan-pajak'] = "C_admin_laporan/lap_pajak";
 	$route['admin-laporan-pajak/(:any)'] = 'C_admin_laporan/lap_pajak';
-	$route['admin-laporan-pajak/(:any)/(:any)'] = 'C_admin_laporan/lap_pajak';
 	
 	$route['admin-statistik-dokumen'] = "C_admin_statistik/index";
 	$route['admin-statistik-dokumen/(:any)'] = 'C_admin_statistik/index';
-	$route['admin-statistik-dokumen/(:any)/(:any)'] = 'C_admin_statistik/index';
 //LAPORAN
 
 //CETAK FAKTUR PENGAJUAN

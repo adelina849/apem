@@ -93,7 +93,7 @@
 							,COALESCE(B.email,'') AS email
 							,COALESCE(B.alamat,'') AS alamat
 						FROM tb_data_pajak AS A 
-						LEFT JOIN tb_penduduk AS B ON A.nik = B.nik
+						LEFT JOIN tb_penduduk AS B ON A.nik = B.ni
 						".$cari."
 						ORDER BY A.tgl_ins DESC
 						LIMIT ".$offset.",".$limit."

@@ -54,7 +54,7 @@
                 $(document).ready(function()
                 {	
 					$('#laporan').attr('class', 'active treeview');
-					$('#laporan-pelayanan').attr('class', 'active treeview');
+					$('#laporan-pajak').attr('class', 'active treeview');
                 });
             </script>
             
@@ -62,11 +62,11 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            Laporan Pengajuan Dokumen
+            Laporan Tunggakan Pajak
           </h1>
           <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Laporan Pengajuan Dokumen</li>
+            <li class="active">Laporan Pajak</li>
             
           </ol>
         </section>
@@ -90,7 +90,7 @@
                   
                   
                   <!-- ISI FORM -->
-						<form role="form" action="<?=base_url();?>admin-laporan-dokumen" method="get" class="frm-input">
+						<form role="form" action="<?=base_url();?>admin-laporan-pajak" method="get" class="frm-input">
 						<div class="box-body">
 						
 							<div class="form-group">
@@ -134,6 +134,11 @@
 						<div class="box-footer">
 							<!-- <button type="reset" class="btn btn-default">Batal</button> -->
 							<button type="submit" id="btnsimpan" class="confirm-btn btn btn-primary" title="Pencarian Laporan Pengajuan Dokumen">Submit</button>
+							
+							<button type="button" id="btnexcel" class="confirm-btn btn btn-warning" title="Export Excel?" >
+								EXPORT EXCEL
+							</button>
+							
 						</div>
 						</form>
 					<!-- ISI FORM -->
@@ -147,70 +152,63 @@
 					
 					<div class="box">
 						<div class="box-header">
-						<h3 class="box-title">Table Laporan Pengajuan Dokumen Periode <?php echo $dari.' - '. $sampai;?></h3>
+						<!-- <h3 class="box-title">Table Laporan Pajak Periode <?php echo $dari.' - '. $sampai;?></h3> -->
 						</div><!-- /.box-header -->
 						<div class="box-body">
 						
 						
 						<?php
-								if(!empty($list_laporan_naskah))
+								if(!empty($list_laporan_pajak))
 								{
-									echo'<table width="100%" id="example2" class="table table-bordered table-hover">';
-										echo '<thead>
-	<tr>';
-													echo '<th width="5%">No</th>';
-													echo '<th width="10%">Barcode</th>';
-													echo '<th width="40%">Info Dokumen</th>';
-													echo '<th width="15%">Status</th>';
-													echo '<th width="30%">Keputusan</th>';
-										echo '</tr>
-	</thead>';
-										$list_result = $list_laporan_naskah->result();
+									echo'<div id="export_excel">';
+									
+									echo'
+										<center>
+											<h3 class="box-title">Table Laporan Pajak Periode '.$dari.' Sampai '. $sampai.'</h3>
+										</center>
+									';
+									
+									echo'<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;">';
+										
+										echo'<tr>';
+											echo'<td style="text-align:center;background-color:black;color:white;width:5%;">NO</td>';
+											echo'<td style="text-align:center;background-color:black;color:white;width:10%;">NIK</td>';
+											echo'<td style="text-align:center;background-color:black;color:white;width:10%;">NO POLISI</td>';
+											echo'<td style="text-align:center;background-color:black;color:white;width:10%;">TGL PAJAK</td>';
+											echo'<td style="text-align:center;background-color:black;color:white;width:13%;">MILIK SENDIRI ?</td>';
+											echo'<td style="text-align:center;background-color:black;color:white;width:10%;">ALASAN</td>';
+											echo'<td style="text-align:center;background-color:black;color:white;width:42%;">TINDAKAN</td>';
+										echo'</tr>';
+										
+										$list_result = $list_laporan_pajak->result();
 										$no =$this->uri->segment(2,0)+1;
-										echo '<tbody>';
+										//echo '<tbody>';
 										foreach($list_result as $row)
 										{
 											echo'<tr>';
-												echo'<td><input type="hidden" id="no_'.$row->id_pengajuan.'" value="'.$row->id_pengajuan.'" />'.$no.'</td>';
+												echo'<td style="border: 1px solid grey;border-collapse: separate;color:black;">'.$no.'</td>';
+												echo'<td style="border: 1px solid grey;border-collapse: separate;color:black;">'.$row->nik.'</td>';
+												echo'<td style="border: 1px solid grey;border-collapse: separate;color:black;">'.$row->noPol_ori.'</td>';
+												echo'<td style="border: 1px solid grey;border-collapse: separate;color:black;">'.$row->pjk_tanggalAkhirPajak.'</td>';
+												echo'<td style="border: 1px solid grey;border-collapse: separate;color:black;">'.$row->isMilikSendiri.'</td>';
+												echo'<td style="border: 1px solid grey;border-collapse: separate;color:black;">'.$row->alasanTidakMilikLagi.'</td>';
 												
-												echo'<td>'.($row->no_pengajuan).'</td>';
-												echo'<td>
-														<b>Jenis Dokumen : </b>'.$row->nama_jenis_naskah.' 
-														<br/> <b>No Dok : </b>'.$row->kode_pengajuan.' 
-														<br/> <b>Sumber : </b>'.$row->sumber.'
-														<br/> <b>Perihal : </b>'.$row->perihal.'
-														<br/> <b>Tgl Masuk : </b>'.$row->tgl_surat_masuk.'
-													</td>';
-												echo'<td>
-														<b>Tahapan : </b>'.$row->tahapan.' 
-														<br/> <b>Valid : </b>'.$row->sts.'
-														<br/> <b>(%) : </b>'.$row->prsn.'%
-													
-													</td>';
-												//echo'<td>'.number_format($row->nominal,0,',','.').'</td>';
+												if($row->tindakan <> '')
+												{
+													echo'<td style="border: 1px solid grey;border-collapse: separate;color:black;">'.$row->tindakan.' : ('.$row->jawabanTindakan.')</td>';
+												}
+												else
+												{
+													echo'<td style="border: 1px solid grey;border-collapse: separate;color:black;"></td>';
+												}
 												
-												echo'<input type="hidden" id="id_pengajuan_'.$no.'" value="'.$row->id_pengajuan.'" />';
-												
-												
-												echo'<input type="hidden" id="no_pengajuan_'.$no.'" value="'.$row->no_pengajuan.'" />';
-												echo'<input type="hidden" id="kode_pengajuan_'.$no.'" value="'.$row->kode_pengajuan.'" />';
-												echo'<input type="hidden" id="diajukan_oleh_'.$no.'" value="'.$row->diajukan_oleh.'" />';
-												echo'<input type="hidden" id="perihal_'.$no.'" value="'.$row->perihal.'" />';
-												echo'<input type="hidden" id="sumber_'.$no.'" value="'.$row->sumber.'" />';
-												echo'<input type="hidden" id="penting_'.$no.'" value="'.$row->penting.'" />';
-												echo'<input type="hidden" id="hasil_pengajuan_'.$no.'" value="'.$row->hasil_pengajuan.'" />';
-												echo'<input type="hidden" id="ket_hasil_'.$no.'" value="'.$row->ket_hasil.'" />';
-												
-												echo'<td>
-														<b>Keputusan : </b>'.$row->hasil_pengajuan.' 
-														<br/> <b>Keterangan : </b>'.$row->ket_hasil.'
-													</td>';
 											echo'</tr>';
 											$no++;
 										}
 										
-										echo '</tbody>';
+										//echo '</tbody>';
 									echo'</table>';
+									echo'</div>';
 								}
 								else
 								{
@@ -235,6 +233,12 @@
     		
 
     <script type='text/javascript'>
+	$("#btnexcel").click(function(e) 
+	{   
+	   window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#export_excel').html())); // content is the id of the DIV element  
+	   e.preventDefault();   
+	});
+	
 	function isNumberKey(evt)
 	{
     	var charCode = (evt.which) ? evt.which : event.keyCode
