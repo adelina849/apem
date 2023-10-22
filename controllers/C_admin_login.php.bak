@@ -321,6 +321,9 @@
 					$pjk_statusBlokir = "";
 					$pjk_ketBlokir = "";
 					
+					$div_pesan = "";
+					$cek_ada_tagihan = "";
+					
 					if(!empty($obj->data))
 					{
 						foreach ($obj->data as $item) 
@@ -328,6 +331,8 @@
 							//if($item->statusTunggakan == true)
 							if($item->statusTunggakan == '1')
 							{
+								$cek_ada_tagihan = "YA";
+								
 								$pjk_namaPemilik = $item->namaPemilik;
 								$pjk_alamatPemilik = $item->alamatPemilik;
 								$pjk_nopol = $item->nomorPolisi;
@@ -498,7 +503,9 @@
 							}
 							else
 							{
-								echo'
+								//echo'
+								$div_pesan =
+								'
 								<div class="box" style="background-color:#DCDCDC;box-shadow: 2px 2px 2px rgba(0,0,0,0.8);padding: 10px;border: 1px dashed grey;">
 									<div class="box-header">
 									
@@ -527,19 +534,26 @@
 							}
 						}
 						
-						echo'
-						<br/>
-						<br/>
-						
-						<!-- <div class="col-xs-12"> -->
-							<button type="button" class="btn-warga btn btn-warning btn-block btn-flat" style="border:1px dotted black;" onclick="pajak_to_layanan()">CETAK TAGIHAN DAN LANJUT KE PELAYANAN</button>
-						<!-- </div> -->
-						
-						<br/>
-						<center>
-						<span id="pesan"></span>
-						</center>
-						';
+						if($cek_ada_tagihan <> 'YA')
+						{
+							echo'
+							<br/>
+							<br/>
+							
+							<!-- <div class="col-xs-12"> -->
+								<button type="button" class="btn-warga btn btn-warning btn-block btn-flat" style="border:1px dotted black;" onclick="pajak_to_layanan()">CETAK TAGIHAN DAN LANJUT KE PELAYANAN</button>
+							<!-- </div> -->
+							
+							<br/>
+							<center>
+							<span id="pesan"></span>
+							</center>
+							';
+						}
+						else
+						{
+							echo $div_pesan;
+						}
 					}
 					else
 					{
@@ -564,7 +578,9 @@
 								<!-- </div> -->
 								
 								<br/>
+								<center>
 								<span id="pesan"></span>
+								</center>
 							</center>
 							
 							</div>
