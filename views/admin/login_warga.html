@@ -270,6 +270,114 @@
     <!-- </script> -->
 	
 	<script type='text/javascript'>
+		function proses_pajak(evt)
+		{
+			
+			var nik = $("#nik_ori").val();
+			
+			var arrStrId = evt.id;
+			var arrIdSplit = arrStrId.split("-");
+			
+			var opcd = arrIdSplit[0];
+			var noPolisiFormat = arrIdSplit[1];
+			
+			
+			var noPolisi = $("#nopol-"+noPolisiFormat).val();
+			var noPol_ori = $("#noPol_ori-"+noPolisiFormat).val();
+			var isMilikSendiri = $("#isMilikSendiri-"+noPolisiFormat).val();
+			var isAlasanMilikSendiri = $("#isAlasanMilikSendiri-"+noPolisiFormat).val();
+			
+			
+			
+			var val = evt.value;
+			var tindakan = "";
+			var jawabanTindakan = "";
+			
+			
+			//alert(isMilikSendiri);
+			
+			if(isMilikSendiri == 'TIDAK')
+			{
+				if( (isAlasanMilikSendiri == 'HILANG') || (isAlasanMilikSendiri == 'DITARIK_LEASING') || (isAlasanMilikSendiri == 'DIJUAL') || (isAlasanMilikSendiri == 'RUSAK_BERAT') )
+				//if(isMilikSendiri == 'HILANG')
+				{
+					$("#rowTindakanPajak-"+noPolisiFormat).css('visibility','visible');
+					
+					$("#tindakan-"+noPolisiFormat).html("Apakah ingin diblokir/proteksi");
+					tindakan = $("#tindakan-"+noPolisiFormat).html();
+					jawabanTindakan = $("#jawabanTindakan-"+noPolisiFormat).val();
+				}
+				else if(isAlasanMilikSendiri == 'PINDAH_ALAMAT')
+				{
+					$("#rowTindakanPajak-"+noPolisiFormat).css('visibility','visible');
+					
+					$("#tindakan-"+noPolisiFormat).html("Mohon untuk segera melakukan BBN Kendaraan");
+					tindakan = $("#tindakan-"+noPolisiFormat).html();
+					jawabanTindakan = $("#jawabanTindakan-"+noPolisiFormat).val();
+				}
+				else
+				{
+					$("#rowTindakanPajak-"+noPolisiFormat).css('visibility','visible');
+					
+					$("#tindakan-"+noPolisiFormat).html("Segera Hubungi Kantor SAMSAT terdekat");
+					tindakan = $("#tindakan-"+noPolisiFormat).html();
+					jawabanTindakan = $("#jawabanTindakan-"+noPolisiFormat).val();
+				}
+			}
+			else
+			{
+				$("#rowTindakanPajak-"+noPolisiFormat).css('visibility','hidden');
+			}
+			
+			
+			/*
+			alert(nik);
+			alert(noPolisiFormat);
+			alert(isMilikSendiri);
+			alert(isAlasanMilikSendiri);
+			*/
+			
+			$.ajax({type: "POST", url: "<?php echo base_url();?>C_admin_login/simpan_data_pajak/"
+			, data: 
+					{
+						nik:nik,
+						nopol:noPolisi,
+						noPol_ori:noPol_ori,
+						isMilikSendiri:isMilikSendiri,
+						alasanTidakMilikLagi:isAlasanMilikSendiri,
+						tindakan:tindakan,
+						jawabanTindakan:jawabanTindakan,
+					}
+			, cache: false
+			, success:function(data)
+			{
+				 //alert(data);
+				//if(data=='BERHASIL')
+				if(data != false)
+				{
+					//alert("DATA TERSIMPAN");
+					$("#"+evt.id).css('border','2px solid green');
+					
+					if(isMilikSendiri == 'YA')
+					{
+						$("#rowPajak-"+noPolisiFormat).css('visibility','hidden');
+					}
+					else
+					{
+						$("#rowPajak-"+noPolisiFormat).css('visibility','visible');
+					}
+				}
+				else
+				{
+					//alert("GAGAL");
+					$("#"+evt.id).css('border','2px solid red');
+					//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Terjadi gangguan jaringan !');
+				}
+			} 
+			});
+			
+		}
+		
 		function cetak_qr_view_langsung_print(evt)
 		{
 			//alert("MULAI");
@@ -913,7 +1021,10 @@
 			}
 			else
 			{
-				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-cek-nik/"
+				//DIUABH UNTUK PAJAK DULUAN, INI JALAAN
+				//$.ajax({type: "POST", url: "<?php echo base_url();?>warga-cek-nik/"
+				
+				$.ajax({type: "POST", url: "<?php echo base_url();?>C_admin_login/cek_nik_pajak/"
 				, data: 
 						{
 							nik:nik
@@ -965,14 +1076,81 @@
 			}
 		}
 		
+		function cek_nik_to_pelayanan()
+		{
+			//alert("GOOD");
+			var nik = $("#nik_ori").val();
+			//alert(nik);
+			$("#pesan").html("<img src='<?php echo base_url();?>assets/global/loading.gif'>Memeriksa NIK Anda...");
+			
+			if(nik=='')
+			{
+			  $("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Kolom Tidak Boleh Kosong');
+			  $("#nik").css('border', '3px #C33 solid');
+			}
+			else
+			{
+				//DIUABH UNTUK PAJAK DULUAN, INI JALAAN
+				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-cek-nik/"
+				, data: 
+						{
+							nik:nik
+						}
+				, cache: false
+				, success:function(data)
+				{
+					 //alert(data);
+					//if(data=='BERHASIL')
+					
+					if(data != false)
+					{
+					
+						//alert("BERHASIL");
+						//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan, Selamat Datang '+data);
+						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan Harap Menunggu,<br/> <img src="<?php echo base_url();?>assets/global/loading.gif"> sedang memproses permintaan.....');
+						$("#nik").css('border', '3px #090 solid');
+						//$("#btn_lanjut").attr("disabled", false);
+						
+						$("#nik_ori").val(nik);
+						
+						setTimeout(
+						function() 
+						{
+							//do something special
+							//alert("Masuk ke pelayanan");
+							$("#form_utama").html(data);
+							$("#btn_lanjut").css('display','none');
+							$("#btn_daftar").css('display','none');
+						}, 3000);
+						
+						$(".langkah").css('color','red');
+						$(".langkah").css('font-weight','normal');
+						$("#langkah_2").css('color','green');
+						$("#langkah_2").css('font-weight','bold');
+						
+					
+					}
+					else
+					{
+						//alert("GAGAL");
+						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> NIK Tidak Ditemukan, Silahkan lakukan pendaftaran data warga !');
+						$("#nik").css('border', '3px #C33 solid');
+						//$("#btn_lanjut").attr("disabled", true);
+					}
+					
+				} 
+				});
+			}
+		}
+		
 		function isNumberKey(evt)
-	{
-    	var charCode = (evt.which) ? evt.which : event.keyCode
-    	if (charCode > 31 && (charCode < 48 || charCode > 57))
-    	
-    	return false;
-    	return true;
-	}
+		{
+			var charCode = (evt.which) ? evt.which : event.keyCode
+			if (charCode > 31 && (charCode < 48 || charCode > 57))
+			
+			return false;
+			return true;
+		}
 	
 	function insert(id)
 	{

@@ -92,7 +92,7 @@
 			$this->load->view('admin/login_warga.html');
 		}
 		
-		function cek_nik()
+		function cek_nik() //ORI JALAN DIGABUNGKAN ANATAR PAJAK DAN VIEW LAYANAN
 		{
 			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
 			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."'";
@@ -202,97 +202,6 @@
 				
 				$list_layanan = $this->M_dash->view_query_general($query_list_layanan);
 				
-				//HASIL CEK PAJAK DIMUNCULKAN
-				//CEK apakah ada pajak
-					$jsonobj = $this->get_json_pajak($nik);
-					$obj = json_decode($jsonobj);
-					
-					$pjk_namaPemilik = "";
-					$pjk_alamatPemilik = "";
-					$pjk_nopol = "";
-					$pjk_merek = "";
-					$pjk_jenisKendaraan = "";
-					$pjk_tanggalAkhirPajak = "";
-					$pjk_statusBlokir = "";
-					$pjk_ketBlokir = "";
-					
-					if(!empty($obj->data))
-					{
-						foreach ($obj->data as $item) 
-						{
-							//if($item->statusTunggakan == true)
-							if($item->statusTunggakan == '1')
-							{
-								$pjk_namaPemilik = $item->namaPemilik;
-								$pjk_alamatPemilik = $item->alamatPemilik;
-								$pjk_nopol = $item->nomorPolisi;
-								$pjk_merek = $item->merek;
-								$pjk_jenisKendaraan = $item->jenis;
-								$pjk_tanggalAkhirPajak = $item->tanggalAkhirPajak;
-								$pjk_statusBlokir = $item->statusBlokir;
-								$pjk_ketBlokir = $item->keteranganBlokir;
-								
-								echo'
-								<div class="box">
-									<div class="box-header">
-									
-									<center>
-									<h3 class="box-title" style="color:red;">MOHON MAAF, ANDA MEMILIKI TAGIHAN PAJAK KENDARAAN BERMOTOR</h3>
-									</center>
-										<br/>
-										<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;color:red;">
-											<tr>
-												<td>Nama Pemilik</td>
-												<td>:</td>
-												<td>'.$pjk_namaPemilik.'</td>
-											</tr>
-											<tr>
-												<td>Alamat Pemilik</td>
-												<td>:</td>
-												<td>'.$pjk_alamatPemilik.'</td>
-											</tr>
-											<tr>
-												<td>No Polisi</td>
-												<td>:</td>
-												<td>'.$pjk_nopol.'</td>
-											</tr>
-											<tr>
-												<td>Merek</td>
-												<td>:</td>
-												<td>'.$pjk_merek.'</td>
-											</tr>
-											<tr>
-												<td>Jenis Kendaraan</td>
-												<td>:</td>
-												<td>'.$pjk_jenisKendaraan.'</td>
-											</tr>
-											<tr>
-												<td>Tanggal Pajak</td>
-												<td>:</td>
-												<td>'.$pjk_tanggalAkhirPajak.'</td>
-											</tr>
-											<tr>
-												<td>Status Blokir</td>
-												<td>:</td>
-												<td>'.$pjk_statusBlokir.'</td>
-											</tr>
-											<tr>
-												<td>Keterangan Blokir</td>
-												<td>:</td>
-												<td>'.$pjk_ketBlokir.'</td>
-											</tr>
-										</table>
-									</div>
-								</div>
-								';
-								
-								//exit;
-							}
-						}
-					}
-				//CEK apakah ada pajak
-				//HASIL CEK PAJAK DIMUNCULKAN
-				
 				echo'<div class="box">
 					<div class="box-header">
 					<h3 class="box-title">TABLE JENIS DOKUMEN</h3>
@@ -387,6 +296,284 @@
 				return false;
 			}
 		}
+		
+		
+		function cek_nik_pajak()
+		{
+			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."'";
+			$cek_nik = $this->M_dash->view_query_general($query_cek_nik);
+			if(!empty($cek_nik))
+			{
+				$cek_nik = $cek_nik->row();
+				//HASIL CEK PAJAK DIMUNCULKAN JIKA BISA PAKE JSON
+				//CEK apakah ada pajak
+					
+					$jsonobj = $this->get_json_pajak($nik);
+					$obj = json_decode($jsonobj);
+					
+					$pjk_namaPemilik = "";
+					$pjk_alamatPemilik = "";
+					$pjk_nopol = "";
+					$pjk_merek = "";
+					$pjk_jenisKendaraan = "";
+					$pjk_tanggalAkhirPajak = "";
+					$pjk_statusBlokir = "";
+					$pjk_ketBlokir = "";
+					
+					if(!empty($obj->data))
+					{
+						foreach ($obj->data as $item) 
+						{
+							//if($item->statusTunggakan == true)
+							if($item->statusTunggakan == '1')
+							{
+								$pjk_namaPemilik = $item->namaPemilik;
+								$pjk_alamatPemilik = $item->alamatPemilik;
+								$pjk_nopol = $item->nomorPolisi;
+								$pjk_merek = $item->merek;
+								$pjk_jenisKendaraan = $item->jenis;
+								$pjk_tanggalAkhirPajak = $item->tanggalAkhirPajak;
+								$pjk_statusBlokir = $item->statusBlokir;
+								$pjk_ketBlokir = $item->keteranganBlokir;
+								
+								$noPol_ori = $item->nomorPolisi;
+								
+								$query = "
+										SELECT * FROM tb_data_pajak 
+										WHERE nik = '".$nik."'
+										AND nopol = '".str_replace(" ","",$pjk_nopol)."'
+										";
+								$cek_data_pajak = $this->M_dash->view_query_general($query);
+								if(!empty($cek_data_pajak))
+								{
+									$cek_data_pajak = $cek_data_pajak->row();
+									
+									
+									$isMilikSendiri = $cek_data_pajak->isMilikSendiri;
+									$alasanTidakMilikLagi = $cek_data_pajak->alasanTidakMilikLagi;
+									$tindakan = $cek_data_pajak->tindakan;
+									$jawabanTindakan = $cek_data_pajak->jawabanTindakan;
+									
+									
+								}
+								else
+								{
+									$isMilikSendiri = "";
+									$alasanTidakMilikLagi = "";
+									$tindakan = "";
+									$jawabanTindakan = "";
+								}
+								
+								echo'
+								<div class="box" style="background-color:#FFF0F5;box-shadow: 2px 2px 2px rgba(0,0,0,0.8);padding: 10px;border: 1px dashed grey;">
+									<div class="box-header">
+									
+									<center>
+									<h3 class="box-title" style="color:red;">MOHON MAAF, ANDA MEMILIKI TAGIHAN PAJAK KENDARAAN BERMOTOR</h3>
+									</center>
+										<br/>
+										<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;color:red;">
+											<tr>
+												<td style="width:30%;">Nama Pemilik</td>
+												<td style="width:5%;">:</td>
+												<td style="width:65%;">'.$pjk_namaPemilik.'</td>
+											</tr>
+											<tr>
+												<td>Alamat Pemilik</td>
+												<td>:</td>
+												<td>'.$pjk_alamatPemilik.'</td>
+											</tr>
+											<tr>
+												<td>No Polisi</td>
+												<td>:</td>
+												<td>
+													'.$pjk_nopol.'
+													<input type="hidden" id="nopol-'.str_replace(" ","",$pjk_nopol).'" value="'.str_replace(" ","",$pjk_nopol).'"/>
+													
+													<input type="hidden" id="noPol_ori-'.str_replace(" ","",$pjk_nopol).'" value="'.$noPol_ori.'"/>
+												</td>
+											</tr>
+											<tr>
+												<td>Merek</td>
+												<td>:</td>
+												<td>'.$pjk_merek.'</td>
+											</tr>
+											<tr>
+												<td>Jenis Kendaraan</td>
+												<td>:</td>
+												<td>'.$pjk_jenisKendaraan.'</td>
+											</tr>
+											<tr>
+												<td>Tanggal Pajak</td>
+												<td>:</td>
+												<td>'.$pjk_tanggalAkhirPajak.'</td>
+											</tr>
+											<tr>
+												<td>Status Blokir</td>
+												<td>:</td>
+												<td>'.$pjk_statusBlokir.'</td>
+											</tr>
+											<tr>
+												<td>Keterangan Blokir</td>
+												<td>:</td>
+												<td>'.$pjk_ketBlokir.'</td>
+											</tr>
+									
+											<tr>
+												<td>Apakah Benar Milik Sendiri</td>
+												<td>:</td>
+												<td>
+													<select id="isMilikSendiri-'.str_replace(" ","",$pjk_nopol).'" title="" class="form-control" onchange="proses_pajak(this)">
+														<option value="'.$isMilikSendiri.'">'.$isMilikSendiri.'</option>
+														<option value="YA">YA</option>
+														<option value="TIDAK">TIDAK</option>
+													</select>
+												</td>
+											</tr>
+											
+											';
+											
+											if($isMilikSendiri == 'TIDAK')
+											{
+												echo'<tr id="rowPajak-'.str_replace(" ","",$pjk_nopol).'" style="visibility:visible;">';
+											}
+											else
+											{
+												echo'<tr id="rowPajak-'.str_replace(" ","",$pjk_nopol).'" style="visibility:hidden;">';
+											}
+											
+											echo'
+												<td style="width:30%;">Alasan </td>
+												<td style="width:5%;">:</td>
+												<td style="width:65%;">
+													<select id="isAlasanMilikSendiri-'.str_replace(" ","",$pjk_nopol).'" title="" class="form-control" onchange="proses_pajak(this)">
+														
+														<option value="'.$alasanTidakMilikLagi.'">'.$alasanTidakMilikLagi.'</option>
+														<option value="HILANG">HILANG</option>
+														<option value="DITARIK_LEASING">DITARIK_LEASING</option>
+														<option value="DIJUAL">DIJUAL</option>
+														<option value="RUSAK_BERAT">RUSAK_BERAT</option>
+														<option value="PINDAH_ALAMAT">PINDAH_ALAMAT</option>
+														<option value="TIDAK_MERASA_MEMILIKI">TIDAK_MERASA_MEMILIKI</option>
+													</select>
+												</td>
+											</tr>
+											
+											';
+											
+											if(($isMilikSendiri == 'TIDAK')&&($alasanTidakMilikLagi != ''))
+											{
+												echo'
+												<tr id="rowTindakanPajak-'.str_replace(" ","",$pjk_nopol).'" style="visibility:visible;">';
+											}
+											else
+											{
+												echo'
+												<tr id="rowTindakanPajak-'.str_replace(" ","",$pjk_nopol).'" style="visibility:hidden;">';
+											}
+											
+											echo'
+											
+												<td style="width:30%;"> <span id="tindakan-'.str_replace(" ","",$pjk_nopol).'">'.$tindakan.'</span> </td>
+												<td style="width:5%;">:</td>
+												<td style="width:65%;">
+													<select id="jawabanTindakan-'.str_replace(" ","",$pjk_nopol).'" title="" class="form-control" onchange="proses_pajak(this)">
+														<option value="'.$jawabanTindakan.'">'.$jawabanTindakan.'</option>
+														<option value="YA">YA</option>
+														<option value="TIDAK">TIDAK</option>
+													</select>
+												</td>
+											</tr>
+											
+										</table>
+									</div>
+								</div>
+								';
+								
+								//exit;
+							}
+							else
+							{
+								echo'
+								<div class="box" style="background-color:#DCDCDC;box-shadow: 2px 2px 2px rgba(0,0,0,0.8);padding: 10px;border: 1px dashed grey;">
+									<div class="box-header">
+									
+									<center>
+										<img style="width:50%;" src="'.base_url('assets/global/images/cam_sam.png').'">
+										<br/>
+										<br/>
+										<h3 class="box-title" style="color:green;text-shadow: 1px 1px 1px grey;">TERIMA KASIH, ANDA TIDAK MEMILIKI TAGIHAN PAJAK KENDARAAN BERMOTOR</h3>
+										
+										<br/>
+										<br/>
+										
+										<!-- <div class="col-xs-12"> -->
+											<button type="button" class="btn-warga btn btn-success btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik_to_pelayanan()">LANJUT KE PELAYANAN</button>
+										<!-- </div> -->
+										
+										<br/>
+										<span id="pesan"></span>
+									</center>
+									
+									</div>
+								</div>
+								';
+							}
+						}
+						
+						echo'
+						<br/>
+						<br/>
+						
+						<!-- <div class="col-xs-12"> -->
+							<button type="button" class="btn-warga btn btn-warning btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik_to_cetak_taghan_pelayanan()">CETAK TAGIHAN DAN LANJUT KE PELAYANAN</button>
+						<!-- </div> -->
+						
+						<br/>
+						<span id="pesan"></span>
+						';
+					}
+					else
+					{
+						echo'
+						<div class="box" style="background-color:#DCDCDC;box-shadow: 2px 2px 2px rgba(0,0,0,0.8);padding: 10px;border: 1px dashed grey;">
+							<div class="box-header">
+							
+							<center>
+								<img style="width:50%;" src="'.base_url('assets/global/images/cam_sam.png').'">
+								<br/>
+								<br/>
+								<h3 class="box-title" style="color:green;text-shadow: 1px 1px 1px grey;">APAKAH ANDA MEMILIKI KENDARAAN YANG BUKAN ATAS NAMA ANDA ? 
+								<br/>
+								JIKA IYA SEGERA BBN (BEA BALIK NAMA) KENDARAAN ANDA
+								</h3>
+								
+								<br/>
+								<br/>
+								
+								<!-- <div class="col-xs-12"> -->
+									<button type="button" class="btn-warga btn btn-success btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik_to_pelayanan()">LANJUT KE PELAYANAN</button>
+								<!-- </div> -->
+								
+								<br/>
+								<span id="pesan"></span>
+							</center>
+							
+							</div>
+						</div>
+						';
+					}
+					
+				//CEK apakah ada pajak
+				//HASIL CEK PAJAK DIMUNCULKAN JIKA BISA PAKE JSON
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		
 		function view_layanan()
 		{
@@ -1825,6 +2012,78 @@
 
 			$tokenResponse = $result1->access_token;
 			return $tokenResponse;
+		}
+		
+		function simpan_data_pajak()
+		{
+			//1. CEK APAKAH SUDAH ADA DATA
+			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
+			$nopol = htmlentities($_POST['nopol'], ENT_QUOTES, 'UTF-8');
+			$noPol_ori = htmlentities($_POST['noPol_ori'], ENT_QUOTES, 'UTF-8');
+			$isMilikSendiri = htmlentities($_POST['isMilikSendiri'], ENT_QUOTES, 'UTF-8');
+			$alasanTidakMilikLagi = htmlentities($_POST['alasanTidakMilikLagi'], ENT_QUOTES, 'UTF-8');
+			$tindakan = htmlentities($_POST['tindakan'], ENT_QUOTES, 'UTF-8');
+			$jawabanTindakan = htmlentities($_POST['jawabanTindakan'], ENT_QUOTES, 'UTF-8');
+			
+			
+			$query = "
+					SELECT * FROM tb_data_pajak 
+					WHERE nik = '".$nik."'
+					AND nopol = '".$nopol."'
+					";
+			$cek_data_pajak = $this->M_dash->view_query_general($query);
+			if(!empty($cek_data_pajak))
+			{
+				//EDIT
+				$cek_data_pajak = $cek_data_pajak->row();
+				$query_edit = "
+								UPDATE tb_data_pajak 
+									SET 
+										noPol_ori = '".$noPol_ori."'
+										,isMilikSendiri = '".$isMilikSendiri."'
+										,alasanTidakMilikLagi = '".$alasanTidakMilikLagi."'
+										,tindakan = '".$tindakan."'
+										,jawabanTindakan = '".$jawabanTindakan."'
+								WHERE nik = '".$nik."'
+								AND nopol = '".$nopol."'
+								";
+				$this->M_dash->exec_query_general($query_edit);
+				echo'BERHASIL';
+			}
+			else
+			{
+				$query_edit = "
+								
+								INSERT INTO tb_data_pajak
+								(
+									nik
+									,nopol
+									,noPol_ori
+									,isMilikSendiri
+									,alasanTidakMilikLagi
+									,tindakan
+									,jawabanTindakan
+								)
+								VALUES
+								(
+									'".$nik."'
+									,'".$nopol."'
+									,'".$noPol_ori."'
+									,'".$isMilikSendiri."'
+									,'".$alasanTidakMilikLagi."'
+									,'".$tindakan."'
+									,'".$jawabanTindakan."'
+								)
+								";
+				$this->M_dash->exec_query_general($query_edit);
+				
+				echo'BERHASIL';
+			}
+		}
+		
+		function cetak_tagihan()
+		{
+			$this->load->view('admin/page/cetak_tagihan_pajak.html');
 		}
 	}
 

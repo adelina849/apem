@@ -9,7 +9,7 @@ class C_api_samsat extends CI_Controller {
 	}
 	
 	
-	public function index()
+	function index()
 	{
 		//$this->get_json_pajak($_GET['nik']);
 		//$path = 'data/movies-10.json';
@@ -48,7 +48,112 @@ class C_api_samsat extends CI_Controller {
 		
 	}
 	
-	public function get_json_pajak($nik)
+	function view_pajak_untuk_apem_tidak_json()
+	{
+		//HASIL CEK PAJAK DIMUNCULKAN
+		//CEK apakah ada pajak
+			
+			if((!empty($_GET['nik'])) && ($_GET['nik']!= "")  )
+			{
+				$nik = $_GET['nik'];
+			}
+			else
+			{
+				$nik = $_POST['nik'];
+			}
+			
+			
+			$jsonobj = $this->get_json_pajak($nik);
+			$obj = json_decode($jsonobj);
+			
+			$pjk_namaPemilik = "";
+			$pjk_alamatPemilik = "";
+			$pjk_nopol = "";
+			$pjk_merek = "";
+			$pjk_jenisKendaraan = "";
+			$pjk_tanggalAkhirPajak = "";
+			$pjk_statusBlokir = "";
+			$pjk_ketBlokir = "";
+			
+			if(!empty($obj->data))
+			{
+				foreach ($obj->data as $item) 
+				{
+					//if($item->statusTunggakan == true)
+					if($item->statusTunggakan == '1')
+					{
+						$pjk_namaPemilik = $item->namaPemilik;
+						$pjk_alamatPemilik = $item->alamatPemilik;
+						$pjk_nopol = $item->nomorPolisi;
+						$pjk_merek = $item->merek;
+						$pjk_jenisKendaraan = $item->jenis;
+						$pjk_tanggalAkhirPajak = $item->tanggalAkhirPajak;
+						$pjk_statusBlokir = $item->statusBlokir;
+						$pjk_ketBlokir = $item->keteranganBlokir;
+						
+						echo'
+						<div class="box">
+							<div class="box-header">
+							
+							<center>
+							<h3 class="box-title" style="color:red;">MOHON MAAF, ANDA MEMILIKI TAGIHAN PAJAK KENDARAAN BERMOTOR</h3>
+							</center>
+								<br/>
+								<table width="100%" id="example2" class="table table-hover hoverTable" style="opacity:1;color:red;">
+									<tr>
+										<td>Nama Pemilik</td>
+										<td>:</td>
+										<td>'.$pjk_namaPemilik.'</td>
+									</tr>
+									<tr>
+										<td>Alamat Pemilik</td>
+										<td>:</td>
+										<td>'.$pjk_alamatPemilik.'</td>
+									</tr>
+									<tr>
+										<td>No Polisi</td>
+										<td>:</td>
+										<td>'.$pjk_nopol.'</td>
+									</tr>
+									<tr>
+										<td>Merek</td>
+										<td>:</td>
+										<td>'.$pjk_merek.'</td>
+									</tr>
+									<tr>
+										<td>Jenis Kendaraan</td>
+										<td>:</td>
+										<td>'.$pjk_jenisKendaraan.'</td>
+									</tr>
+									<tr>
+										<td>Tanggal Pajak</td>
+										<td>:</td>
+										<td>'.$pjk_tanggalAkhirPajak.'</td>
+									</tr>
+									<tr>
+										<td>Status Blokir</td>
+										<td>:</td>
+										<td>'.$pjk_statusBlokir.'</td>
+									</tr>
+									<tr>
+										<td>Keterangan Blokir</td>
+										<td>:</td>
+										<td>'.$pjk_ketBlokir.'</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						';
+						
+						//exit;
+					}
+				}
+			}
+		//CEK apakah ada pajak
+		//HASIL CEK PAJAK DIMUNCULKAN
+	}
+	
+	function get_json_pajak($nik)
 	{		
 		// production
 		$client_id = "_NrXe69JftV9Bm4HcENriwglz0ga";
@@ -118,7 +223,7 @@ class C_api_samsat extends CI_Controller {
 	}
 	
 	//function token_splp($client_id, $client_credential, $urlTokenSPLP)
-	public function token_splp()
+	function token_splp()
 	{
 		
 		// production
