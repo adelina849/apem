@@ -483,9 +483,9 @@
 											
 											echo'
 											
-												<td style="width:30%;"> <span id="tindakan-'.str_replace(" ","",$pjk_nopol).'">'.$tindakan.'</span> </td>
-												<td style="width:5%;">:</td>
-												<td style="width:65%;">
+												<td style="width:30%;" id="tdLblTindakan-'.str_replace(" ","",$pjk_nopol).'"> <span id="tindakan-'.str_replace(" ","",$pjk_nopol).'">'.$tindakan.'</span> </td>
+												<td style="width:5%;" id="tdLblTindakanSparator-'.str_replace(" ","",$pjk_nopol).'">:</td>
+												<td style="width:65%;" id="tdLblTindakanJawaban-'.str_replace(" ","",$pjk_nopol).'">
 													<select id="jawabanTindakan-'.str_replace(" ","",$pjk_nopol).'" title="" class="form-control" onchange="proses_pajak(this)">
 														<option value="'.$jawabanTindakan.'">'.$jawabanTindakan.'</option>
 														<option value="YA">YA</option>
@@ -493,7 +493,43 @@
 													</select>
 												</td>
 											</tr>
+											';
 											
+											if($isMilikSendiri == 'YA')
+											{
+												echo'
+												<tr id="rowArahanBayarPajak-'.str_replace(" ","",$pjk_nopol).'" style="display:contents;">';
+											}
+											else
+											{
+												echo'
+												<tr id="rowArahanBayarPajak-'.str_replace(" ","",$pjk_nopol).'" style="display:none;">';
+											}
+											
+											echo'
+												<td colspan="3" style="text-align:center;">
+													<center>
+														<font style="color:black;">ANDA BISA MELAKUKAN PEMBAYARAN ONLINE MELALUI APLIKASI
+														</font>
+														
+														<br/>
+														
+														<img style="width:25%;" src="https://sambara.bapenda.jabarprov.go.id/sambara_lite_plopd/assets/images/logo-black.png">
+														<img style="width:25%;" src="https://sapawarga.jabarprov.go.id/static/img/logo.1ab08267.png">
+														
+														<br/>
+														<font style="color:black;">
+															ANDA BISA JUGA MELAKUKAN PEMBAYARAN OFFLINE MELALUI KANTOR SAMSAT TERDEKAT 
+															<br/>
+															<i>
+															Jl. Dr. Muwardi Nomor 118 Bypass Cianjur 43216
+															<br/>
+															HP 082123333136 Website : www.bapenda.jabarprov.go.id  Email : cianjurpppd@gmail.com
+															</i>
+														</font>
+													</center>
+												</td>
+											</tr>
 										</table>
 									</div>
 								</div>
@@ -510,10 +546,10 @@
 									<div class="box-header">
 									
 									<center>
-										<img style="width:50%;" src="'.base_url('assets/global/images/cam_sam.png').'">
+										<img style="width:50%;" src="'.base_url('assets/global/images/pak_irvan_nuhun.png').'">
 										<br/>
 										<br/>
-										<h3 class="box-title" style="color:green;text-shadow: 1px 1px 1px grey;">TERIMA KASIH, ANDA TIDAK MEMILIKI TAGIHAN PAJAK KENDARAAN BERMOTOR</h3>
+										<h3 class="box-title" style="color:green;text-shadow: 1px 1px 1px grey;">TERIMA KASIH ANDA SUDAH TAAT MEMBAYAR PAJAK KENDARAAN BERMOTOR</h3>
 										
 										<br/>
 										<br/>
@@ -562,20 +598,29 @@
 							<div class="box-header">
 							
 							<center>
-								<img style="width:50%;" src="'.base_url('assets/global/images/cam_sam.png').'">
+								<img style="width:50%;" src="'.base_url('assets/global/images/pak_irvan_cool.png').'">
 								<br/>
 								<br/>
-								<h3 class="box-title" style="color:green;text-shadow: 1px 1px 1px grey;">TIDAK DITEMUKAN DATA KENDARAAN ATAS NAMA ANDA, APAKAH ANDA MEMILIKI KENDARAAN YANG BUKAN ATAS NAMA ANDA ? 
-								<br/>
-								JIKA IYA SEGERA BBN (BEA BALIK NAMA) KENDARAAN ANDA
+								<h3 class="box-title" style="color:green;text-shadow: 1px 1px 1px grey;">APAKAH ANDA MEMILIKI KENDARAAN ATAS NAMA ANDA ? 
+								
+								
 								</h3>
-								
 								<br/>
 								<br/>
+
+
+								<div class="col-xs-6">
+									<button type="button" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik_to_pelayanan_bbn()">YA</button>
+								</div>
 								
-								<!-- <div class="col-xs-12"> -->
-									<button type="button" class="btn-warga btn btn-success btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik_to_pelayanan()">LANJUT KE PELAYANAN</button>
-								<!-- </div> -->
+								<div class="col-xs-6">
+									<button type="button" class="btn-warga btn btn-success btn-block btn-flat" style="border:1px dotted black;" onclick="cek_nik_to_pelayanan()">TIDAK</button>
+								</div>
+								
+								<br/>
+								<h3 id="infoArahanBBN" style="visibility:hidden;color:red;">
+								SEGERA BBN (BEA BALIK NAMA) KENDARAAN ANDA
+								</h3>
 								
 								<br/>
 								<center>

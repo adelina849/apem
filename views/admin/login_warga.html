@@ -335,6 +335,16 @@
 				//if(isMilikSendiri == 'HILANG')
 				{
 					$("#rowTindakanPajak-"+noPolisiFormat).css('visibility','visible');
+					$("#tdLblTindakan-"+noPolisiFormat).attr('colspan',1);
+					$("#tdLblTindakan-"+noPolisiFormat).css('visibility','visible');
+					$("#tdLblTindakanSparator-"+noPolisiFormat).css('visibility','visible');
+					$("#tdLblTindakanJawaban-"+noPolisiFormat).css('visibility','visible');
+					
+					$("#jawabanTindakan-"+noPolisiFormat).css('visibility','visible');
+					
+					
+					$("#tdLblTindakanSparator-"+noPolisiFormat).css('visibility','visible');
+					$("#tdLblTindakanJawaban-"+noPolisiFormat).css('visibility','visible');
 					
 					$("#tindakan-"+noPolisiFormat).html("Apakah ingin diblokir/proteksi");
 					tindakan = $("#tindakan-"+noPolisiFormat).html();
@@ -343,6 +353,15 @@
 				else if(isAlasanMilikSendiri == 'PINDAH_ALAMAT')
 				{
 					$("#rowTindakanPajak-"+noPolisiFormat).css('visibility','visible');
+					$("#tdLblTindakan-"+noPolisiFormat).attr('colspan',3);
+					$("#tdLblTindakan-"+noPolisiFormat).css('visibility','visible');
+					$("#tdLblTindakanSparator-"+noPolisiFormat).css('visibility','hidden');
+					$("#tdLblTindakanJawaban-"+noPolisiFormat).css('visibility','hidden');
+					
+					$("#jawabanTindakan-"+noPolisiFormat).css('visibility','hidden');
+					
+					
+					
 					
 					$("#tindakan-"+noPolisiFormat).html("Mohon untuk segera melakukan BBN Kendaraan");
 					tindakan = $("#tindakan-"+noPolisiFormat).html();
@@ -351,15 +370,31 @@
 				else
 				{
 					$("#rowTindakanPajak-"+noPolisiFormat).css('visibility','visible');
+					$("#tdLblTindakan-"+noPolisiFormat).attr('colspan',3);
+					$("#tdLblTindakan-"+noPolisiFormat).css('visibility','visible');
+					$("#tdLblTindakanSparator-"+noPolisiFormat).css('visibility','hidden');
+					$("#tdLblTindakanJawaban-"+noPolisiFormat).css('visibility','hidden');
+					
+					$("#jawabanTindakan-"+noPolisiFormat).css('visibility','hidden');
+					
 					
 					$("#tindakan-"+noPolisiFormat).html("Segera Hubungi Kantor SAMSAT terdekat");
 					tindakan = $("#tindakan-"+noPolisiFormat).html();
 					jawabanTindakan = $("#jawabanTindakan-"+noPolisiFormat).val();
 				}
+				
+				$("#rowArahanBayarPajak-"+noPolisiFormat).css('display','none');
 			}
 			else
 			{
+				$("#rowPajak-"+noPolisiFormat).css('visibility','hidden');
 				$("#rowTindakanPajak-"+noPolisiFormat).css('visibility','hidden');
+				//$("#tdLblTindakan-"+noPolisiFormat).css('visibility','hidden');
+				//$("#tdLblTindakanSparator-"+noPolisiFormat).css('visibility','hidden');
+				//$("#tdLblTindakanJawaban-"+noPolisiFormat).css('visibility','hidden');
+				
+				//$("#jawabanTindakan-"+noPolisiFormat).css('visibility','hidden');
+				$("#rowArahanBayarPajak-"+noPolisiFormat).css('display','contents');
 			}
 			
 			
@@ -1156,6 +1191,77 @@
 							$("#btn_lanjut").css('display','none');
 							$("#btn_daftar").css('display','none');
 						}, 3000);
+						
+						$(".langkah").css('color','red');
+						$(".langkah").css('font-weight','normal');
+						$("#langkah_2").css('color','green');
+						$("#langkah_2").css('font-weight','bold');
+						
+					
+					}
+					else
+					{
+						//alert("GAGAL");
+						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> NIK Tidak Ditemukan, Silahkan lakukan pendaftaran data warga !');
+						$("#nik").css('border', '3px #C33 solid');
+						//$("#btn_lanjut").attr("disabled", true);
+					}
+					
+				} 
+				});
+			}
+		}
+		
+		function cek_nik_to_pelayanan_bbn()
+		{
+			//alert("GOOD");
+			
+			
+			$("#infoArahanBBN").css('visibility','visible');
+			
+			var nik = $("#nik_ori").val();
+			//alert(nik);
+			$("#pesan").html("<img src='<?php echo base_url();?>assets/global/loading.gif'>Memeriksa NIK Anda...");
+			
+			if(nik=='')
+			{
+			  $("#pesan").html('<img src="<?php echo base_url();?>assets/global/salah.png"> Kolom Tidak Boleh Kosong');
+			  $("#nik").css('border', '3px #C33 solid');
+			}
+			else
+			{
+				//DIUABH UNTUK PAJAK DULUAN, INI JALAAN
+				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-cek-nik/"
+				, data: 
+						{
+							nik:nik
+						}
+				, cache: false
+				, success:function(data)
+				{
+					 //alert(data);
+					//if(data=='BERHASIL')
+					
+					if(data != false)
+					{
+					
+						//alert("BERHASIL");
+						//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan, Selamat Datang '+data);
+						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan Harap Menunggu,<br/> <img src="<?php echo base_url();?>assets/global/loading.gif"> sedang memproses permintaan.....');
+						$("#nik").css('border', '3px #090 solid');
+						//$("#btn_lanjut").attr("disabled", false);
+						
+						$("#nik_ori").val(nik);
+						
+						setTimeout(
+						function() 
+						{
+							//do something special
+							//alert("Masuk ke pelayanan");
+							$("#form_utama").html(data);
+							$("#btn_lanjut").css('display','none');
+							$("#btn_daftar").css('display','none');
+						}, 4000);
 						
 						$(".langkah").css('color','red');
 						$(".langkah").css('font-weight','normal');
