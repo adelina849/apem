@@ -601,10 +601,17 @@
 								<img style="width:50%;" src="'.base_url('assets/global/images/pak_irvan_cool.png').'">
 								<br/>
 								<br/>
-								<h3 class="box-title" style="color:green;text-shadow: 1px 1px 1px grey;">APAKAH ANDA MEMILIKI KENDARAAN ATAS NAMA ANDA ? 
-								
-								
-								</h3>
+									
+									<!--
+									<h3 class="box-title" style="color:green;text-shadow: 1px 1px 1px grey;">
+									APAKAH ANDA MEMILIKI KENDARAAN ATAS NAMA ANDA ? 
+									</h3>
+									-->
+									
+									<h3 class="box-title" style="color:green;text-shadow: 1px 1px 1px grey;">
+									APAKAH ANDA MEMILIKI KENDARAAN ATAS NAMA ORANG LAIN ? 
+									</h3>
+									
 								<br/>
 								<br/>
 
