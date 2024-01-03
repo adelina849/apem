@@ -15,6 +15,7 @@
 					FROM tb_pengajuan AS A
 					LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah
 					WHERE A.tgl_surat_masuk BETWEEN '".$dari."' AND '".$sampai."'
+					AND A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 					GROUP BY COALESCE(B.nama_jenis_naskah,'');
 					";
 			$query = $this->db->query($query);
@@ -35,6 +36,7 @@
 						,COUNT(A.id_jenis_naskah) AS jum_naskah
 					FROM tb_pengajuan AS A
 					WHERE A.tgl_surat_masuk BETWEEN '".$dari."' AND '".$sampai."'
+					AND A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 					GROUP BY COALESCE(A.hasil_pengajuan,'');
 					";
 			$query = $this->db->query($query);
@@ -55,6 +57,7 @@
 						,COUNT(A.id_jenis_naskah) AS jum_naskah
 					FROM tb_pengajuan AS A
 					WHERE A.tgl_surat_masuk BETWEEN '".$dari."' AND '".$sampai."'
+					AND A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 					GROUP BY COALESCE(DATE(A.tgl_surat_masuk),'') ORDER BY COALESCE(DATE(A.tgl_surat_masuk),'') DESC;
 					";
 			$query = $this->db->query($query);

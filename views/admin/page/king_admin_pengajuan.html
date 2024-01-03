@@ -232,6 +232,7 @@
 						<form role="form" action="<?=base_url();?>admin-pengajuan-dokumen-simpan" method="post" class="frm-input">
 						<input type="hidden" name="stat_edit" id="stat_edit"/>
 						<input type="hidden" name="from" id="from" value="<?php if (!empty($_GET['from'])){echo $_GET['from'];} ?>"/>
+						<input type="hidden" name="kode_kantor" id="kode_kantor" value="<?php echo $this->session->userdata('ses_kode_kantor');?>"/>
 						
 						
 						<div class="box-body">
@@ -895,6 +896,7 @@
 	
 	function simpan_isi_syarat_naskah(no)
 	{
+		var kode_kantor = $("#kode_kantor").val();
 		var id_pengajuan = $("#id_pengajuan_for_isi_syarat_naskah-"+no).val();
 		var id_pengajuan_format_for_isi_syarat_naskah = $("#id_pengajuan_format_for_isi_syarat_naskah-"+no).val();
 		var id_jenis_naskah = $("#id_jenis_naskah_for_isi_syarat_naskah-"+no).val(); 
@@ -908,6 +910,7 @@
 				,url: "<?php echo base_url();?>C_admin_login/simpan_isi_syarat_naskah/"
 				, data: 
 						{
+							kode_kantor:kode_kantor,
 							id_pengajuan:id_pengajuan,
 							id_pengajuan_format_for_isi_syarat_naskah:id_pengajuan_format_for_isi_syarat_naskah,
 							id_jenis_naskah:id_jenis_naskah,
@@ -1009,6 +1012,7 @@
 
 	function simpan_isian_var_naskah(evt)
 	{						
+		var kode_kantor = $("#kode_kantor").val();
 		var id_pengajuan = $("#id_jenis_naskah_isi_var").val()+"-"+$("#nik_isi_var").val()+"-"+$("#tgl_surat_dibuat_isi_var").val();
 		var id_jenis_naskah = $("#id_jenis_naskah_isi_var").val();
 		var tgl_surat_dibuat = $("#tgl_surat_dibuat_isi_var").val();
@@ -1026,7 +1030,8 @@
 					id_pengajuan:id_pengajuan,
 					id_jenis_naskah:id_jenis_naskah,
 					id_var_naskah:id_var_naskah,
-					isi:val
+					isi:val,
+					kode_kantor:kode_kantor
 				}
 		, cache: false
 		, success:function(data)

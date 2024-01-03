@@ -441,9 +441,11 @@ class C_admin_pengajuan extends CI_Controller {
 								FROM tb_var_naskah AS A
 								LEFT JOIN tb_isi_var_naskah AS B 
 									ON A.id_var_naskah = B.id_var_naskah 
+									AND A.kode_kantor = B.kode_kantor
 									AND B.id_jenis_naskah = '".$id_jenis_naskah."'
 									AND B.id_pengajuan = '".$id_jenis_naskah."-".$nik."-".$tgl_surat_dibuat_untuk_isian."'
-								WHERE A.id_jenis_naskah = '".$id_jenis_naskah."' 
+								WHERE A.id_jenis_naskah = '".$id_jenis_naskah."'
+								AND A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 								";
 					$list_data = $this->M_dash->view_query_general($query_data);
 					if(!empty($list_data))
@@ -519,9 +521,15 @@ class C_admin_pengajuan extends CI_Controller {
 										,COALESCE(C.id_pengajuan,'') AS id_pengajuan_format_isi_syarat_naskah
 									FROM tb_persyaratan_naskah AS A 
 									INNER JOIN tb_persyaratan AS B 
-									ON A.id_syarat = B.id_syarat AND A.kode_kantor = B.kode_kantor
-									LEFT JOIN tb_isi_syarat_naskah AS C ON A.id_syarat_naskah = C.id_syarat_naskah AND A.id_jenis_naskah = C.id_jenis_naskah AND C.id_pengajuan = '".$id_jenis_naskah."-".$nik."-".$tgl_surat_dibuat_untuk_isian."' 
-									WHERE A.id_jenis_naskah = '".$id_jenis_naskah."' 
+										ON A.id_syarat = B.id_syarat 
+										AND A.kode_kantor = B.kode_kantor
+									LEFT JOIN tb_isi_syarat_naskah AS C 
+										ON A.id_syarat_naskah = C.id_syarat_naskah 
+										AND A.kode_kantor = C.kode_kantor
+										AND A.id_jenis_naskah = C.id_jenis_naskah 
+										AND C.id_pengajuan = '".$id_jenis_naskah."-".$nik."-".$tgl_surat_dibuat_untuk_isian."' 
+									WHERE A.id_jenis_naskah = '".$id_jenis_naskah."'
+									AND A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 									";
 					$list_syarat = $this->M_dash->view_query_general($query_persyaratan);
 					if(!empty($list_syarat))

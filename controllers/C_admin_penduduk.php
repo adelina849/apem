@@ -148,7 +148,7 @@ class C_admin_penduduk extends CI_Controller {
 	public function hapus()
 	{
 		$id_penduduk = $this->uri->segment(2,0);
-		$cari = "WHERE MD5(id_penduduk) = '".$id_penduduk."' ";
+		$cari = "WHERE MD5(id_penduduk) = '".$id_penduduk."' AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."' ";
 		$hasil_cek = $this->M_penduduk->get_data_penduduk($cari);
 		if(!empty($hasil_cek))
 		{
@@ -160,7 +160,7 @@ class C_admin_penduduk extends CI_Controller {
 	function get_data_penduduk()
 	{
 		$nik = $_POST['nik'];
-		$cari = "WHERE (nik) = '".$nik."' ";
+		$cari = "WHERE (nik) = '".$nik."' AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'";
 		$hasil_cek = $this->M_penduduk->get_data_penduduk($cari);
 		if(!empty($hasil_cek))
 		{

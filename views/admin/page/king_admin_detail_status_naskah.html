@@ -96,6 +96,9 @@
 							</div>
 							<!-- /.box-header -->
 							<div class="box-body">
+								
+								<input type="hidden" name="kode_kantor" id="kode_kantor" value="<?php echo $this->session->userdata('ses_kode_kantor');?>"/>
+							
 							  <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height:410px;">
 							  <center>
 								<ol class="carousel-indicators">
@@ -313,6 +316,7 @@
 
 	function hapus(id)
 	{
+		var kode_kantor = $("#kode_kantor").val();
 		var id_tahapan_naskah = $("#id_tahapan_naskah_"+id).val();
 		var id_pengajuan = $("#id_pengajuan_"+id).val();
 		var nama_tahapan = $("#nama_tahapan_"+id).val(); 
@@ -325,7 +329,7 @@
 					type: "POST"
 					,url: "<?=base_url();?>C_admin_detail_status_naskah/hapus/"
 					,data:
-						"id_tahapan_naskah="+id_tahapan_naskah+"&id_pengajuan="+id_pengajuan
+						"id_tahapan_naskah="+id_tahapan_naskah+"&id_pengajuan="+id_pengajuan+"&kode_kantor="+kode_kantor
 					,success:function(data)
 					{ 
 						alert(nama_tahapan+" Berhasil Dihapus");
@@ -341,6 +345,7 @@
 	function simpan(id)
 	{
 		//alert(id);
+		var kode_kantor = $("#kode_kantor").val();
 		var id_tahapan_naskah = $("#id_tahapan_naskah_"+id).val(); 
 		var nama_tahapan = $("#nama_tahapan_"+id).val(); 
 		var id_pengajuan = $("#id_pengajuan_"+id).val(); 
@@ -362,7 +367,7 @@
 					type: "POST"
 					,url: "<?=base_url();?>C_admin_detail_status_naskah/simpan/"
 					,data:
-						"id_tahapan_naskah="+id_tahapan_naskah+"&nama_tahapan="+nama_tahapan+"&id_pengajuan="+id_pengajuan+"&id_karyawan="+id_karyawan+"&user_insert="+user_insert+"&tgl_updt_status="+tgl_updt_status+"&di_proses_oleh="+di_proses_oleh+"&jenis_keputusan="+jenis_keputusan+"&ket_status="+ket_status+"&ordr_index="+ordr_index
+						"id_tahapan_naskah="+id_tahapan_naskah+"&nama_tahapan="+nama_tahapan+"&id_pengajuan="+id_pengajuan+"&id_karyawan="+id_karyawan+"&user_insert="+user_insert+"&tgl_updt_status="+tgl_updt_status+"&di_proses_oleh="+di_proses_oleh+"&jenis_keputusan="+jenis_keputusan+"&ket_status="+ket_status+"&ordr_index="+ordr_index+"&kode_kantor="+kode_kantor
 					,success:function(data)
 					{ 
 						alert(nama_tahapan+" Berhasil Disimpan");

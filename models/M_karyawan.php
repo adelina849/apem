@@ -24,10 +24,14 @@
 		function list_karyawan_no_akun($cari,$limit,$offset)
 		{
 			$query = $this->db->query("
-										SELECT A.id_karyawan,A.nik_karyawan, A.nama_karyawan,A.pnd,A.tlp,A.email,A.avatar,A.avatar_url,A.alamat,A.ket_karyawan,B.id_jabatan,B.nama_jabatan,C.id_akun,C.user,C.pass,C.pertanyaan1,C.pertanyaan2,C.jawaban1,C.jawaban2 FROM tb_karyawan AS A
+										SELECT A.id_karyawan,A.nik_karyawan, A.nama_karyawan,A.pnd,A.tlp,A.email,A.avatar,A.avatar_url,A.alamat,A.ket_karyawan,B.id_jabatan,B.nama_jabatan,C.id_akun,C.user,C.pass,C.pertanyaan1,C.pertanyaan2,C.jawaban1,C.jawaban2 
+										FROM tb_karyawan AS A
 										LEFT JOIN tb_jabatan AS B ON A.id_jabatan = B.id_jabatan
 										LEFT JOIN tb_akun AS C ON A.id_karyawan = C.id_karyawan
-										WHERE C.user IS NULL ".$cari." ORDER BY nama_karyawan ASC LIMIT ".$offset.",".$limit);
+										 
+										WHERE A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
+										AND C.user IS NULL ".$cari." 
+										ORDER BY nama_karyawan ASC LIMIT ".$offset.",".$limit);
 			if($query->num_rows() > 0)
 			{
 				return $query;
@@ -42,7 +46,7 @@
 		{
 			$query = $this->db->query("
 										SELECT * FROM tb_karyawan AS A
-										LEFT JOIN tb_jabatan AS B ON A.id_jabatan = B.id_jabatan
+										LEFT JOIN tb_jabatan AS B ON A.id_jabatan = B.id_jabatan AND A.kode_kantor = B.kode_kantor
 										".$cari." ORDER BY nama_karyawan ASC LIMIT ".$offset.",".$limit);
 			if($query->num_rows() > 0)
 			{

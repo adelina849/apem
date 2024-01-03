@@ -137,6 +137,7 @@
 					,tgl_updt = NOW()
 					,user_updt = '".$user_updt."'
 				WHERE id_syarat = '".$id_syarat."'
+				AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 			";
 			
 			$this->db->query($query);

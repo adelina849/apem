@@ -81,21 +81,68 @@
 				// // {
 					// // header('Location: '.base_url().'admin-login');
 				// // }
+				if((!empty($_GET['kode_kantor'])) && ($_GET['kode_kantor']!= "")  )
+				{
+					$kode_kantor = htmlentities($_GET['kode_kantor'], ENT_QUOTES, 'UTF-8');
+					$query = "SELECT * FROM tb_kantor WHERE kode_kantor = '".$kode_kantor."';";
+					$query = $this->M_akun->view_query_general($query);
+					if(!empty($query))
+					{
+						$get_data_kantor = $query->row();
+						
+						$data = array('get_data_kantor'=>$get_data_kantor);
+						
+						$this->load->view('admin/login.html',$data);
+					}
+					else
+					{
+						echo'<H1>SILAHKAN ISIKAN KODE KANTOR PADA HEADER URL <br/><b>Example : '.base_url().'admin-login?kode_kantor={{kode_kantor}}</b></H1>';
+					}
+				}
+				else
+				{
+					echo'<H1>SILAHKAN ISIKAN KODE KANTOR PADA HEADER URL <br/><b>Example : '.base_url().'admin-login?kode_kantor={{kode_kantor}}</b></H1>';
+				}
 				
-				$this->load->view('admin/login.html');
 				////}
 			////}
 		}
 		
 		function login_warga()
 		{
-			$this->load->view('admin/login_warga.html');
+			
+			if((!empty($_GET['kode_kantor'])) && ($_GET['kode_kantor']!= "")  )
+			{
+				$kode_kantor = htmlentities($_GET['kode_kantor'], ENT_QUOTES, 'UTF-8');
+				$query = "SELECT * FROM tb_kantor WHERE kode_kantor = '".$kode_kantor."';";
+				$query = $this->M_akun->view_query_general($query);
+				if(!empty($query))
+				{
+					$get_data_kantor = $query->row();
+					
+					$data = array('get_data_kantor'=>$get_data_kantor);
+					
+					//$this->load->view('admin/login.html',$data);
+					$this->load->view('admin/login_warga.html',$data);
+				}
+				else
+				{
+					echo'<H1>SILAHKAN ISIKAN KODE KANTOR PADA HEADER URL <br/><b>Example : '.base_url().'admin-login?kode_kantor={{kode_kantor}}</b></H1>';
+				}
+			}
+			else
+			{
+				echo'<H1>SILAHKAN ISIKAN KODE KANTOR PADA HEADER URL <br/><b>Example : '.base_url().'admin-login?kode_kantor={{kode_kantor}}</b></H1>';
+			}
+			
 		}
 		
 		function cek_nik() //ORI JALAN DIGABUNGKAN ANATAR PAJAK DAN VIEW LAYANAN
 		{
 			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
-			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."'";
+			$kode_kantor = htmlentities($_POST['kode_kantor'], ENT_QUOTES, 'UTF-8');
+			
+			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."' AND kode_kantor = '".$kode_kantor."' ";
 			$cek_nik = $this->M_dash->view_query_general($query_cek_nik);
 			if(!empty($cek_nik))
 			{
@@ -114,6 +161,7 @@
 								SELECT COUNT(id_pengajuan) AS CNT 
 								FROM tb_pengajuan 
 								WHERE sumber = '".$cek_nik->nik."'
+								AND kode_kantor = '".$kode_kantor."'
 								AND id_jenis_naskah = A.id_jenis_naskah
 							) 
 							,
@@ -142,6 +190,8 @@
 								FROM tb_tahapan_naskah AS A
 								LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
 								LEFT JOIN tb_tahapan AS C ON A.id_tahapan  = C.id_tahapan  AND A.kode_kantor = C.kode_kantor
+								
+								WHERE A.kode_kantor = '".$kode_kantor."'
 								-- WHERE COALESCE(B.nama_jenis_naskah,'') LIKE '%%'
 							) AS A2
 							GROUP BY A2.id_jenis_naskah,A2.naskah,A2.kode_kantor
@@ -168,6 +218,8 @@
 								FROM tb_persyaratan_naskah AS A
 								LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
 								LEFT JOIN tb_persyaratan AS C ON A.id_syarat  = C.id_syarat  AND A.kode_kantor = C.kode_kantor
+								
+								WHERE A.kode_kantor = '".$kode_kantor."'
 								-- WHERE COALESCE(B.nama_jenis_naskah,'') LIKE '%%'
 							) AS A2
 							GROUP BY A2.id_jenis_naskah,A2.naskah,A2.kode_kantor
@@ -194,11 +246,16 @@
 									,A.kode_kantor
 								FROM tb_var_naskah AS A
 								LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
+								
+								WHERE A.kode_kantor = '".$kode_kantor."'
 								-- WHERE COALESCE(B.nama_jenis_naskah,'') LIKE '%%'
 							) AS A2
 							GROUP BY A2.id_jenis_naskah,A2.naskah,A2.kode_kantor
 						) AS D ON A.id_jenis_naskah = D.id_jenis_naskah AND A.kode_kantor = D.kode_kantor
-						WHERE COALESCE(A.nama_jenis_naskah,'') LIKE '%%' ORDER BY A.nama_jenis_naskah ";
+						WHERE  
+							A.kode_kantor = '".$kode_kantor."' 
+							AND COALESCE(A.nama_jenis_naskah,'') LIKE '%%' 
+						ORDER BY A.nama_jenis_naskah ";
 				
 				$list_layanan = $this->M_dash->view_query_general($query_list_layanan);
 				
@@ -301,7 +358,8 @@
 		function cek_nik_pajak()
 		{
 			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
-			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."'";
+			$kode_kantor = htmlentities($_POST['kode_kantor'], ENT_QUOTES, 'UTF-8');
+			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."' AND kode_kantor = '".$kode_kantor."' ";
 			$cek_nik = $this->M_dash->view_query_general($query_cek_nik);
 			if(!empty($cek_nik))
 			{
@@ -645,7 +703,68 @@
 			}
 			else
 			{
-				return false;
+				//return false;
+				//INPUT DATA DARI SAMSAT
+				
+				$jsonobj = $this->get_json_pajak($nik);
+				$obj = json_decode($jsonobj);
+				
+				$pjk_namaPemilik = "";
+				$pjk_alamatPemilik = "";
+				$pjk_nopol = "";
+				$pjk_merek = "";
+				$pjk_jenisKendaraan = "";
+				$pjk_tanggalAkhirPajak = "";
+				$pjk_statusBlokir = "";
+				$pjk_ketBlokir = "";
+				
+				$div_pesan = "";
+				$cek_ada_tagihan = "";
+				
+				if(!empty($obj->data))
+				{
+					$no = 1;
+					foreach ($obj->data as $item) 
+					{
+						$cek_ada_tagihan = "YA";
+						
+						$pjk_namaPemilik = $item->namaPemilik;
+						$pjk_alamatPemilik = $item->alamatPemilik;
+						$pjk_nopol = $item->nomorPolisi;
+						$pjk_merek = $item->merek;
+						$pjk_jenisKendaraan = $item->jenis;
+						$pjk_tanggalAkhirPajak = $item->tanggalAkhirPajak;
+						$pjk_statusBlokir = $item->statusBlokir;
+						$pjk_ketBlokir = $item->keteranganBlokir;
+						
+						$noPol_ori = $item->nomorPolisi;
+						
+						if($no == 1) //UNUTK MEMASTIKAN LOOPING TIDAK LEBIH DARI 1 AGAR TIDAK DOUBLE
+						{
+							$this->M_penduduk->simpan
+							(
+								$nik,
+								$pjk_namaPemilik, //$nama
+								'', //$jenis_kelamin,
+								'', //$status_menikah,
+								'CIANJUR', //$tempat_lahir,
+								'', //$tgl_lahir,
+								'', //$tlp,
+								'', //$email,
+								$pjk_alamatPemilik, //$alamat,
+								'ADMIN', //$from_db,
+								$kode_kantor
+
+							);
+						}
+					}
+					echo'ADA DATA DARI SAMSAT';
+				}
+				else
+				{
+					//DISAMSAT TIDAK DITEMUKAN
+					return false;
+				}
 			}
 		}
 		
@@ -837,7 +956,9 @@
 		function view_daftar_warga()
 		{
 			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
-			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."'";
+			$kode_kantor = htmlentities($_POST['kode_kantor'], ENT_QUOTES, 'UTF-8');
+			
+			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."' AND kode_kantor = '".$kode_kantor."' ";
 			$cek_nik = $this->M_dash->view_query_general($query_cek_nik);
 			if(!empty($cek_nik) && ($nik != ''))
 			{
@@ -927,6 +1048,7 @@
 		
 		function simpan_data_warga()
 		{
+			$kode_kantor = htmlentities($_POST['kode_kantor'], ENT_QUOTES, 'UTF-8');
 			
 			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
 			$nama = htmlentities($_POST['nama'], ENT_QUOTES, 'UTF-8');
@@ -938,7 +1060,7 @@
 			$alamat = htmlentities($_POST['alamat'], ENT_QUOTES, 'UTF-8');
 			
 			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
-			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."'";
+			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."' AND kode_kantor = '".$kode_kantor."' ";
 			$cek_nik = $this->M_dash->view_query_general($query_cek_nik);
 			if(!empty($cek_nik))
 			{
@@ -955,7 +1077,7 @@
 					,$tlp
 					,$email
 					,$alamat
-					,'KABCJR'
+					,$kode_kantor
 				);
 			}
 			else
@@ -972,7 +1094,7 @@
 					,$email
 					,$alamat
 					,'ADMIN' //$from_db
-					,'KABCJR'
+					,$kode_kantor
 				);
 			}
 			
@@ -983,11 +1105,13 @@
         {
             $user = htmlentities($_POST['user'], ENT_QUOTES, 'UTF-8');
             $pass = htmlentities($_POST['pass'], ENT_QUOTES, 'UTF-8');
+			$kode_kantor = htmlentities($_POST['kode_kantor'], ENT_QUOTES, 'UTF-8');
+			
 			$check = isset($_POST['chk_saya_bukan_robot']) ? "checked" : "unchecked";
 			
 			if($check == 'checked')
 			{
-				$data_login = $this->M_akun->get_login($user,md5($pass));
+				$data_login = $this->M_akun->get_login_with_kode_kantor($user,md5($pass),$kode_kantor);
 				if(!empty($data_login))
 				{
 					if ($data_login->avatar <> "")
@@ -1007,6 +1131,12 @@
 						'ses_id_jabatan' => $data_login->id_jabatan,
 						'ses_nama_jabatan' => $data_login->nama_jabatan,
 						'ses_nama_karyawan' => $data_login->nama_karyawan,
+						
+						'ses_nama_kantor' => $data_login->nama_kantor,
+						'ses_pemilik' => $data_login->pemilik,
+						'ses_tlp_kantor' => $data_login->tlp_kantor,
+						'ses_alamat_kantor' => $data_login->alamat_kantor,
+						
 						'ses_kode_kantor' => $data_login->kode_kantor,
 						'ses_avatar_url' => $src,
 						'ses_tgl_ins' => $data_login->tgl_ins
@@ -1034,6 +1164,7 @@
 		{
 			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
 			$id_jenis_naskah = htmlentities($_POST['id_jenis_naskah'], ENT_QUOTES, 'UTF-8');
+			$kode_kantor = htmlentities($_POST['kode_kantor'], ENT_QUOTES, 'UTF-8');
 			
 			
 			
@@ -1047,19 +1178,19 @@
 				$no_pengajuan = "";
 			}
 			
-			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."'";
+			$query_cek_nik = "SELECT * FROM tb_penduduk WHERE nik = '".$nik."' AND kode_kantor = '".$kode_kantor."' ";
 			$cek_nik = $this->M_dash->view_query_general($query_cek_nik);
 			if(!empty($cek_nik))
 			{
 				$cek_nik = $cek_nik->row();
 				
-				$query_cek_jenis_naskah = "SELECT * FROM tb_jenis_naskah WHERE id_jenis_naskah = '".$id_jenis_naskah."'";
+				$query_cek_jenis_naskah = "SELECT * FROM tb_jenis_naskah WHERE id_jenis_naskah = '".$id_jenis_naskah."' AND kode_kantor = '".$kode_kantor."' ";
 				$cek_jenis_naskah = $this->M_dash->view_query_general($query_cek_jenis_naskah);
 				if(!empty($cek_jenis_naskah))
 				{
 					$cek_jenis_naskah = $cek_jenis_naskah->row();
 					
-					$query_cek_apakah_sudah_ada_edit = "SELECT * FROM tb_pengajuan WHERE no_pengajuan = '".$no_pengajuan."';";
+					$query_cek_apakah_sudah_ada_edit = "SELECT * FROM tb_pengajuan WHERE no_pengajuan = '".$no_pengajuan."' AND kode_kantor = '".$kode_kantor."' ;";
 					$cek_apakah_sudah_ada_edit = $this->M_dash->view_query_general($query_cek_apakah_sudah_ada_edit);
 					if(!empty($cek_apakah_sudah_ada_edit))
 					{
@@ -1186,6 +1317,7 @@
 									AND B.id_jenis_naskah = '".$cek_jenis_naskah->id_jenis_naskah."'
 									AND B.id_pengajuan = '".$cek_jenis_naskah->id_jenis_naskah."-".$nik."-".$tgl_surat_dibuat_untuk_isian."'
 								WHERE A.id_jenis_naskah = '".$cek_jenis_naskah->id_jenis_naskah."' 
+								AND A.kode_kantor = '".$kode_kantor."'
 								";
 					$list_data = $this->M_dash->view_query_general($query_data);
 					if(!empty($list_data))
@@ -1266,7 +1398,8 @@
 									INNER JOIN tb_persyaratan AS B 
 									ON A.id_syarat = B.id_syarat AND A.kode_kantor = B.kode_kantor
 									LEFT JOIN tb_isi_syarat_naskah AS C ON A.id_syarat_naskah = C.id_syarat_naskah AND A.id_jenis_naskah = C.id_jenis_naskah AND C.id_pengajuan = '".$id_jenis_naskah."-".$nik."-".$tgl_surat_dibuat_untuk_isian."' 
-									WHERE A.id_jenis_naskah = '".$cek_jenis_naskah->id_jenis_naskah."' 
+									WHERE A.id_jenis_naskah = '".$cek_jenis_naskah->id_jenis_naskah."'
+									AND A.kode_kantor = '".$kode_kantor."'
 									";
 					$list_syarat = $this->M_dash->view_query_general($query_persyaratan);
 					if(!empty($list_syarat))
@@ -1378,12 +1511,21 @@
 		{
 			if((!empty($_POST['no_pengajuan'])) && ($_POST['no_pengajuan']!= "")  )
 			{
-				$cek_terakhir = "SELECT * FROM tb_pengajuan WHERE sumber = '".$_POST['sumber']."' AND id_jenis_naskah = '".$_POST['id_jenis_naskah']."' AND tgl_surat_dibuat = '".$_POST['tgl_surat_dibuat']."' ORDER BY id_pengajuan DESC LIMIT 0,1; ";
+				$kode_kantor = htmlentities($_POST['kode_kantor'], ENT_QUOTES, 'UTF-8');
+				
+				$cek_terakhir = "
+								SELECT * 
+								FROM tb_pengajuan 
+								WHERE sumber = '".$_POST['sumber']."' 
+									AND id_jenis_naskah = '".$_POST['id_jenis_naskah']."' 
+									AND tgl_surat_dibuat = '".$_POST['tgl_surat_dibuat']."'
+									AND kode_kantor = '".$kode_kantor."'
+								ORDER BY id_pengajuan DESC LIMIT 0,1; ";
 				$data_pengajuan = $this->M_dash->view_query_general($cek_terakhir);
 				if(!empty($data_pengajuan))
 				{
 					$data_pengajuan = $data_pengajuan->row();
-					$this->M_pengajuan->edit
+					$this->M_pengajuan->edit_ajax
 								(
 									$data_pengajuan->id_pengajuan
 									,$_POST['id_jenis_naskah']
@@ -1398,6 +1540,7 @@
 									,$_POST['ket_pengajuan']
 									,$_POST['penting']
 									,$this->session->userdata('ses_id_karyawan')
+									,$kode_kantor
 								
 								);
 					echo $_POST['no_pengajuan'];
@@ -1423,7 +1566,7 @@
 					,$_POST['ket_pengajuan']
 					,$_POST['penting']
 					,'' //$this->session->userdata('ses_id_karyawan')
-					,'KABCJR' //$this->session->userdata('ses_kode_kantor')
+					,$kode_kantor //,'KABCJR' //$this->session->userdata('ses_kode_kantor')
 					,'KAB'
 				);
 				
@@ -1554,13 +1697,17 @@
 		
 		function view_history_pengajuan()
 		{
+			$kode_kantor = htmlentities($_POST['kode_kantor'], ENT_QUOTES, 'UTF-8');
 			$nik = htmlentities($_POST['nik'], ENT_QUOTES, 'UTF-8');
 			$id_jenis_naskah = htmlentities($_POST['id_jenis_naskah'], ENT_QUOTES, 'UTF-8');
 			
 			$query = "
 					SELECT * FROM tb_pengajuan AS A 
 					LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah
-					WHERE A.sumber = '".$nik."' AND A.id_jenis_naskah = '".$id_jenis_naskah."' ORDER BY A.tgl_ins DESC;";
+					WHERE A.sumber = '".$nik."' 
+					AND A.id_jenis_naskah = '".$id_jenis_naskah."' 
+					AND A.kode_kantor = '".$kode_kantor."'
+					ORDER BY A.tgl_ins DESC;";
 			
 			$cek_data_pengajuan = $this->M_dash->view_query_general($query);
 			if(!empty($cek_data_pengajuan))
@@ -1678,11 +1825,13 @@
 		function hapus_pengajuan()
 		{
 			$id_pengajuan = htmlentities($_POST['id_pengajuan'], ENT_QUOTES, 'UTF-8');
-			$this->M_pengajuan->hapus($id_pengajuan);
+			$kode_kantor = htmlentities($_POST['kode_kantor'], ENT_QUOTES, 'UTF-8');
+			
+			$this->M_pengajuan->hapus_ajax($id_pengajuan,$kode_kantor);
 			
 			//Hapus Images
 				$this->load->model('M_images');
-				$list_images = $this->M_images->get_images($id_pengajuan,'pengajuan','id',$id_pengajuan);
+				$list_images = $this->M_images->get_images_ajax($id_pengajuan,'pengajuan','id',$id_pengajuan,$kode_kantor);
 				if(!empty($list_images))
 				{
 					$list_result = $list_images->result();
@@ -1703,12 +1852,14 @@
 			$id_jenis_naskah = htmlentities($_POST['id_jenis_naskah'], ENT_QUOTES, 'UTF-8');
 			$id_var_naskah = htmlentities($_POST['id_var_naskah'], ENT_QUOTES, 'UTF-8');
 			$isi = htmlentities($_POST['isi'], ENT_QUOTES, 'UTF-8');
+			$kode_kantor = htmlentities($_POST['kode_kantor'], ENT_QUOTES, 'UTF-8');
 			
 			$query = "
 					SELECT * FROM tb_isi_var_naskah 
 					WHERE id_pengajuan = '".$id_pengajuan."'
 					AND id_jenis_naskah = '".$id_jenis_naskah."'
 					AND id_var_naskah = '".$id_var_naskah."'
+					AND kode_kantor = '".$kode_kantor."'
 					";
 			$cek_isi_var_naskah = $this->M_dash->view_query_general($query);
 			if(!empty($cek_isi_var_naskah))
@@ -1720,15 +1871,16 @@
 								WHERE id_pengajuan = '".$id_pengajuan."'
 								AND id_jenis_naskah = '".$id_jenis_naskah."'
 								AND id_var_naskah = '".$id_var_naskah."'
+								AND kode_kantor = '".$kode_kantor."'
 								";
 				$this->M_dash->exec_query_general($query_edit);
 			}
 			else
 			{
 				//SIMPAN
-				$query_simpan = "INSERT INTO tb_isi_var_naskah (id_pengajuan,id_jenis_naskah,id_var_naskah,isi,tgl_ins)
+				$query_simpan = "INSERT INTO tb_isi_var_naskah (id_pengajuan,id_jenis_naskah,id_var_naskah,isi,kode_kantor,tgl_ins)
 				VALUES
-				('".$id_pengajuan."','".$id_jenis_naskah."','".$id_var_naskah."','".$isi."',NOW());
+				('".$id_pengajuan."','".$id_jenis_naskah."','".$id_var_naskah."','".$isi."','".$kode_kantor."',NOW());
 				";
 				$this->M_dash->exec_query_general($query_simpan);
 			}
@@ -1739,15 +1891,20 @@
 		
 		function simpan_isi_syarat_naskah()
 		{
+			
+			
 			$id_pengajuan = htmlentities($_POST['id_pengajuan'], ENT_QUOTES, 'UTF-8');
 			$id_pengajuan_format_for_isi_syarat_naskah = htmlentities($_POST['id_pengajuan_format_for_isi_syarat_naskah'], ENT_QUOTES, 'UTF-8');
 			$id_jenis_naskah = htmlentities($_POST['id_jenis_naskah'], ENT_QUOTES, 'UTF-8');
 			$id_syarat_naskah = htmlentities($_POST['id_syarat_naskah'], ENT_QUOTES, 'UTF-8');
 			
+			$kode_kantor = htmlentities($_POST['kode_kantor'], ENT_QUOTES, 'UTF-8');
+			
 			$query_get_info_isi_syarat_naskah = "
 											SELECT * 
 											FROM tb_isi_syarat_naskah 
-											WHERE id_pengajuan = '".$id_pengajuan_format_for_isi_syarat_naskah."' 
+											WHERE id_pengajuan = '".$id_pengajuan_format_for_isi_syarat_naskah."'
+											AND kode_kantor = '".$kode_kantor."'
 											AND id_jenis_naskah = '".$id_jenis_naskah."' 
 											AND id_syarat_naskah = '".$id_syarat_naskah."' ;";
 			$get_info_isi_syarat_naskah = $this->M_dash->view_query_general($query_get_info_isi_syarat_naskah);
@@ -1759,7 +1916,9 @@
 								FROM tb_isi_syarat_naskah 
 								WHERE id_pengajuan = '".$id_pengajuan_format_for_isi_syarat_naskah."' 
 								AND id_jenis_naskah = '".$id_jenis_naskah."' 
-								AND id_syarat_naskah = '".$id_syarat_naskah."' ;
+								AND id_syarat_naskah = '".$id_syarat_naskah."' 
+								AND kode_kantor = '".$kode_kantor."'
+								;
 				";
 				$this->M_dash->exec_query_general($query_delete);
 				
@@ -1772,7 +1931,7 @@
 								INSERT INTO tb_isi_syarat_naskah
 								(id_pengajuan,id_jenis_naskah,id_syarat_naskah,isi,tgl_ins,kode_kantor)
 								VALUES
-								('".$id_pengajuan_format_for_isi_syarat_naskah."','".$id_jenis_naskah."','".$id_syarat_naskah."',1,NOW(),'KABCJR')
+								('".$id_pengajuan_format_for_isi_syarat_naskah."','".$id_jenis_naskah."','".$id_syarat_naskah."',1,NOW(),'".$kode_kantor."')
 								";
 								
 				$this->M_dash->exec_query_general($query_delete);
@@ -1898,7 +2057,7 @@
 			$this->session->unset_userdata('ses_tgl_ins');
 			
 			//redirect('index.php/login','location');
-			header('Location: '.base_url().'admin-login');
+			header('Location: '.base_url().'admin-login?kode_kantor='.$this->session->userdata('ses_kode_kantor'));
 		}
         
         function auto_remove_captcha()

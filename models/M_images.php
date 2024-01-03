@@ -148,6 +148,19 @@
             }
         }
 		
+		function get_images_ajax($id,$group_by,$berdasarkan,$cari,$kode_kantor)
+        {
+            $query = $this->db->get_where('tb_images', array('id'=>$id,'group_by'=>$group_by,$berdasarkan => $cari,'kode_kantor' => $kode_kantor));
+            if($query->num_rows() > 0)
+            {
+                return $query;
+            }
+            else
+            {
+                return false;
+            }
+        }
+		
 		function do_upload($id,$cek_bfr)
 		{
 			$this->load->library('upload');

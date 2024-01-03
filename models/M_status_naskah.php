@@ -89,10 +89,8 @@
 					LEFT JOIN tb_tahapan AS B ON A.id_tahapan = B.id_tahapan AND A.kode_kantor = B.kode_kantor
 					LEFT JOIN tb_status_naskah AS C ON A.id_tahapan_naskah = C.id_tahapan_naskah AND C.id_pengajuan = ".$id_pengajuan." AND A.kode_kantor = C.kode_kantor
 					LEFT JOIN tb_karyawan AS D ON C.id_karyawan = D.id_karyawan AND A.kode_kantor = D.kode_kantor
-					WHERE A.id_jenis_naskah  = '".$id_jenis_naskah."' 
-					
-					-- TIDAK DIFUNGSIKAN DULU DA CUMA 1 KANTOR
-					-- AND A.kode_kantor = '".$kode_kantor."' 
+					WHERE A.id_jenis_naskah  = '".$id_jenis_naskah."'
+					AND A.kode_kantor = '".$kode_kantor."' 
 					
 					ORDER BY COALESCE(C.ordr_index,A.ordr_index) ASC;";
 					
@@ -214,7 +212,9 @@
 					,ket_status = '".$ket_status."'
 					,tgl_updt = NOW()
 					,user_updt = '".$user_updt."'
-				WHERE id_tahapan_naskah = '".$id_tahapan_naskah."' AND id_pengajuan = '".$id_pengajuan."'
+				WHERE id_tahapan_naskah = '".$id_tahapan_naskah."' 
+				AND id_pengajuan = '".$id_pengajuan."'
+				AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 			";
 			
 			$this->db->query($query);
@@ -230,6 +230,7 @@
 					,tgl_updt = NOW()
 					,user_updt = '".$this->session->userdata('ses_id_karyawan')."'
 				WHERE id_pengajuan = '".$id_pengajuan."'
+				AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 			";
 			
 			$this->db->query($query);

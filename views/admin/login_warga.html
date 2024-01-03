@@ -158,8 +158,11 @@
 	<center>
 	<!-- <h1>PATEN (Pelayanan Administrasi Terpadu Kecamatan)</h1> -->
 	<!-- <img src="<?php echo base_url('assets/global/images/banner.png');?>" style="width:100%;"> -->
+	
 	<img id="img_bpt" src="<?php echo base_url('assets/global/images/bupati_cjr.png');?>" style="float:left;">
-	<img id="img_cam" src="<?php echo base_url('assets/global/images/cam_sam.png');?>" style="float:right;">
+	<!-- <img id="img_cam" src="<?php echo base_url('assets/global/images/cam_sam.png');?>" style="float:right;"> -->
+	<img id="img_cam" src="<?php echo base_url('assets/images/foto_apem/'.$get_data_kantor->kode_kantor.'.png');?>" style="float:right;">
+	
 	</center>
     <!-- <div class="login-box" style="opacity:0.8;width:50%;"> -->
 	<div id="box_center" class="login-box" style="opacity:1;">
@@ -173,10 +176,14 @@
 		<center style="margin-top:0%;">
 		<img class="head_box" src="<?php echo base_url('assets/global/images/logo.png');?>" style="width:25%;">
         <!-- <p class="login-box-msg"><h3>ANJUNGAN PATEN MANDIRI</h3></p> -->
-		<h3 style="text-shadow: 1px 1px 1px white;color:black;">ANJUNGAN PATEN MANDIRI (APEM)<br/>KECAMATAN CIBEBER</h3>
+		<h3 style="text-shadow: 1px 1px 1px white;color:black;">ANJUNGAN PATEN MANDIRI (APEM)<br/><?php echo strtoupper($get_data_kantor->nama_kantor);?></h3>
 		<h3 style="margin-top:-2%;text-shadow: 1px 1px 1px white;color:black;">DAN</h3>
 		<h3 style="margin-top:-2%;text-shadow: 1px 1px 1px white;color:black;">SISTEM PENAGIHAN PAJAK KENDARAAN BERMOTOR TERINTEGRITAS PELAYANAN TERPADU DI KECAMATAN<br/>(SI GANTENG DT)</h3>
+		
+		
 		<input type="hidden" name="nik_ori" id="nik_ori" class="form-control" placeholder="MASUKAN NIK ANDA...." autocomplete="off" />
+		<input type="hidden" name="kode_kantor" id="kode_kantor" class="form-control" placeholder="MASUKAN NIK ANDA...." autocomplete="off" value="<?php echo ($get_data_kantor->kode_kantor);?>" />
+		
 		</center>
 		
         <!-- <form method="post" style="border:1px black dashed;padding:2%;"> -->
@@ -641,9 +648,13 @@
 			var jenis = arrIdSplit[0];
 			var id_jenis_naskah = arrIdSplit[1];
 			var idx = arrIdSplit[2];
+			
 			var nik = $("#nik_ori").val();
+			var kode_kantor = $("#kode_kantor").val();
+			
 			var id_pengajuan = $("#id_pengajuan_"+idx).val();
 			var no_pengajuan = $("#no_pengajuan_"+idx).val();
+			
 			
 			var r = confirm("Apakah anda yakin akan menghapus pengajuan untuk "+$("#no_pengajuan_"+idx).val()+" ?");
 			if (r == true) 
@@ -652,6 +663,7 @@
 				, data: 
 						{
 							id_pengajuan:id_pengajuan
+							,kode_kantor:kode_kantor
 						}
 				, cache: false
 				, success:function(data)
@@ -701,6 +713,9 @@
 			var nik = $("#nik_ori").val();
 			var no_pengajuan = $("#no_pengajuan_"+idx).val();
 			
+			
+			var kode_kantor = $("#kode_kantor").val();
+			
 			/*
 			var r = confirm("Apakah anda yakin akan melihat history pengajuan untuk "+$("#nama_jenis_naskah_"+idx).val()+" ?");
 			if (r == true) 
@@ -712,6 +727,7 @@
 							nik:nik
 							,id_jenis_naskah:id_jenis_naskah
 							,no_pengajuan:no_pengajuan
+							,kode_kantor:kode_kantor
 						}
 				, cache: false
 				, success:function(data)
@@ -970,6 +986,7 @@
 		
 		function simpan_daftar_warga()
 		{
+			var kode_kantor = $("#kode_kantor").val();
 			var nik = $("#nik").val();
 			var nama = $("#nama").val();
 			var jenis_kelamin = $("#jenis_kelamin").val();
@@ -1015,7 +1032,8 @@
 							tgl_lahir:tgl_lahir,
 							tlp:tlp,
 							email:email,
-							alamat:alamat
+							alamat:alamat,
+							kode_kantor:kode_kantor
 						}
 				, cache: false
 				, success:function(data)
@@ -1050,10 +1068,13 @@
 		function view_daftar()
 		{
 			var nik = $("#nik").val();
+			var kode_kantor = $("#kode_kantor").val();
+			
 			$.ajax({type: "POST", url: "<?php echo base_url();?>warga-daftar/"
 			, data: 
 					{
-						nik:nik
+						nik:nik,
+						kode_kantor:kode_kantor
 					}
 			, cache: false
 			, success:function(data)
@@ -1080,6 +1101,8 @@
 		{
 			//alert("GOOD");
 			var nik = $("#nik").val();
+			var kode_kantor = $("#kode_kantor").val();
+			
 			//alert(nik);
 			$("#pesan").html("<img src='<?php echo base_url();?>assets/global/loading.gif'>Memeriksa NIK Anda...");
 			
@@ -1096,7 +1119,8 @@
 				$.ajax({type: "POST", url: "<?php echo base_url();?>C_admin_login/cek_nik_pajak/"
 				, data: 
 						{
-							nik:nik
+							nik:nik,
+							kode_kantor:kode_kantor
 						}
 				, cache: false
 				, success:function(data)
@@ -1106,31 +1130,39 @@
 					
 					if(data != false)
 					{
-					
-						//alert("BERHASIL");
-						//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan, Selamat Datang '+data);
-						$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan dan memeriksa tunggakan pajak kendaraan, Harap Menunggu,<br/> <img src="<?php echo base_url();?>assets/global/loading.gif"> sedang memproses permintaan.....');
-						$("#nik").css('border', '3px #090 solid');
-						//$("#btn_lanjut").attr("disabled", false);
-						
-						$("#nik_ori").val(nik);
-						
-						setTimeout(
-						function() 
+						if(data == 'ADA DATA DARI SAMSAT')
 						{
-							//do something special
-							//alert("Masuk ke pelayanan");
-							$("#form_utama").html(data);
-							$("#btn_lanjut").css('display','none');
-							$("#btn_daftar").css('display','none');
-						}, 3000);
-						
-						$(".langkah").css('color','red');
-						$(".langkah").css('font-weight','normal');
-						$("#langkah_2").css('color','green');
-						$("#langkah_2").css('font-weight','bold');
-						
-					
+							alert("NIK/DATA PENDUDUK BELUM TERDAFTAR, KAMI MENGAMBIL DATA DARI APLIKASI SIGANTENG DT, SILAHKAN LENGKAPI DI DATA WARGA ATAU LANGSUNG KE PELAYANAN !");
+							
+							$("#pesan").html('NIK/DATA PENDUDUK BELUM TERDAFTAR, KAMI MENGAMBIL DATA DARI APLIKASI SIGANTENG DT, SILAHKAN LENGKAPI DI DATA WARGA ATAU LANGSUNG KE PELAYANAN !');
+							$("#pesan").css('color','red');
+							$("#nik").css('border', '3px #090 solid');
+						}
+						else
+						{
+							//alert("BERHASIL");
+							//$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan, Selamat Datang '+data);
+							$("#pesan").html('<img src="<?php echo base_url();?>assets/global/true.png"> NIK Ditemukan dan memeriksa tunggakan pajak kendaraan, Harap Menunggu,<br/> <img src="<?php echo base_url();?>assets/global/loading.gif"> sedang memproses permintaan.....');
+							$("#nik").css('border', '3px #090 solid');
+							//$("#btn_lanjut").attr("disabled", false);
+							
+							$("#nik_ori").val(nik);
+							
+							setTimeout(
+							function() 
+							{
+								//do something special
+								//alert("Masuk ke pelayanan");
+								$("#form_utama").html(data);
+								$("#btn_lanjut").css('display','none');
+								$("#btn_daftar").css('display','none');
+							}, 3000);
+							
+							$(".langkah").css('color','red');
+							$(".langkah").css('font-weight','normal');
+							$("#langkah_2").css('color','green');
+							$("#langkah_2").css('font-weight','bold');
+						}
 					}
 					else
 					{
@@ -1149,6 +1181,7 @@
 		{
 			//alert("GOOD");
 			var nik = $("#nik_ori").val();
+			var kode_kantor = $("#kode_kantor").val();
 			//alert(nik);
 			$("#pesan").html("<img src='<?php echo base_url();?>assets/global/loading.gif'>Memeriksa NIK Anda...");
 			
@@ -1163,7 +1196,8 @@
 				$.ajax({type: "POST", url: "<?php echo base_url();?>warga-cek-nik/"
 				, data: 
 						{
-							nik:nik
+							nik:nik,
+							kode_kantor:kode_kantor
 						}
 				, cache: false
 				, success:function(data)

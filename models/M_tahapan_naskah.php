@@ -127,7 +127,11 @@
 				SELECT A.*,COALESCE(id_jenis_naskah,0) AS cek_pilih 
 				FROM tb_tahapan AS A
 				LEFT JOIN tb_tahapan_naskah AS B 
-				ON A.id_tahapan = B.id_tahapan AND A.kode_kantor = B.kode_kantor AND B.id_jenis_naskah = '".$id_jenis_naskah."';";
+					ON A.id_tahapan = B.id_tahapan 
+					AND A.kode_kantor = B.kode_kantor 
+					AND B.id_jenis_naskah = '".$id_jenis_naskah."'
+				WHERE A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
+				;";
 				
 			$query = $this->db->query($query);
 			if($query->num_rows() > 0)
@@ -149,8 +153,12 @@
 					,COALESCE(B.id_tahapan_naskah,'') AS id_tahapan_naskah
 					,COALESCE(B.ordr_index,0) AS ordr_index
 				FROM tb_tahapan AS A
-				LEFT JOIN tb_tahapan_naskah AS B ON A.id_tahapan = B.id_tahapan AND A.kode_kantor = B.kode_kantor AND B.id_jenis_naskah = '".$id_jenis_naskah."'
+				LEFT JOIN tb_tahapan_naskah AS B 
+					ON A.id_tahapan = B.id_tahapan 
+					AND A.kode_kantor = B.kode_kantor 
+					AND B.id_jenis_naskah = '".$id_jenis_naskah."'
 				WHERE B.id_tahapan IS NOT NULL
+				AND A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 				ORDER BY COALESCE(B.ordr_index,0),A.nama_tahapan;";
 				
 			$query = $this->db->query($query);
@@ -210,7 +218,9 @@
 					ordr_index = '".$ordr_index."'
 					,tgl_updt = NOW()
 					,user_updt = '".$this->session->userdata('ses_id_karyawan')."'
-				WHERE id_jenis_naskah = '".$id_jenis_naskah."' AND id_tahapan = '".$id_tahapan."'
+				WHERE id_jenis_naskah = '".$id_jenis_naskah."' 
+				AND id_tahapan = '".$id_tahapan."'
+				AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 			";
 			
 			$this->db->query($query);
@@ -265,6 +275,7 @@
 				FROM tb_persyaratan AS A
 				LEFT JOIN tb_persyaratan_naskah AS B ON A.id_syarat  = B.id_syarat  AND A.kode_kantor = B.kode_kantor AND B.id_jenis_naskah = '".$id_jenis_naskah."'
 				WHERE B.id_syarat  IS NOT NULL
+				AND A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 				ORDER BY COALESCE(B.ordr_index,0),A.nama_syarat;";
 				
 			$query = $this->db->query($query);
@@ -284,7 +295,11 @@
 				SELECT A.*,COALESCE(id_jenis_naskah,0) AS cek_pilih 
 				FROM tb_persyaratan AS A
 				LEFT JOIN tb_persyaratan_naskah AS B 
-				ON A.id_syarat = B.id_syarat AND A.kode_kantor = B.kode_kantor AND B.id_jenis_naskah = '".$id_jenis_naskah."';";
+					ON A.id_syarat = B.id_syarat 
+					AND A.kode_kantor = B.kode_kantor 
+					AND B.id_jenis_naskah = '".$id_jenis_naskah."'
+				WHERE A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
+				;";
 				
 			$query = $this->db->query($query);
 			if($query->num_rows() > 0)
@@ -361,7 +376,9 @@
 					ordr_index = '".$ordr_index."'
 					,tgl_updt = NOW()
 					,user_updt = '".$this->session->userdata('ses_id_karyawan')."'
-				WHERE id_jenis_naskah = '".$id_jenis_naskah."' AND id_syarat = '".$id_syarat."'
+				WHERE id_jenis_naskah = '".$id_jenis_naskah."' 
+				AND id_syarat = '".$id_syarat."'
+				AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 			";
 			
 			$this->db->query($query);

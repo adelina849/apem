@@ -95,11 +95,12 @@
 				(
 					'".$id_jenis_naskah."'
 					-- ,(SELECT CONCAT(FRMTGL,ORD) AS no_pengajuan
-					,(SELECT FRMTGL AS no_pengajuan
+					,(
+						SELECT FRMTGL AS no_pengajuan
 						FROM
 						(
 							-- SELECT CONCAT(Y,M,D,H,MM,DD) AS FRMTGL
-							SELECT CONCAT(DD,D,M,Y,H,MM) AS FRMTGL
+							SELECT CONCAT('".$this->session->userdata('ses_kode_kantor')."',DD,D,M,Y,H,MM) AS FRMTGL
 							 ,CASE
 								WHEN ORD >= 10 THEN CONCAT('00',CAST(ORD AS CHAR))
 								WHEN ORD >= 100 THEN CONCAT('0',CAST(ORD AS CHAR))
@@ -118,7 +119,8 @@
 								( COALESCE(MAX(CAST(RIGHT(no_pengajuan,4) AS UNSIGNED)),0) + 1) AS ORD FROM tb_pengajuan
 								WHERE DATE(tgl_ins) = DATE(NOW())
 							) AS A
-						) AS AA)
+						) AS AA
+						)
 					,'".$kode_pengajuan."'
 					,'".$diajukan_oleh."'
 					,'".$perihal."'
@@ -179,6 +181,56 @@
 					,tgl_updt = NOW()
 					,user_updt = '".$user_updt."'
 				WHERE id_pengajuan = '".$id_pengajuan."'
+				AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
+			";
+			
+			$this->db->query($query);
+			
+		}
+		
+		function edit_ajax(
+			$id_pengajuan
+			,$id_jenis_naskah
+			,$no_pengajuan
+			,$kode_pengajuan
+			,$diajukan_oleh
+			,$perihal
+			,$sumber
+			,$tandatangan_oleh
+			,$tgl_surat_dibuat
+			,$tgl_surat_masuk
+			,$ket_pengajuan
+			,$penting
+			,$user_updt
+			,$kode_kantor
+			)
+		{
+			/*$data = array
+			(
+			   'nama_jabatan' => $nama,
+			   'ket_jabatan' => $ket,
+			   'user' => $id_user
+			);
+			
+			$this->db->update('tb_jabatan', $data,array('id_jabatan' => $id,'kode_kantor' => $this->session->userdata('ses_kode_kantor')));*/
+			
+			$query = "
+				UPDATE tb_pengajuan SET 
+					id_jenis_naskah = '".$id_jenis_naskah."'
+					,no_pengajuan = '".$no_pengajuan."'
+					,kode_pengajuan = '".$kode_pengajuan."'
+					,diajukan_oleh = '".$diajukan_oleh."'
+					,perihal = '".$perihal."'
+					,sumber = '".$sumber."'
+					,tandatangan_oleh = '".$tandatangan_oleh."'
+					,tgl_surat_dibuat = '".$tgl_surat_dibuat."'
+					,tgl_surat_masuk = '".$tgl_surat_masuk."'
+					,ket_pengajuan = '".$ket_pengajuan."'
+					,penting = '".$penting."'
+					,tgl_updt = NOW()
+					,user_updt = '".$user_updt."'
+				WHERE id_pengajuan = '".$id_pengajuan."'
+				AND kode_kantor = '".$kode_kantor."'
 			";
 			
 			$this->db->query($query);
@@ -188,7 +240,13 @@
 		function hapus($id)
 		{
 			//$this->db->query("DELETE FROM tb_pengajuan WHERE id_pengajuan = ".$id." AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."' ;");
-			$this->db->query("DELETE FROM tb_pengajuan WHERE id_pengajuan = ".$id.";");
+			$this->db->query("DELETE FROM tb_pengajuan WHERE id_pengajuan = '".$id."' AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."' ;");
+		}
+		
+		function hapus_ajax($id,$kode_kantor)
+		{
+			//$this->db->query("DELETE FROM tb_pengajuan WHERE id_pengajuan = ".$id." AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."' ;");
+			$this->db->query("DELETE FROM tb_pengajuan WHERE id_pengajuan = '".$id."' AND kode_kantor = '".$kode_kantor."' ;");
 		}
 		
 		
@@ -202,6 +260,7 @@
 									FROM tb_pengajuan AS A
 									LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
 									WHERE ".$berdasarkan." = '".$cari."'
+									AND A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'
 									;
 									
 									");

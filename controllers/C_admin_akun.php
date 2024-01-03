@@ -329,7 +329,7 @@ class C_admin_akun extends CI_Controller {
 	
 	function cek_login()
 	{
-		$hasil_cek = $this->M_akun->get_login($_POST['user'],$_POST['pass']);
+		$hasil_cek = $this->M_akun->get_login_with_kode_kantor($_POST['user'],$_POST['pass'],$this->session->userdata('ses_kode_kantor'));
 		echo $hasil_cek;
 	}
 	

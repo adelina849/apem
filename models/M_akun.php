@@ -7,6 +7,26 @@
 			parent::__construct();
 		}
 		
+		function view_query_general($query)
+		{
+			$query = $this->db->query($query);
+			if($query->num_rows() > 0)
+			{
+				return $query;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		function exec_query_general($query)
+		{
+			/*SIMPAN DAN CATAT QUERY*/
+				//$this->M_gl_log->simpan_query($query);
+				$this->db->query($query);
+			/*SIMPAN DAN CATAT QUERY*/
+		}
 		
 		function get_no_karyawan()
 		{
@@ -248,7 +268,47 @@
 				FROM tb_akun AS A
 				LEFT JOIN tb_karyawan AS B ON A.id_karyawan = B.id_karyawan -- AND A.kode_kantor = B.kode_kantor
 				LEFT JOIN tb_jabatan AS C ON B.id_jabatan = C.id_jabatan -- AND A.kode_kantor = C.kode_kantor
-				WHERE A.user = '".$user."' AND A.pass = '".$pass."'");
+				WHERE A.user = '".$user."' AND A.pass = '".$pass."' ");
+            
+			if($query->num_rows() > 0)
+            {
+                return $query->row();
+            }
+            else
+            {
+                return false;
+            }
+        }
+		
+		function get_login_with_kode_kantor($user,$pass,$kode_kantor)
+        {
+            //$query = $this->db->get_where('tb_akun', array('user' => $user),'pass'=> $pass);
+			$query = $this->db->query("
+				SELECT A.* 
+					,A.tgl_insert AS tgl_ins
+					,COALESCE(B.id_jabatan,'') AS id_jabatan
+					,COALESCE(B.no_karyawan,'') AS no_karyawan
+					,COALESCE(B.nik_karyawan,'') AS nik_karyawan
+					,COALESCE(B.nama_karyawan,'') AS nama_karyawan
+					,COALESCE(B.avatar,'') AS avatar
+					,COALESCE(B.avatar_url,'') AS avatar_url
+					,COALESCE(B.pnd,'') AS pnd
+					,COALESCE(B.tlp,'') AS tlp
+					,COALESCE(B.email,'') AS email
+					,COALESCE(B.alamat,'') AS alamat
+					,COALESCE(B.ket_karyawan,'') AS ket_karyawan
+					,COALESCE(C.nama_jabatan,'') AS nama_jabatan
+					
+					,COALESCE(D.nama_kantor,'') AS nama_kantor
+					,COALESCE(D.pemilik,'') AS alamat_kantor
+					,COALESCE(D.tlp,'') AS tlp_kantor
+					,COALESCE(D.alamat,'') AS alamat_kantor
+					
+				FROM tb_akun AS A
+				LEFT JOIN tb_karyawan AS B ON A.id_karyawan = B.id_karyawan -- AND A.kode_kantor = B.kode_kantor
+				LEFT JOIN tb_jabatan AS C ON B.id_jabatan = C.id_jabatan -- AND A.kode_kantor = C.kode_kantor
+				LEFT JOIN tb_kantor AS D ON A.kode_kantor = D.kode_kantor
+				WHERE A.user = '".$user."' AND A.pass = '".$pass."' AND A.kode_kantor = '".$kode_kantor."' ");
             
 			if($query->num_rows() > 0)
             {

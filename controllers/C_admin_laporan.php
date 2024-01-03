@@ -157,7 +157,8 @@
 					if((!empty($_GET['cari'])) && ($_GET['cari']!= "")  )
 					{
 						$cari = " 
-									WHERE DATE(A.tgl_ins) BETWEEN '".$dari."' AND '".$sampai."'
+									WHERE A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'  
+									AND DATE(A.tgl_ins) BETWEEN '".$dari."' AND '".$sampai."'
 									AND 
 									(
 										A.nik LIKE '%".str_replace("'","",$_GET['cari'])."%'
@@ -167,7 +168,9 @@
 					}
 					else
 					{
-						$cari = "WHERE DATE(A.tgl_ins) BETWEEN '".$dari."' AND '".$sampai."' ";
+						$cari = "WHERE 
+									A.kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'  
+									AND DATE(A.tgl_ins) BETWEEN '".$dari."' AND '".$sampai."' ";
 						//$cari = "";
 					}
 					

@@ -157,6 +157,7 @@ class C_admin_status_naskah extends CI_Controller {
 			$get_data = $get_data->row();
 			
 			//KIRIM EMAIL
+			/*
 				$this->load->config('email');
 				$this->load->library('email');
 				
@@ -243,6 +244,7 @@ class C_admin_status_naskah extends CI_Controller {
 				{
 					show_error($this->email->print_debugger());
 				} 
+			*/
 			//KIRIM EMAIL
 		}
 		 
