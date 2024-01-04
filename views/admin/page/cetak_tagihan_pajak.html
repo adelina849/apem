@@ -49,6 +49,7 @@
 						$query = "
 								SELECT * FROM tb_data_pajak 
 								WHERE nik = '".$nik."'
+								AND kode_kantor = '".$kode_kantor."'
 								AND nopol = '".str_replace(" ","",$pjk_nopol)."'
 								";
 						$cek_data_pajak = $this->M_dash->view_query_general($query);

@@ -88,14 +88,19 @@
 			
 			function tanggal($var = '')
 			{
-			$tgl = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember");
-			$pecah = explode("-", $var);
-			return $pecah[2]." ".$tgl[$pecah[1] - 1]." ".$pecah[0];
+				$tgl = array("Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember");
+				$pecah = explode("-", $var);
+				return $pecah[2]." ".$tgl[$pecah[1] - 1]." ".$pecah[0];
 			}
 			
 			//3. DATA FORMAT
 			$string = str_replace('@tanggal@',tanggal(date('Y-m-d')),$string);
 			//3. DATA FORMAT
+			
+			//4. TTD CAMAT
+			//,base_url().'assets/images/ttd_camat/'.$kode_kantor.'.PNG'
+			$string = str_replace('@ttd_camat@','<img id="img_bpt" src="'.base_url().'assets/images/ttd_camat/'.$kode_kantor.'.PNG" style="width:100%;">',$string);
+			//4. TTD CAMAT
 			
 			
 
