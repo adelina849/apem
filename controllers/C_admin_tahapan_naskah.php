@@ -106,7 +106,7 @@ class C_admin_tahapan_naskah extends CI_Controller {
 				{
 					$get_jenis_naskah = $get_jenis_naskah->row();
 					
-					$query_get_var_naskah = "SELECT * FROM tb_var_naskah WHERE md5(id_jenis_naskah) = '".$id_jenis_naskah."' AND kode_kantor = 'KABCJR'; ";
+					$query_get_var_naskah = "SELECT * FROM tb_var_naskah WHERE md5(id_jenis_naskah) = '".$id_jenis_naskah."' AND kode_kantor = '".$this->session->userdata('ses_kode_kantor')."'; ";
 					$get_var_naskah = $this->M_dash->view_query_general($query_get_var_naskah);
 					
 					$data = array('page_content'=>'king_admin_format_naskah','get_jenis_naskah'=>$get_jenis_naskah,'get_var_naskah' => $get_var_naskah);

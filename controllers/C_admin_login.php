@@ -97,6 +97,7 @@
 					else
 					{
 						echo'<H1>SILAHKAN ISIKAN KODE KANTOR PADA HEADER URL <br/><b>Example : '.base_url().'admin-login?kode_kantor={{kode_kantor}}</b></H1>';
+						//header('Location: '.base_url().'admin-login?kode_kantor='.$kode_kantor);
 					}
 				}
 				else
@@ -1175,12 +1176,14 @@
 				else
 				{
 					//redirect('index.php/login','location');
-					header('Location: '.base_url().'admin-login');
+					//header('Location: '.base_url().'admin-login');
+					header('Location: '.base_url().'admin-login?kode_kantor='.$kode_kantor);
 				}
 			}
 			else
 			{
-				header('Location: '.base_url().'admin-login?from=cek');
+				//header('Location: '.base_url().'admin-login?from=cek');
+				header('Location: '.base_url().'admin-login?from=cek&kode_kantor='.$kode_kantor);
 			}
         }
         
@@ -2059,7 +2062,20 @@
 						$get_isian_naskah = $this->M_dash->view_query_general($query_get_isian_naskah);
 						
 						//$data = array('page_content'=>'king_admin_tahapan','halaman'=>$halaman,'list_tahapan'=>$list_tahapan);
-						$data = array('get_pengajuan'=>$get_pengajuan,'get_data_penduduk'=>$get_data_penduduk,'get_jenis_naskah'=>$get_jenis_naskah,'get_isian_naskah'=>$get_isian_naskah,'id_pengajuan_format'=>$id_pengajuan_format,'kode_kantor' => $kode_kantor);
+						
+						$get_data_kantor = "SELECT * FROM tb_kantor WHERE kode_kantor = '".$kode_kantor."'; ";
+						$get_data_kantor = $this->M_dash->view_query_general($get_data_kantor);
+						if(!empty($get_data_kantor))
+						{
+							$get_data_kantor = $get_data_kantor->row();
+						}
+						else
+						{
+							$get_data_kantor = false;
+						}
+						
+						
+						$data = array('get_pengajuan'=>$get_pengajuan,'get_data_penduduk'=>$get_data_penduduk,'get_jenis_naskah'=>$get_jenis_naskah,'get_isian_naskah'=>$get_isian_naskah,'id_pengajuan_format'=>$id_pengajuan_format,'kode_kantor' => $kode_kantor,'get_data_kantor'=>$get_data_kantor);
 						$this->load->view('admin/page/king_admin_cetak_format_naskah.php',$data);
 					}
 					else

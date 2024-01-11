@@ -99,8 +99,16 @@
 			
 			//4. TTD CAMAT
 			//,base_url().'assets/images/ttd_camat/'.$kode_kantor.'.PNG'
-			$string = str_replace('@ttd_camat@','<img id="img_bpt" src="'.base_url().'assets/images/ttd_camat/'.$kode_kantor.'.PNG" style="width:100%;">',$string);
+			$string = str_replace('@ttd_camat@','<img id="img_bpt" src="'.base_url().'assets/images/ttd_camat/'.$kode_kantor.'.png" style="width:100%;">',$string);
 			//4. TTD CAMAT
+			
+			//5. PEJABAT CAMAT
+				$string = str_replace('@pejabat_camat@',$get_data_kantor->pemilik,$string);
+			//5. PEJABAT CAMAT
+			
+			//6. NAMA KECAMATAN
+				$string = str_replace('@kecamatan@',strtoupper($get_data_kantor->nama_kantor),$string);
+			//6. NAMA KECAMATAN
 			
 			
 
