@@ -231,7 +231,7 @@
 			  
 			  <button type="button" class="btn-warga btn btn-danger btn-block btn-flat" style="border:1px dotted black;" onclick="location.reload();">ULANGI</button>
 			  
-			  <a href="<?php echo base_url();?>cek-barcode" class="btn btn-danger btn-block btn-flat" style="border:1px dotted black;">SCAN QR</a>
+			  <a href="<?php echo base_url();?>cek-barcode?kode_kantor=<?php echo ($get_data_kantor->kode_kantor);?>" class="btn btn-danger btn-block btn-flat" style="border:1px dotted black;">SCAN QR</a>
 			  <br/>
             </div>
 			
@@ -460,6 +460,8 @@
 		function cetak_qr_view_langsung_print(evt)
 		{
 			//alert("MULAI");
+			var kode_kantor = $("#kode_kantor").val();
+			
 			var arrStrId = evt.id;
 			var arrIdSplit = arrStrId.split("-");
 			
@@ -477,7 +479,7 @@
 			
 			
 			//C_admin_login/view_download_dok?id_pengajuan=358&id_jenis_naskah=3
-			var href = "<?php echo base_url();?>C_admin_login/cetak_print_qr_code?code="+no_pengajuan;
+			var href = "<?php echo base_url();?>C_admin_login/cetak_print_qr_code?code="+no_pengajuan+"&kode_kantor="+kode_kantor;
 													
 			window.open(href, 'popup', 'height=700,width=500,toolbar=no');
 			//return false;

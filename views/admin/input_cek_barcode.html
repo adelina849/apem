@@ -67,7 +67,7 @@
     <!-- /.lockscreen-image -->
 
     <!-- lockscreen credentials (contains the form) -->
-    <form class="lockscreen-credentials" action="<?php echo base_url();?>status-barcode" method="post">
+    <form class="lockscreen-credentials" action="<?php echo base_url();?>status-barcode?kode_kantor=<?php echo ($get_data_kantor->kode_kantor);?>" method="post">
       <div class="input-group">
         <!-- <input type="text" name="no_pengajuan" class="form-control" placeholder="Barcode..."> -->
 		<!-- <input type="text" class="form-control input-sm" id="scan" placeholder="Scan/Ketik QR Code" onkeydown="scan(this)"> -->
@@ -83,6 +83,8 @@
 			}
 		?>
 		
+		<input type="hidden" name="kode_kantor" id="kode_kantor" class="form-control" placeholder="MASUKAN NIK ANDA...." autocomplete="off" value="<?php echo ($get_data_kantor->kode_kantor);?>" />
+		
 		<input type="text" class="form-control input-sm" id="scan" name="scan" placeholder="Scan/Ketik QR Code" onchange="scan(this)" value="<?php echo $no_pengajuan;?>">
 
         <div class="input-group-btn">
@@ -97,7 +99,7 @@
   <div class="help-block text-center">
     Masukan barcode kode yang tertera pada slip, slip diberikan oleh admin pada saat pengajuan dokumen
 	<br/>
-	<a href="<?php echo base_url();?>" class="fa fa-arrow-left text-muted" style="color:red;"> kembali ke home</a>
+	<a href="<?php echo base_url();?>?kode_kantor=<?php echo ($get_data_kantor->kode_kantor);?>" class="fa fa-arrow-left text-muted" style="color:red;"> kembali ke home</a>
   </div>
   <!-- <div class="text-center"> -->
     <!-- <a href="login.html">Or sign in as a different user</a> -->

@@ -22,13 +22,28 @@
 					,A.user_updt,A.tgl_ins
 						,COALESCE(A.ket_hasil,'') AS ket_hasil
 						,COALESCE(A.hasil_pengajuan,'') AS hasil_pengajuan
-						,(SELECT COUNT(id_tahapan_naskah) AS tahapan FROM tb_tahapan_naskah AS B WHERE B.id_jenis_naskah = A.id_jenis_naskah) AS tahapan
-						,(SELECT COUNT(id_status_naskah) AS sts FROM tb_status_naskah AS C WHERE C.id_pengajuan = A.id_pengajuan) AS sts
+						,
+							(
+								SELECT COUNT(id_tahapan_naskah) AS tahapan 
+								FROM tb_tahapan_naskah AS B 
+								WHERE B.id_jenis_naskah = A.id_jenis_naskah
+								AND B.kode_kantor = A.kode_kantor
+							) 
+							AS tahapan
+						,
+							(
+								SELECT COUNT(id_status_naskah) AS sts 
+								FROM tb_status_naskah AS C 
+								WHERE C.id_pengajuan = A.id_pengajuan
+								AND C.kode_kantor = A.kode_kantor
+							) AS sts
 						,A.kode_kantor
 						,A.id_jenis_naskah
 						,COALESCE(B.nama_jenis_naskah,'') AS nama_jenis_naskah
 					FROM tb_pengajuan AS A
-					LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor
+					LEFT JOIN tb_jenis_naskah AS B 
+						ON A.id_jenis_naskah = B.id_jenis_naskah 
+						AND A.kode_kantor = B.kode_kantor
 					GROUP BY A.id_pengajuan,A.id_jenis_naskah,B.nama_jenis_naskah,A.no_pengajuan,A.kode_pengajuan,A.sumber,A.perihal,A.diajukan_oleh,A.penting,A.user_updt,A.tgl_ins,A.ket_hasil,A.hasil_pengajuan,A.kode_kantor
 				) AS AA
 				".$cari." 
@@ -86,14 +101,42 @@
 						,COALESCE(C.ket_status,'') AS ket_status
 						,COALESCE(D.nama_karyawan,'') AS nama_karyawan
 					FROM tb_tahapan_naskah AS A
-					LEFT JOIN tb_tahapan AS B ON A.id_tahapan = B.id_tahapan AND A.kode_kantor = B.kode_kantor
-					LEFT JOIN tb_status_naskah AS C ON A.id_tahapan_naskah = C.id_tahapan_naskah AND C.id_pengajuan = ".$id_pengajuan." AND A.kode_kantor = C.kode_kantor
-					LEFT JOIN tb_karyawan AS D ON C.id_karyawan = D.id_karyawan AND A.kode_kantor = D.kode_kantor
+					LEFT JOIN tb_tahapan AS B 
+						ON A.id_tahapan = B.id_tahapan 
+						AND A.kode_kantor = B.kode_kantor
+					LEFT JOIN tb_status_naskah AS C 
+						ON A.id_tahapan_naskah = C.id_tahapan_naskah 
+						AND C.id_pengajuan = ".$id_pengajuan." 
+						AND A.kode_kantor = C.kode_kantor
+					LEFT JOIN tb_karyawan AS D 
+						ON C.id_karyawan = D.id_karyawan 
+						AND A.kode_kantor = D.kode_kantor
 					WHERE A.id_jenis_naskah  = '".$id_jenis_naskah."'
 					AND A.kode_kantor = '".$kode_kantor."' 
 					
 					ORDER BY COALESCE(C.ordr_index,A.ordr_index) ASC;";
 					
+			$query = $this->db->query($query);
+			if($query->num_rows() > 0)
+			{
+				return $query;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		
+		function get_status_naskah_terakhir_by_kode_kantor($id_pengajuan,$kode_kantor)
+		{
+			$query = "
+						SELECT * 
+						FROM tb_status_naskah 
+						WHERE id_pengajuan = '".$id_pengajuan."' 
+						AND kode_kantor = '".$kode_kantor."' 
+						ORDER BY ordr_index DESC LIMIT 0,1";
+			
 			$query = $this->db->query($query);
 			if($query->num_rows() > 0)
 			{

@@ -8,6 +8,23 @@
 		}
 		
 		
+		function list_images_limit_by_kode_kantor($id,$group,$cari,$limit,$offset,$kode_kantor)
+		{
+			$query = $this->db->query("
+										SELECT * FROM tb_images 
+										WHERE id = '". $id ."' 
+										AND group_by = '". $group ."'
+										".$cari." ORDER BY tgl_ins ASC LIMIT ".$offset.",".$limit);
+			if($query->num_rows() > 0)
+			{
+				return $query;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		function list_images_limit($id,$group,$cari,$limit,$offset)
 		{
 			$query = $this->db->query("

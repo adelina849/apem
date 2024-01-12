@@ -2126,7 +2126,19 @@
 		function cetak_print_qr_code()
 		{
 			$no_pengajuan = htmlentities($_GET['code'], ENT_QUOTES, 'UTF-8');
-			$query = "SELECT * FROM tb_pengajuan AS A LEFT JOIN tb_jenis_naskah AS B ON A.id_jenis_naskah = B.id_jenis_naskah AND A.kode_kantor = B.kode_kantor WHERE A.no_pengajuan = '".$no_pengajuan."' ;";
+			$kode_kantor = htmlentities($_GET['kode_kantor'], ENT_QUOTES, 'UTF-8');
+			
+			$query = "
+						SELECT * 
+						FROM tb_pengajuan AS A 
+						LEFT JOIN tb_jenis_naskah AS B 
+							ON A.id_jenis_naskah = B.id_jenis_naskah 
+							AND A.kode_kantor = B.kode_kantor 
+						WHERE A.no_pengajuan = '".$no_pengajuan."' 
+						AND A.kode_kantor = '".$kode_kantor."' 
+						;
+					";
+					
 			$get_data_pengajuan = $this->M_dash->view_query_general($query);
 			if(!empty($get_data_pengajuan))
 			{

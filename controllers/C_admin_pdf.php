@@ -85,7 +85,10 @@ class C_admin_pdf extends CI_Controller {
 				
 				
 				//$this->fpdf->Cell(5,5,'',0,0,'L',false);
-				$this->fpdf->Cell(85,5,'KECAMATAN CIBEBER',0,1,'C',false);
+				//$this->fpdf->Cell(85,5,'KECAMATAN CIBEBER',0,1,'C',false);
+				
+				$this->fpdf->Cell(85,5, strtoupper( $this->session->userdata('ses_nama_kantor') ) ,0,1,'C',false);
+				
 				//$this->fpdf->Cell(85,5,'KELURAHAN BOJONGHERANG',0,1,'C',false);
 				
 				$this->fpdf->Ln(3);
